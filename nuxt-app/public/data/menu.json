@@ -1,0 +1,23 @@
+{
+    "menuItems": [
+      {
+        "name": "The Network",
+        "link": "#",
+        "submenu": [
+          { "name": "About LeishMan", "link": "/about" },
+          { "name": "Steering Committee", "link": "/steering" }
+        ]
+      },
+      {
+        "name": "What We Do",
+        "link": "#",
+        "submenu": [
+          { "name": "Seminar", "link": "/seminar" },
+          { "name": "Network Meeting", "link": "/network-meeting" }
+        ]
+      },
+      { "name": "Reference Centers", "link": "/reference-centers" },
+      { "name": "Publications", "link": "/publications" }
+    ]
+  }
+  

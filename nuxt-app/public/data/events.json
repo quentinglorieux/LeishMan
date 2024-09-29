@@ -1,0 +1,44 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "title": "Annual Conference",
+      "date": "2024-11-05",
+      "location": "Paris, France",
+      "description": "Join us for our annual conference...",
+      "image": "images/annual_conference.png"
+    },
+    {
+      "id": 2,
+      "title": "Workshop on Quantum Physics",
+      "date": "2024-12-10",
+      "location": "Berlin, Germany",
+      "description": "A hands-on workshop on quantum simulations...",
+      "image": "images/quantum_physics.png"
+    },
+    {
+      "id": 3,
+      "title": "Symposium on Artificial Intelligence in Healthcare",
+      "date": "2024-09-18",
+      "location": "London, UK",
+      "description": "An insightful symposium discussing AI's role in modern healthcare.",
+      "image": ""
+    },
+    {
+      "id": 4,
+      "title": "Seminar on Climate Change and Public Health",
+      "date": "2024-10-25",
+      "location": "New York, USA",
+      "description": "A seminar exploring the intersection of climate change and its impact on global public health.",
+      "image": ""
+    },
+    {
+      "id": 5,
+      "title": "Bioinformatics Workshop",
+      "date": "2024-08-20",
+      "location": "Amsterdam, Netherlands",
+      "description": "A practical workshop focused on bioinformatics tools and techniques.",
+      "image": ""
+    }
+  ]
+}

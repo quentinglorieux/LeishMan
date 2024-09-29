@@ -1,0 +1,53 @@
+{
+  "news": [
+    {
+      "id": 1,
+      "title": "New Research Breakthrough",
+      "date": "2024-09-20",
+      "excerpt": "Our team has made a significant discovery...",
+      "image": ""
+    },
+    {
+      "id": 2,
+      "title": "Award Received",
+      "date": "2024-08-15",
+      "excerpt": "We are honored to receive the prestigious award...",
+      "image": ""
+    },
+    {
+      "id": 3,
+      "title": "Partnership with Global Health Organization",
+      "date": "2024-07-30",
+      "excerpt": "We have entered a strategic partnership to tackle global health challenges.",
+      "image": ""
+    },
+    {
+      "id": 4,
+      "title": "Publication of New Study on Virology",
+      "date": "2024-06-10",
+      "excerpt": "Our latest research on virology has been published in a leading journal.",
+      "image": ""
+    },
+    {
+      "id": 5,
+      "title": "New State-of-the-Art Laboratory Opened",
+      "date": "2024-05-25",
+      "excerpt": "We have inaugurated a new lab with cutting-edge technology to enhance research.",
+      "image": ""
+    },
+    {
+      "id": 6,
+      "title": "Conference on Quantum Physics Success",
+      "date": "2024-05-10",
+      "excerpt": "The recent conference on quantum physics attracted leading experts from around the world.",
+      "image": ""
+    },
+    {
+      "id": 7,
+      "title": "New Grants Awarded for Immunology Research",
+      "date": "2024-04-15",
+      "excerpt": "Several grants have been awarded to support groundbreaking research in immunology.",
+      "image": ""
+    }
+  ]
+}
