@@ -24,7 +24,7 @@
       <!-- Columns -->
       <Column header="Center Name" field="name" filter sortable>
         <template #body="slotProps">
-          <a :href="slotProps.data.link" target="_blank" class="text-blue-500 hover:underline">
+          <a :href="slotProps.data.link" target="_blank" class="text-blue-700 font-medium hover:underline">
             {{ slotProps.data.name }}
           </a>
         </template>

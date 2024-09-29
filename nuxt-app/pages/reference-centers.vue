@@ -1,10 +1,10 @@
 <template>
-    <div class="reference-centers-page">
-      <h1 class="text-3xl font-bold mb-6">Reference Centres</h1>
+    <div class="reference-centers-page ">
+      <h1 class="text-3xl font-bold mb-6 pt-10  ">Reference Centres</h1>
   
-      <!-- Google Map
+      <!-- Google Map  -->
       <ReferenceMap />
-       -->
+     
   
       <!-- Filterable and Searchable Table -->
       <div class="mt-8">
