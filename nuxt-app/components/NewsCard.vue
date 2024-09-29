@@ -11,7 +11,7 @@
       </div>
       <div class="px-6 py-4 flex justify-between items-center">
         <span class="text-sm text-gray-600">{{ formattedDate }}</span>
-        <nuxt-link :to="newsItem.link" class="text-pasteur-blue hover:underline">Read More</nuxt-link>
+        <nuxt-link :to="`/news/${newsItem.id}`" class="text-pasteur-blue hover:underline">Read More</nuxt-link>
       </div>
     </div>
   </template>

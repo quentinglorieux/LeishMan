@@ -13,7 +13,7 @@
         <span class="block text-sm text-gray-600">Location: {{ eventItem.location }}</span>
       </div>
       <div class="px-6 py-4">
-        <nuxt-link :to="eventItem.title" class="bg-pasteur-blue text-white px-4 py-2 rounded hover:bg-pasteur-dark">Learn More</nuxt-link>
+        <nuxt-link :to="`/event/${eventItem.id}`" class="bg-pasteur-blue text-white px-4 py-2 rounded hover:bg-pasteur-dark">Learn More</nuxt-link>
       </div>
     </div>
   </template>

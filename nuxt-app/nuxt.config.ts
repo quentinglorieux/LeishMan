@@ -17,9 +17,6 @@ export default defineNuxtConfig({
     'primevue/resources/primevue.min.css', // PrimeVue core CSS
     'primeicons/primeicons.css', // PrimeIcons
   ],
-  buildModules: [
-    '@nuxtjs/style-resources',
-  ],
   plugins: [
     '@/plugins/primevue.js', 
   ],

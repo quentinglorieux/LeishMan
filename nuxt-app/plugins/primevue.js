@@ -7,7 +7,6 @@ import Dropdown from 'primevue/dropdown';
 import Paginator from 'primevue/paginator';
 
 export default defineNuxtPlugin((nuxtApp) => {
-  // Tell Nuxt to use PrimeVue for the Vue app
   nuxtApp.vueApp.use(PrimeVue);
 
   // Register PrimeVue components globally
