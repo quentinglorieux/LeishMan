@@ -1,24 +1,24 @@
 <template>
-  <div>
+  <div >
     <!-- Hero Section -->
     <section class="bg-pasteur-blue text-white py-16">
       <div class="container mx-auto text-center">
         <h1 class="text-4xl font-bold">About Us</h1>
         <p class="mt-4 text-lg max-w-2xl mx-auto">
           Learn more about our mission, vision, and the amazing team behind the
-          Pasteur Network.
+          LeishMan Network.
         </p>
       </div>
     </section>
 
     <!-- About Content Section -->
     <section class="py-16">
-      <div class="container mx-auto grid md:grid-cols-2 gap-8">
+      <div class="container mx-auto grid md:grid-cols-2 gap-8 px-10">
         <!-- Text Content -->
         <div>
           <h2 class="text-3xl font-bold mb-4">Our Mission</h2>
           <p class="text-gray-700 leading-loose mb-6">
-            The Pasteur Network connects a global community of researchers
+            The LeishMan Network connects a global community of researchers
             dedicated to promoting scientific excellence and fostering
             innovation to improve public health worldwide. Our mission is to
             bring together experts, share knowledge, and collaborate on
@@ -51,7 +51,7 @@
           />
           <h2 class="text-3xl font-bold mb-4">Our History</h2>
           <p class="text-gray-700 leading-loose">
-            Established in 1887, the Pasteur Network has been a pioneer in
+            Established in 1987, the LeishMan Network has been a pioneer in
             scientific discoveries that have shaped the world. From
             breakthroughs in vaccination to disease control, we have always been
             at the forefront of medical research and innovation.
@@ -61,7 +61,7 @@
     </section>
 
     <!-- Team or Key Figures Section (Optional) -->
-    <section class="py-16 bg-gray-100">
+    <section class="py-16 bg-gray-100 px-10">
       <div class="container mx-auto text-center">
         <h2 class="text-3xl font-bold mb-6">Meet Our Team</h2>
         <div class="grid md:grid-cols-3 gap-8">

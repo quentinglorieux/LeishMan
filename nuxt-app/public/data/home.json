@@ -1,8 +1,8 @@
 {
     "hero": {
-      "title": "Welcome to Pasteur Network",
+      "title": "Welcome to LeishMan Network",
       "subtitle": "A global network dedicated to scientific excellence.",
-      "heroImage": "/hero-bg.jpg"
+      "heroImage": "images/banner2.jpg"
     }
   }
   
