@@ -1,7 +1,7 @@
 [build]
   # The base directory where the Nuxt.js app is located
-  base = "packages/nuxt-app"
-  publish = "packages/nuxt-app/.output/public"  # The directory to publish
+  base = "nuxt-app"
+  publish = "nuxt-app/.output/public"  # The directory to publish
   command = "npm install && npm run build"  # The build command
 
 # Redirects and headers can be defined here if needed
