@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import Aura from '@primevue/themes/aura';
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
@@ -13,13 +15,15 @@ export default defineNuxtConfig({
   },
   css: [
     '@/assets/css/tailwind.css',
-    'primevue/resources/themes/saga-blue/theme.css', // PrimeVue theme
-    'primevue/resources/primevue.min.css', // PrimeVue core CSS
     'primeicons/primeicons.css', // PrimeIcons
   ],
-  plugins: [
-    '@/plugins/primevue.js', 
-  ],
+  primevue: {
+      options: {
+          theme: {
+              preset: Aura
+          }
+      }
+  }
 })
 
 
