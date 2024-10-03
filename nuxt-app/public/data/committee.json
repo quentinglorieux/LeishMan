@@ -1,0 +1,36 @@
+{
+  "members": [
+    {
+      "id": 1,
+      "name": "Pierre Buffet",
+      "email_adress": "buffet@leishman.fr",
+      "isCommittee": true,
+      "role": "MD, PhD, Coordinator",
+      "image": "images/noprofile.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Gert Van der Auwera ",
+      "email_adress": "auwera@leisman.fr",
+      "isCommittee": true,
+      "role": "PhD",
+      "image": "images/noprofile.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Clea Melenotte",
+      "email_adress": "melenotte@leisman.fr",
+      "isCommittee": true,
+      "role": "MD, PhD",
+      "image": "images/noprofile.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Sara Sobirk",
+      "email_adress": "sobirk@leisman.fr",
+      "isCommittee": true,
+      "role": "MD, PhD",
+      "image": "images/noprofile.jpg"
+    }
+  ]
+}

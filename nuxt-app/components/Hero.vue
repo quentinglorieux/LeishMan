@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="data.hero"
-    class="relative bg-cover bg-center h-[500px] pt-16"
+    class="relative bg-cover bg-center h-[500px] pt-16 z-1"
     :style="{ backgroundImage: `url(${data.hero?.heroImage})` }"
   >
     <div class="absolute inset-0 bg-black opacity-50"></div>

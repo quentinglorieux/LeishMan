@@ -40,5 +40,93 @@
       "description": "A practical workshop focused on bioinformatics tools and techniques.",
       "image": ""
     }
+  ],
+
+  "seminars": [
+    {
+      "id": 1,
+      "title": "Leishmaniasis Overview: Global Health Challenge",
+      "date": "2024-11-05",
+      "location": "Paris, France",
+      "description": "This seminar explores the impact of leishmaniasis, a neglected tropical disease, its epidemiology, transmission through sandfly vectors, and its global health implications. Participants will gain insights into the types (cutaneous, visceral, mucocutaneous) and strategies for prevention and control.",
+      "image": "images/annual_conference.png"
+    },
+    {
+      "id": 2,
+      "title": "Clinical Diagnosis and Treatment of Leishmaniasis",
+      "date": "2024-12-10",
+      "location": "Berlin, Germany",
+      "description": "Focused on the clinical presentation and diagnosis of leishmaniasis, this seminar will cover modern diagnostic techniques and the latest advances in treatment options, including drug therapies and challenges in managing drug resistance.",
+      "image": "images/leishmanioses.jpg"
+    },
+    {
+      "id": 3,
+      "title": "Vector Biology and Transmission of Leishmaniasis",
+      "date": "2024-09-18",
+      "location": "London, UK",
+      "description": "In this session, we dive into the life cycle of the Leishmania parasite, the biology of sandfly vectors, and environmental factors contributing to disease spread. Strategies for vector control and challenges in public health will also be discussed.",
+      "image": "images/placeholder.png"
+    },
+    {
+      "id": 4,
+      "title": "Immunology and Pathogenesis of Leishmaniasis",
+      "date": "2024-10-25",
+      "location": "New York, USA",
+      "description": "This seminar addresses the immune response to Leishmania infection, including host-pathogen interactions, immune evasion strategies of the parasite, and implications for vaccine development and immunotherapies.",
+      "image": "images/placeholder.png"
+    },
+    {
+      "id": 5,
+      "title": "Leishmaniasis: Public Health Policies and Global Strategies",
+      "date": "2024-08-20",
+      "location": "Amsterdam, Netherlands",
+      "description": "Participants will explore the role of public health policy in combating leishmaniasis, from global efforts led by WHO to local strategies for disease control. The focus will be on case studies, surveillance systems, and ",
+      "image": "images/placeholder.png"
+    }
+  ],
+
+  "projects": [
+    {
+      "id": 1,
+      "title": "The Main Project",
+      "date": "2024-11-05",
+      "location": "Paris, France",
+      "description": "The real project",
+      "image": "images/placeholer.png"
+    },
+    {
+      "id": 2,
+      "title": "Project 0",
+      "date": "2024-12-10",
+      "location": "Berlin, Germany",
+      "description": "What a project",
+      "image": "images/placeholer.png"
+    },
+    {
+      "id": 3,
+      "title": "Project Leishman",
+      "date": "2024-09-18",
+      "location": "London, UK",
+      "description": "An insightful symposium discussing AI's role in modern healthcare.",
+      "image": "images/placeholer.png"
+    }
+  ],
+  "collaborations": [
+    {
+      "id": 1,
+      "title": "CNR Leishmaniose France",
+      "date": "2024-11-05",
+      "location": "Paris, France",
+      "link": "https://cnr-leish.edu.umontpellier.fr/conseil-therapeutique/",
+      "image": "images/placeholer.png"
+    },
+    {
+      "id": 2,
+      "title": "OMS",
+      "date": "2024-12-10",
+      "location": "Berlin, Germany",
+      "description": "What a project",
+      "image": "images/placeholer.png"
+    }
   ]
 }

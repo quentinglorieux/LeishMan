@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-4xl font-bold text-center my-8">Events</h1>
+    <Titleheader title="Events" />
     <div class="container mx-auto">
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <EventCard

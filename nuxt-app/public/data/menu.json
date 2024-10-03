@@ -2,26 +2,32 @@
   "menuItems": [
     {
       "name": "The Network",
-      "link": "#",
+      "link": "/about",
       "icon": "zondicons:network",
       "submenu": [
         { "name": "About LeishMan", "link": "/about" },
+        { "name": "Global Network", "link": "/reference-centers" },
         { "name": "Steering Committee", "link": "/steering" }
       ]
     },
     {
-      "name": "What We Do",
+      "name": "What We Do ?",
       "icon": "grommet-icons:workshop",
-      "link": "#",
+      "link": "/news",
       "submenu": [
-        { "name": "Seminar", "link": "/seminar" },
-        { "name": "Network Meeting", "link": "/network-meeting" }
+        { "name": "Seminar/meeting", "link": "/activities#seminar" },
+        { "name": "On-going Projects", "link": "/activities#project" },
+        { "name": "Collaborations", "link": "/activities#collaborations" }
       ]
     },
     {
-      "name": "Reference Centers",
-      "icon": "medical-icon:laboratory",
-      "link": "/reference-centers"
+      "name": "LeishMania",
+      "icon": "i-heroicons-light-bulb",
+      "link": "/LeishMania",
+      "submenu": [
+        { "name": "Gallery", "link": "/gallery" },
+        { "name": "protocols", "link": "/protocols" }
+      ]
     },
     {
       "name": "Publications",
