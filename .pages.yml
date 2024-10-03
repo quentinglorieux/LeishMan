@@ -1,0 +1,63 @@
+media: media
+content:
+  - name: members
+    label: Members
+    type: collection
+    path: '_members'
+    view:
+      fields: [ lastname, firstname, laboratory, activities ]
+    fields:
+      - name: lastname
+        label: Lastname
+        type: string
+      - name: firstname
+        label: Firstname
+        type: string
+      - name: laboratory
+        label: Laboratory
+        type: string
+      - name: activities
+        label: Activities
+        type: rich-text
+  - name: laboratories
+    label: Laboratories
+    type: collection
+    path: '_labo'
+    view:
+      fields: [ name, GPS, head, logo, description ]
+    fields:
+      - name: name
+        label: Name
+        type: string
+      - name: GPS
+        label: GPS
+        type: number
+      - name: logo
+        label: Logo
+        type: image
+      - name: description
+        label: Description
+        type: rich-text
+  - name: events
+    label: Events
+    type: collection
+    path: '_event'
+    view:
+      fields: [ title,type,  date, description, image ]
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: type
+        label: Type
+        type: string
+        list: true
+      - name: date
+        label: Date
+        type: date
+      - name: image
+        label: Image
+        type: image
+      - name: description
+        label: Description
+        type: rich-text
