@@ -6,7 +6,7 @@
         <!-- Logo -->
         <nuxt-link to="/">
           <div class="flex items-center space-x-3">
-            <img src="/images/logo.png" alt="LeishMan Network" class="h-10" />
+            <!-- <img src="/images/logo.png" alt="LeishMan Network" class="h-10" /> -->
             <h1 class="text-2xl font-bold text-black tracking-wide">
               LEISHMAN NETWORK
             </h1>

@@ -6,6 +6,7 @@
       "icon": "zondicons:network",
       "submenu": [
         { "name": "About LeishMan", "link": "/about" },
+        { "name": "Contact", "link": "/contact" },
         { "name": "Global Network", "link": "/reference-centers" },
         { "name": "Steering Committee", "link": "/steering" }
       ]

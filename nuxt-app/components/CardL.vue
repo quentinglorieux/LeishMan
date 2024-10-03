@@ -2,10 +2,12 @@
   <div
     class="block m-4 px-2 py-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
   >
-    <h3 class="p-4 md:uppercase">{{ title }}</h3>
+    <div class="flex">
+      <h3 class="p-4 md:uppercase">{{ title }}</h3>
 
-    <div class="sm:w-5/6 p-4">
-      {{ location }}
+      <div class="sm:w-5/6 p-4">
+        {{ location }}
+      </div>
     </div>
     <div class="sm:flex">
       <div class="align-baseline">
