@@ -50,8 +50,9 @@ content:
         type: string
       - name: type
         label: Type
-        type: string
-        list: true
+        type: select
+        options:
+          values: [seminar,meeting,publication]
       - name: date
         label: Date
         type: date
