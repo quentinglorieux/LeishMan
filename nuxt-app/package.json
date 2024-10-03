@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@nuxtjs/style-resources": "^1.2.2",
+    "@pinia/nuxt": "^0.5.5",
     "@primevue/themes": "^4.0.7",
     "nuxt": "^3.13.0",
+    "pinia": "^2.2.4",
     "primeicons": "^7.0.0",
     "primevue": "^4.0.7",
     "vue": "latest",
