@@ -92,7 +92,7 @@
       "date": "2024-11-05",
       "location": "Paris, France",
       "description": "The real project",
-      "image": "images/placeholer.png"
+      "image": "images/project1.jpg"
     },
     {
       "id": 2,
@@ -100,7 +100,7 @@
       "date": "2024-12-10",
       "location": "Berlin, Germany",
       "description": "What a project",
-      "image": "images/placeholer.png"
+      "image": "images/project2.jpg"
     },
     {
       "id": 3,
@@ -108,7 +108,7 @@
       "date": "2024-09-18",
       "location": "London, UK",
       "description": "An insightful symposium discussing AI's role in modern healthcare.",
-      "image": "images/placeholer.png"
+      "image": "images/project3.jpg"
     }
   ],
   "collaborations": [
@@ -118,7 +118,7 @@
       "date": "2024-11-05",
       "location": "Paris, France",
       "link": "https://cnr-leish.edu.umontpellier.fr/conseil-therapeutique/",
-      "image": "images/placeholer.png"
+      "image": "images/placeholder.png"
     },
     {
       "id": 2,
@@ -126,7 +126,15 @@
       "date": "2024-12-10",
       "location": "Berlin, Germany",
       "description": "What a project",
-      "image": "images/placeholer.png"
+      "image": "images/oms.png"
+    },
+    {
+      "id": 2,
+      "title": "Pierre Buffet",
+      "date": "2024-12-10",
+      "location": "Berlin, Germany",
+      "description": "What a project",
+      "image": "images/placeholder.png"
     }
   ]
 }
