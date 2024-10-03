@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <!-- Hero Section -->
     <section class="bg-pasteur-blue text-white py-16">
       <div class="container mx-auto text-center">
@@ -112,5 +112,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

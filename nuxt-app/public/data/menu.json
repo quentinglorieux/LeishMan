@@ -1,23 +1,39 @@
 {
-    "menuItems": [
-      {
-        "name": "The Network",
-        "link": "#",
-        "submenu": [
-          { "name": "About LeishMan", "link": "/about" },
-          { "name": "Steering Committee", "link": "/steering" }
-        ]
-      },
-      {
-        "name": "What We Do",
-        "link": "#",
-        "submenu": [
-          { "name": "Seminar", "link": "/seminar" },
-          { "name": "Network Meeting", "link": "/network-meeting" }
-        ]
-      },
-      { "name": "Reference Centers", "link": "/reference-centers" },
-      { "name": "Publications", "link": "/publications" }
-    ]
-  }
-  
+  "menuItems": [
+    {
+      "name": "The Network",
+      "link": "/about",
+      "icon": "zondicons:network",
+      "submenu": [
+        { "name": "About LeishMan", "link": "/about" },
+        { "name": "Contact", "link": "/contact" },
+        { "name": "Global Network", "link": "/reference-centers" },
+        { "name": "Steering Committee", "link": "/steering" }
+      ]
+    },
+    {
+      "name": "What We Do ?",
+      "icon": "grommet-icons:workshop",
+      "link": "/news",
+      "submenu": [
+        { "name": "Seminar/meeting", "link": "/activities#seminar" },
+        { "name": "On-going Projects", "link": "/activities#project" },
+        { "name": "Collaborations", "link": "/activities#collaborations" }
+      ]
+    },
+    {
+      "name": "LeishMania",
+      "icon": "i-heroicons-light-bulb",
+      "link": "/LeishMania",
+      "submenu": [
+        { "name": "Gallery", "link": "/gallery" },
+        { "name": "protocols", "link": "/protocols" }
+      ]
+    },
+    {
+      "name": "Publications",
+      "icon": "i-heroicons-light-bulb",
+      "link": "/publications"
+    }
+  ]
+}
