@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4">
+  <div class="mx-auto px-4 bg-white dark:bg-slate-800">
     <Titleheader title="Full List of Publications" />
     <!-- Year Filter -->
     <div class="flex flex-wrap space-x-2 mb-6">
@@ -11,7 +11,7 @@
           'py-2 px-4 rounded-full text-sm',
           {
             'bg-gray-300 text-black': selectedYear === year,
-            'bg-gray-100 text-gray-600': selectedYear !== year,
+            'bg-gray-100 text-gray-600 ': selectedYear !== year,
           },
         ]"
       >
@@ -19,14 +19,18 @@
       </button>
       <button
         @click="filterByYear('all')"
-        class="py-2 px-4 rounded-full bg-gray-100 text-gray-600 text-sm"
+        class="py-2 px-4 rounded-full bg-gray-100 text-gray-600 text-sm dark:text-gray-600"
       >
         All
       </button>
     </div>
 
     <!-- Publications List -->
-    <div v-for="(works, year) in filteredPublications" :key="year">
+    <div
+      class="dark:bg-slate-800 dark:text-gray-300"
+      v-for="(works, year) in filteredPublications"
+      :key="year"
+    >
       <h2 class="text-2xl font-semibold mt-6">{{ year }}</h2>
       <ul>
         <li v-for="work in works" :key="work.id" class="mb-4">
@@ -34,12 +38,12 @@
             <a
               :href="work.primary_location.landing_page_url"
               target="_blank"
-              class="hover:underline text-black"
+              class="hover:underline text-black dark:text-gray-300"
             >
               {{ work.title }}
             </a>
           </div>
-          <div class="text-gray-600 mb-2">
+          <div class="text-gray-600 mb-2 dark:text-gray-300">
             <span
               v-for="author in work.authorships"
               :key="author.author.id"

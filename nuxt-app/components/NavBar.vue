@@ -1,13 +1,15 @@
 <template>
   <div class="w-screen">
-    <header class="bg-white shadow-md z-10">
+    <header class="bg-white shadow-md z-10 dark:bg-slate-600">
       <!-- Logo and Navigation -->
       <div class="container mx-auto flex justify-between items-center p-4">
         <!-- Logo -->
         <nuxt-link to="/">
           <div class="flex items-center space-x-3">
             <!-- <img src="/images/logo.png" alt="LeishMan Network" class="h-10" /> -->
-            <h1 class="text-2xl font-bold text-black tracking-wide">
+            <h1
+              class="text-2xl font-bold text-black tracking-wide dark:text-white"
+            >
               LEISHMAN NETWORK
             </h1>
           </div>
@@ -20,7 +22,7 @@
           <div
             v-for="(item, index) in menuItems"
             :key="item.name"
-            class="flex items-center"
+            class="flex items-center dark:text-white"
           >
             <!-- Add a vertical bar except for the first menu item -->
             <div
@@ -37,12 +39,12 @@
               <!-- Render submenu if it exists -->
               <ul
                 v-if="item.submenu"
-                class="absolute hidden group-hover:block bg-white shadow-lg p-2 space-y-2 text-gray-700 z-20"
+                class="absolute hidden group-hover:block bg-white shadow-lg p-2 space-y-2 text-gray-700 dark:bg-slate-600 z-20"
               >
                 <li v-for="sub in item.submenu" :key="sub.name">
                   <nuxt-link
                     :to="sub.link"
-                    class="hover:text-blue-600 text-sm"
+                    class="hover:text-blue-600 text-sm dark:text-white"
                     >{{ sub.name }}</nuxt-link
                   >
                 </li>
@@ -51,23 +53,9 @@
           </div>
         </nav>
 
-        <!-- Language and Search -->
+        <!-- ColorMode -->
         <div class="flex items-center space-x-6">
-          <!-- Language Switch 
-        <div class="text-blue-600">
-          <a href="#" class="hover:underline">EN</a> | <a href="#" class="hover:underline">FR</a>
-        </div>
-        -->
-
-          <!-- Search Bar -->
-          <div class="relative">
-            <input
-              type="text"
-              placeholder="Search"
-              class="bg-gray-100 border border-gray-300 rounded-full py-2 px-2 xl:px-10 text-sm focus:outline-none focus:ring focus:ring-blue-300"
-            />
-            <button class="absolute right-3 top-2 text-blue-600"></button>
-          </div>
+          <div><ColorMode /></div>
         </div>
       </div>
 
@@ -76,23 +64,11 @@
 
       <!-- Mobile Menu Button -->
       <button
-        class="lg:hidden block p-4 focus:outline-none"
+        class="lg:hidden block p-2 focus:outline-none"
         @click="toggleMenu"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16m-7 6h7"
-          />
-        </svg>
+        <UIcon name="fa:bars" class="w-8 h-8 text-black dark:text-white">
+        </UIcon>
       </button>
 
       <!-- Mobile Navigation -->
@@ -117,7 +93,7 @@
         </div>
       </transition>
       <aside
-        class="dark:bg-gray-800 p-10 transform top-0 left-0 w-64 bg-slate-200 fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30"
+        class="p-10 transform top-0 left-0 w-64 bg-gray-100 text-gray-600 dark:bg-slate-600 dark:text-gray-100 fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30"
         :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
       >
         <div class="close">
@@ -138,8 +114,6 @@
             </svg>
           </button>
         </div>
-
-        <!-- <Tailwind /> -->
 
         <div
           class="border-b-2 border-blue-600 font-sans py-2"
