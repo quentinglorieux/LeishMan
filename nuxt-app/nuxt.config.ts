@@ -2,7 +2,7 @@
 import Aura from '@primevue/themes/aura';
 
 export default defineNuxtConfig({
-  // ssr: true, // Enable SSR
+  ssr: true, // Enable SSR
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   components: true, // Ensure auto-import for components is enabled

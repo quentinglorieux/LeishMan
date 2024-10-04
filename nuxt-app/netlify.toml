@@ -2,10 +2,10 @@
   # The base directory where the Nuxt.js app is located
   base = "nuxt-app"
   publish = "nuxt-app/dist"  # The directory to publish
-  command = "npm install && npm run build"  # The build command
+  command = "npm run build"  # The build command
 
 # Redirects and headers can be defined here if needed
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/.netlify/functions/server"
   status = 200
