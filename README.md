@@ -1,4 +1,4 @@
-`# LeishMan Site
+# LeishMan Site
 - git clone
 - get the .env file from me 😀
 - install directus with docker (`docker compose up`)

@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen">
-    <div id="seminar" class="p-10 bg-slate-100">
+    <div id="seminar" class="p-10 bg-slate-200 text-gray-800 dark:bg-slate-400">
       <Titleheader title="Seminars"> </Titleheader>
 
       <p class="m-10"></p>
@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div id="project" class="py-10 bg-white">
+    <div id="project" class="py-10 bg-white text-gray-800 dark:bg-slate-500">
       <div>
         <Titleheader id="project" title="Projects"> </Titleheader>
         <div class="md:w-9/12 mx-auto">
@@ -54,7 +54,10 @@
       </div>
     </div>
 
-    <div id="collaborations" class="p-10 bg-blue-100">
+    <div
+      id="collaborations"
+      class="p-10 bg-slate-200 text-gray-800 dark:bg-slate-400"
+    >
       <Titleheader title="Collaborations"></Titleheader>
       <div class="md:w-9/12 mx-auto">
         <UCarousel
