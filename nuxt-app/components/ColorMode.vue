@@ -1,31 +1,33 @@
 <template>
-  <div>
-    <input
-      type="checkbox"
-      class="checkbox"
-      id="checkbox"
-      v-model="store.isDark"
+  <div class="dark:bg-slate-600">
+    <UButton
+      v-if="colorMode.value == 'dark'"
+      icon="material-symbols:nightlight"
+      color="white"
+      class="w-6 h-6"
+      @click="changeColorMode"
     />
-    <label for="checkbox" class="checkbox-label">
-      <Icon id="moon" name="material-symbols:nightlight" />
-      <Icon id="sun" name="mdi:white-balance-sunny" />
-
-      <span class="ball"></span>
-    </label>
+    <UButton
+      v-else
+      class="w-6 h-6"
+      icon="mdi:white-balance-sunny"
+      @click="changeColorModeDark"
+    />
   </div>
 </template>
 
 <script setup>
 const colorMode = useColorMode();
-import { useLogginStore } from "~/stores/store";
-const store = useLogginStore();
-watch(store, () => {
-  if (store.isDark) {
-    colorMode.preference = "dark";
-  } else {
-    colorMode.preference = "light";
-  }
-});
+function changeColorMode() {
+  console.log("sdfsdf");
+  colorMode.value = "light";
+  colorMode.preference = "light";
+}
+function changeColorModeDark() {
+  console.log("sf");
+  colorMode.value = "dark";
+  colorMode.preference = "dark";
+}
 </script>
 
 <style lang="postcss">
