@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/nitro": "^0.10.0",
     "@nuxtjs/style-resources": "^1.2.2",
     "@primevue/themes": "^4.0.7",
     "nuxt": "^3.13.0",
