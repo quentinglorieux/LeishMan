@@ -22,7 +22,7 @@ content:
       - name: description
         label: Description
         type: rich-text
-  - name: events_home
+  - name: events_home_coll
     label: Events HomeJSON collection
     type: file
     path: "nuxt-app/public/data/events_home_coll.json"
