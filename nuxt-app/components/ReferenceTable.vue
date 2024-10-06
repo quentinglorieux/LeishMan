@@ -1,89 +1,70 @@
-<template>
-  <div>
-    <!-- PrimeVue DataTable with global filter and alternate row styling -->
-    <DataTable
-      :value="referenceCenters"
-      paginator
-      :rows="10"
-      :filters="filters"
-      :responsiveLayout="'scroll'"
-      :globalFilterFields="['name', 'country', 'city', 'representatives']"
-      :class="{'p-datatable-striped': true, 'p-datatable-gridlines': true}"
-    >
-      <!-- Search bar for global search -->
-      <template #header>
-        <div class="table-header">
-          <span class="text-lg font-semibold">Participating Reference Centres</span>
-          <span class="p-input-icon-right">
-            <i class="pi pi-search" />
-            <InputText v-model="filters['global'].value" placeholder="Search" />
-          </span>
-        </div>
-      </template>
+<script setup lang="ts">
+const columns = [
+  {
+    key: "name",
+    label: "Center Name",
+    sortable: true,
+  },
+  {
+    key: "country",
+    label: "Country",
+    sortable: true,
+  },
+  {
+    key: "city",
+    label: "City",
+    sortable: true,
+  },
+  {
+    key: "mtgs",
+    label: "Speciality",
+  },
+  { key: "representatives", label: "Representative(s)" },
+];
 
-      <!-- Columns -->
-      <Column header="Center Name" field="name" filter sortable>
-        <template #body="slotProps">
-          <a :href="slotProps.data.link" target="_blank" class="text-blue-700 font-medium hover:underline">
-            {{ slotProps.data.name }}
-          </a>
-        </template>
-      </Column>
-      <Column field="country" header="Country" filter sortable />
-      <Column field="city" header="City" filter sortable />
-      <Column field="mtgs" header="Speciality" />
-      <Column field="representatives" header="Representative(s)" />
-    </DataTable>
-  </div>
-</template>
+const referenceCenters = ref([]);
 
-<script setup>
-
-// State for reference centers
-const referenceCenters = ref([])
-
-// Define global filter
-const filters = ref({
-  global: { value: null, matchMode: 'contains' }
-})
+const q = ref("");
 
 onMounted(async () => {
   try {
-    const response = await fetch('/data/reference-centers.json')
-    const data = await response.json()
-    referenceCenters.value = data.centers
+    const response = await fetch("/data/reference-centers.json");
+    const data = await response.json();
+    referenceCenters.value = data.centers;
   } catch (error) {
-    console.error('Error fetching reference center data:', error)
+    console.error("Error fetching reference center data:", error);
   }
-})
+});
+
+const filteredRows = computed(() => {
+  if (!q.value) {
+    return referenceCenters.value;
+  }
+
+  return referenceCenters.value.filter((lab) => {
+    return Object.values(lab).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase());
+    });
+  });
+});
 </script>
 
-<style scoped>
-/* Styling for alternate rows and general table styling */
-.p-datatable .p-datatable-tbody > tr:nth-child(even) {
-  background-color: #f9f9f9;  /* Light gray alternate rows */
-}
+<template>
+  <div class="bg-white dark:bg-slate-700 dark:text-white mb-10">
+    <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
+      <UInput v-model="q" placeholder="Filter people..." />
+    </div>
 
-.p-datatable .p-datatable-tbody > tr:hover {
-  background-color: #e6e6e6;  /* Darker gray on hover */
-}
-
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.p-input-icon-right .pi-search {
-  margin-right: 0.5rem;
-}
-
-a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-</style>
+    <UTable
+      style="color: white"
+      loading
+      :loading-state="{
+        icon: 'i-heroicons-arrow-path-20-solid',
+        label: 'Loading...',
+      }"
+      class="dark:text-white"
+      :rows="filteredRows"
+      :columns="columns"
+    />
+  </div>
+</template>

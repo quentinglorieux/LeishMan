@@ -7,8 +7,6 @@ import {
   InfoWindow,
   MarkerCluster,
 } from "vue3-google-map";
-const config = useRuntimeConfig();
-const apikey = config.ggAPIkey;
 
 const center = { lat: 48.866667, lng: 2.333 };
 // const center = { lat: 52.36834, lng: 4.88635 };
@@ -24,11 +22,13 @@ const locations = [
   { lat: 43.866667, lng: 5.333, info: "Labo 7" },
   { lat: 40.866667, lng: 2.233, info: "Labo 8" },
 ];
+
+const config = useRuntimeConfig();
+const api_key = config.apiSecret;
 </script>
 <template>
-  <div>{{ apikey }}</div>
   <GoogleMap
-    :api-key="apikey"
+    :api-key="api_key"
     style="width: 100%; height: 500px"
     :center="center"
     :zoom="5"
