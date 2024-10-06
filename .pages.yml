@@ -65,7 +65,7 @@ content:
   - name: aboutUs
     label: About Us
     type: file
-    path: 'nuxt-app/pages/aboutUs.md'
+    path: '_about.md'
     fields:
       - name: title1
         label: Title1
