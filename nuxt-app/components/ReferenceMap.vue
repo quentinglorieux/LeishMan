@@ -24,7 +24,8 @@ const locations = [
 ];
 
 const config = useRuntimeConfig();
-const api_key = config.apiSecret;
+const api_key = config.public.publicApiKey;
+
 </script>
 <template>
   <GoogleMap
