@@ -1,5 +1,4 @@
 [build]
-  # The base directory where the Nuxt.js app is located
   base = "nuxt-app"
-  command = "nuxi generate"  # The build command
+  command = "nuxi generate"
 

@@ -6,4 +6,5 @@ node_modules
 .env
 dist/
 .output/
+nuxt-app/dist
 

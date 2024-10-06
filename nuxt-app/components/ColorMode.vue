@@ -19,12 +19,10 @@
 <script setup>
 const colorMode = useColorMode();
 function changeColorMode() {
-  console.log("sdfsdf");
   colorMode.value = "light";
   colorMode.preference = "light";
 }
 function changeColorModeDark() {
-  console.log("sf");
   colorMode.value = "dark";
   colorMode.preference = "dark";
 }

@@ -29,7 +29,6 @@ onMounted(async () => {
   try {
     const response = await fetch("/data/home.json");
     data.value = await response.json();
-    console.log(data.value); // Debugging to ensure data is loaded correctly
   } catch (error) {
     console.error("Error loading the JSON:", error);
   }
