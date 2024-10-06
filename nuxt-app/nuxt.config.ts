@@ -13,7 +13,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     gmapsApiKey: process.env.GOOGLE_MAPS_API_KEY || 'wrong_key', 
     public: {
-      publicApiKey: process.env.GOOGLE_MAPS_API_KEY || 'public' 
+      publicApiKey: process.env.GOOGLE_MAPS_API_KEY || 'public',
+      cms: process.env.CMS || 'sveltia',
     }
   }
 
