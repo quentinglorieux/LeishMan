@@ -1,5 +1,29 @@
 media: media
 content:
+  - name: events_home
+    label: Events Home JSON
+    type: file
+    path: 'nuxt_app/public/data/events_home.json'
+    view:
+      fields: [ title,type,  date, description, image ]
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: type
+        label: Type
+        type: select
+        options:
+          values: [seminar,meeting,publication]
+      - name: date
+        label: Date
+        type: date
+      - name: image
+        label: Image
+        type: image
+      - name: description
+        label: Description
+        type: rich-text
   - name: members
     label: Members
     type: collection
