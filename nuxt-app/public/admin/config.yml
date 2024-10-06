@@ -6,16 +6,21 @@ media_folder: static/img
 public_folder: /img
 
 collections:
-  - name: 'blog'
-    label: 'Blog'
-    folder: 'content/blog'
-    format: 'frontmatter'
-    create: true
-    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
-    editor:
-      preview: false
-    fields:
-      - { label: 'Title', name: 'title', widget: 'string' }
-      - { label: 'Publish Date', name: 'date', widget: 'datetime' }
-      - { label: 'Description', name: 'description', widget: 'string' }
-      - { label: 'Body', name: 'body', widget: 'markdown' }
+  - label: "Events"
+    name: "events"
+    files:
+      - label: "About Page"
+        name: "about"
+        file: "data/events_decap.json"
+        fields:
+          - {label: Title, name: title, widget: string}
+          - {label: Description, name: description, widget: markdown}
+          - {label: Location, name: location, widget: string}
+          - label: "Image"
+            name: "image"
+            widget: "image"
+            choose_url: true
+            default: ""
+            media_library:
+              config:
+                multiple: false
