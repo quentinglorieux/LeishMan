@@ -62,3 +62,15 @@ content:
       - name: description
         label: Description
         type: rich-text
+  - name: aboutUs
+    label: About Us
+    type: file
+    path: '_about'
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: paragraph
+        label: Paragraph
+        type: rich-text
+        list: true
