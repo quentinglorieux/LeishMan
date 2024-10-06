@@ -1,6 +1,5 @@
 [build]
   # The base directory where the Nuxt.js app is located
   base = "nuxt-app"
-  publish = "dist"  # The directory to publish
   command = "nuxi generate"  # The build command
 
