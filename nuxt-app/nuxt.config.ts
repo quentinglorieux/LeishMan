@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr: true, // Enable SSR
+  ssr: false, // Enable SSR
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
   components: true, // Ensure auto-import for components is enabled
@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: "netlify", // Ensures proper configuration for SSR on Netlify
+    // preset: "netlify", // Ensures proper configuration for SSR on Netlify
   },
 
   runtimeConfig: {
