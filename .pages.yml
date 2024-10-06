@@ -1,9 +1,31 @@
 media: pagescms/media
 content:
   - name: events_home
-    label: Events HomeJSON
+    label: Events HomeJSON file
     type: file
     path: "nuxt-app/public/data/events_home.json"
+    view:
+      fields: [title, type, date, description, image]
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: type
+        label: Type
+        type: select
+      - name: date
+        label: Date
+        type: date
+      - name: image
+        label: Image
+        type: image
+      - name: description
+        label: Description
+        type: rich-text
+  - name: events_home
+    label: Events HomeJSON collection
+    type: file
+    path: "nuxt-app/public/data/events_home_coll.json"
     view:
       fields: [title, type, date, description, image]
     fields:
