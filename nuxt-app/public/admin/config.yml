@@ -24,7 +24,7 @@ collections:
     identifier_field: name
     fields:
       - {label: "Nom", name: "name", widget: "string", required: true}
-      - {label: "GPS", name: "GPS", widget: "maps", required: true}
+      - {label: "GPS", name: "GPS", widget: "map", required: true}
       - {label: "Logo", name: "logo", widget: "image", required: false}
       - {label: "Description", name: "description", widget: "markdown", required: false}
   - label: Événements
