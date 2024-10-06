@@ -67,10 +67,15 @@ content:
     type: file
     path: '_about'
     fields:
-      - name: title
-        label: Title
+      - name: title1
+        label: Title1
         type: string
-      - name: paragraph
-        label: Paragraph
+      - name: paragraph1
+        label: Paragraph1
         type: rich-text
-        list: true
+      - name: title2
+        label: Title2
+        type: string
+      - name: paragraph2
+        label: Paragraph2
+        type: rich-text     
