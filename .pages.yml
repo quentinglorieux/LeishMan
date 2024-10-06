@@ -3,7 +3,7 @@ content:
   - name: members
     label: Members
     type: collection
-    path: '_members'
+    path: 'pagescms/_members'
     view:
       fields: [ lastname, firstname, laboratory, activities ]
     fields:
@@ -22,7 +22,7 @@ content:
   - name: laboratories
     label: Laboratories
     type: collection
-    path: '_labo'
+    path: 'pagescms/_labo'
     view:
       fields: [ name, GPS, head, logo, description ]
     fields:
@@ -41,7 +41,7 @@ content:
   - name: events
     label: Events
     type: collection
-    path: '_event'
+    path: 'pagescms/_event'
     view:
       fields: [ title,type,  date, description, image ]
     fields:
@@ -65,7 +65,7 @@ content:
   - name: aboutUs
     label: About Us
     type: file
-    path: '_about.md'
+    path: 'pagescms/about.md'
     fields:
       - name: title1
         label: Title1
