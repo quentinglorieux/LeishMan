@@ -1,7 +1,7 @@
 media: pagescms/media
 content:
   - name: events_home
-    label: Events Home JSON
+    label: Events HomeJSON
     type: file
     path: "nuxt-app/public/data/events_home.json"
     view:
