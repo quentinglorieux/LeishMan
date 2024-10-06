@@ -1,11 +1,11 @@
-media: media
+media: pagescms/media
 content:
   - name: events_home
     label: Events Home JSON
     type: file
-    path: 'nuxt_app/public/data/events_home.json'
+    path: "nuxt-app/public/data/events_home.json"
     view:
-      fields: [ title,type,  date, description, image ]
+      fields: [title, type, date, description, image]
     fields:
       - name: title
         label: Title
@@ -25,9 +25,9 @@ content:
   - name: members
     label: Members
     type: collection
-    path: 'pagescms/_members'
+    path: "pagescms/_members"
     view:
-      fields: [ lastname, firstname, laboratory, activities ]
+      fields: [lastname, firstname, laboratory, activities]
     fields:
       - name: lastname
         label: Lastname
@@ -44,9 +44,9 @@ content:
   - name: laboratories
     label: Laboratories
     type: collection
-    path: 'pagescms/_labo'
+    path: "pagescms/_labo"
     view:
-      fields: [ name, GPS, head, logo, description ]
+      fields: [name, GPS, head, logo, description]
     fields:
       - name: name
         label: Name
@@ -63,9 +63,9 @@ content:
   - name: events
     label: Events
     type: collection
-    path: 'pagescms/_event'
+    path: "pagescms/_event"
     view:
-      fields: [ title,type,  date, description, image ]
+      fields: [title, type, date, description, image]
     fields:
       - name: title
         label: Title
@@ -74,7 +74,7 @@ content:
         label: Type
         type: select
         options:
-          values: [seminar,meeting,publication]
+          values: [seminar, meeting, publication]
       - name: date
         label: Date
         type: date
@@ -87,7 +87,7 @@ content:
   - name: aboutUs
     label: About Us
     type: file
-    path: 'pagescms/about.md'
+    path: "pagescms/about.md"
     fields:
       - name: title1
         label: Title1
@@ -112,4 +112,4 @@ content:
         type: string
       - name: paragraph4
         label: Paragraph4
-        type: rich-text     
+        type: rich-text
