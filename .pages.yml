@@ -24,7 +24,7 @@ content:
         type: rich-text
   - name: events_home_coll
     label: Events HomeJSON collection
-    type: file
+    type: collection
     path: "nuxt-app/public/data/events_home_coll.json"
     view:
       fields: [title, type, date, description, image]
