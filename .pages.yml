@@ -13,8 +13,6 @@ content:
       - name: type
         label: Type
         type: select
-        options:
-          values: [seminar,meeting,publication]
       - name: date
         label: Date
         type: date
