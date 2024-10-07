@@ -98,21 +98,8 @@ onMounted(() => {
   ];
 });
 
-import parseMD from "parse-md";
 
-const data = ref();
-onMounted(async () => {
-  try {
-    const response = await fetch(
-      "https://raw.githubusercontent.com/quentinglorieux/LeishMan/refs/heads/main/_about"
-    );
-    const d = await response.text();
-    data.value = parseMD(d).metadata;
-    console.log(data);
-  } catch (error) {
-    console.error("Error fetching publications:", error);
-  }
-});
+
 </script>
 
 <style scoped></style>

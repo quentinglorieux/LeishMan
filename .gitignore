@@ -1,5 +1,10 @@
-directus/.env
 nuxt-app/.nuxt
 node_modules
 .DS_Store
 .netlify
+.vscode/
+.env
+dist/
+.output/
+nuxt-app/dist
+

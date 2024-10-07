@@ -1,11 +1,11 @@
-media: media
+media: pagescms/media
 content:
   - name: members
     label: Members
     type: collection
-    path: '_members'
+    path: "pagescms/_members"
     view:
-      fields: [ lastname, firstname, laboratory, activities ]
+      fields: [lastname, firstname, laboratory, activities]
     fields:
       - name: lastname
         label: Lastname
@@ -22,9 +22,9 @@ content:
   - name: laboratories
     label: Laboratories
     type: collection
-    path: '_labo'
+    path: "pagescms/_labo"
     view:
-      fields: [ name, GPS, head, logo, description ]
+      fields: [name, GPS, head, logo, description]
     fields:
       - name: name
         label: Name
@@ -41,9 +41,9 @@ content:
   - name: events
     label: Events
     type: collection
-    path: '_event'
+    path: "pagescms/_event"
     view:
-      fields: [ title,type,  date, description, image ]
+      fields: [title, type, date, description, image]
     fields:
       - name: title
         label: Title
@@ -52,7 +52,7 @@ content:
         label: Type
         type: select
         options:
-          values: [seminar,meeting,publication]
+          values: [seminar, meeting, publication]
       - name: date
         label: Date
         type: date
@@ -61,4 +61,33 @@ content:
         type: image
       - name: description
         label: Description
+        type: rich-text
+  - name: aboutUs
+    label: About Us
+    type: file
+    path: "pagescms/about.md"
+    fields:
+      - name: title1
+        label: Title1
+        type: string
+      - name: paragraph1
+        label: Paragraph1
+        type: rich-text
+      - name: title2
+        label: Title2
+        type: string
+      - name: paragraph2
+        label: Paragraph2
+        type: rich-text
+      - name: title3
+        label: Title3
+        type: string
+      - name: paragraph3
+        label: Paragraph3
+        type: rich-text
+      - name: title4
+        label: Title4
+        type: string
+      - name: paragraph4
+        label: Paragraph4
         type: rich-text

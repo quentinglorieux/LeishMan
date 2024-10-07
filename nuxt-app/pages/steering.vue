@@ -33,7 +33,6 @@ onMounted(async () => {
     const committeeResponse = await fetch("/data/committee.json");
     const committeeData = await committeeResponse.json();
     team.value = committeeData.members;
-    console.log(team);
   } catch (error) {
     console.error("Error fetching news data:", error);
   }
