@@ -16,30 +16,18 @@
       <div class="container mx-auto grid md:grid-cols-2 gap-8 px-10">
         <!-- Text Content -->
         <div>
-          <h2 class="text-3xl font-bold mb-4">Our Mission</h2>
+          <h2 class="text-3xl font-bold mb-4">{{ data.title1 }}</h2>
           <p class="text-gray-700 dark:text-white leading-loose mb-6">
-            The LeishMan Network connects a global community of researchers
-            dedicated to promoting scientific excellence and fostering
-            innovation to improve public health worldwide. Our mission is to
-            bring together experts, share knowledge, and collaborate on
-            groundbreaking research in the fields of virology, immunology, and
-            more.
+            {{ data.paragraph1 }}
           </p>
 
-          <h2 class="text-3xl font-bold mb-4">Our Vision</h2>
+          <h2 class="text-3xl font-bold mb-4">{{ data.title2 }}</h2>
           <p class="text-gray-700 dark:text-white leading-loose mb-6">
-            We envision a world where health threats are tackled with scientific
-            rigor and cooperation, leading to innovative solutions for a
-            healthier global community.
+            {{ data.paragraph2 }}
           </p>
 
-          <h2 class="text-3xl font-bold mb-4">Our Values</h2>
-          <ul class="list-disc pl-6 text-gray-700 dark:text-white">
-            <li>Collaboration and teamwork</li>
-            <li>Innovation and creativity</li>
-            <li>Scientific integrity</li>
-            <li>Commitment to public health</li>
-          </ul>
+          <h2 class="text-3xl font-bold mb-4">{{ data.title3 }}</h2>
+          {{ data.paragraph3 }}
         </div>
 
         <!-- Image or Milestone Section -->
@@ -49,12 +37,9 @@
             alt="About Us"
             class="rounded-lg shadow-lg mb-6"
           />
-          <h2 class="text-3xl font-bold mb-4">Our History</h2>
+          <h2 class="text-3xl font-bold mb-4">{{ data.title4 }}</h2>
           <p class="text-gray-700 leading-loose dark:text-white">
-            Established in 1987, the LeishMan Network has been a pioneer in
-            scientific discoveries that have shaped the world. From
-            breakthroughs in vaccination to disease control, we have always been
-            at the forefront of medical research and innovation.
+            {{ data.paragraph4 }}
           </p>
         </div>
       </div>
@@ -111,6 +96,22 @@ onMounted(() => {
       image: "/images/noprofile.jpg",
     },
   ];
+});
+
+import parseMD from "parse-md";
+
+const data = ref();
+onMounted(async () => {
+  try {
+    const response = await fetch(
+      "https://raw.githubusercontent.com/quentinglorieux/LeishMan/refs/heads/main/_about"
+    );
+    const d = await response.text();
+    data.value = parseMD(d).metadata;
+    console.log(data);
+  } catch (error) {
+    console.error("Error fetching publications:", error);
+  }
 });
 </script>
 
