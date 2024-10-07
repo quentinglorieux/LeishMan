@@ -19,6 +19,27 @@ content:
       - name: activities
         label: Activities
         type: rich-text
+        
+  - name: steeringCommitte
+    label: Steering Commitee
+    type: collection
+    path: "nuxt-app/pagescms/_committee"
+    view:
+      fields: [lastname, firstname, email, picture]
+    fields:
+      - name: lastname
+        label: Lastname
+        type: string
+      - name: firstname
+        label: Firstname
+        type: string
+      - name: email
+        label: Email
+        type: string
+      - name: picture
+        label: Picture
+        type: image
+        
   - name: laboratories
     label: Laboratories
     type: collection
