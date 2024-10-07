@@ -23,7 +23,7 @@ content:
   - name: steeringCommitte
     label: Steering Commitee
     type: collection
-    path: "nuxt-app/pagescms/_committee"
+    path: "nuxt-app/pagescms/_committee/committee.json"
     view:
       fields: [lastname, firstname, email, picture]
     fields:
