@@ -75,6 +75,8 @@
 const placeholderImage = "/images/placeholder.jpg";
 const team = ref([]);
 
+const data = ref([]);
+
 onMounted(() => {
   team.value = [
     {
@@ -97,9 +99,6 @@ onMounted(() => {
     },
   ];
 });
-
-
-
 </script>
 
 <style scoped></style>
