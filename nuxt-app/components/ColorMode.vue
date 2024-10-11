@@ -1,18 +1,11 @@
 <template>
   <div class="dark:bg-slate-600">
-    <UButton
-      v-if="colorMode.value == 'dark'"
-      icon="material-symbols:nightlight"
-      color="white"
-      class="w-6 h-6"
-      @click="changeColorMode"
-    />
-    <UButton
-      v-else
-      class="w-6 h-6"
-      icon="mdi:white-balance-sunny"
-      @click="changeColorModeDark"
-    />
+    <button v-if="colorMode.value == 'dark'" @click="changeColorMode">
+      <UIcon name="material-symbols:nightlight"> </UIcon>
+    </button>
+    <button v-else @click="changeColorModeDark">
+      <UIcon name="mdi:white-balance-sunny"> </UIcon>
+    </button>
   </div>
 </template>
 
