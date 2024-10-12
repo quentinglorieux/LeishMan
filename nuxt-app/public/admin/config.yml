@@ -12,56 +12,149 @@ collections:
     create: true
     identifier_field: lastname
     fields:
-      - {label: "Nom", name: "lastname", widget: "string", required: true}
-      - {label: "Prénom", name: "firstname", widget: "string", required: true}
-      - {label: "Laboratoire", name: "laboratory", widget: "string", required: true}
-      - {label: "Featured Image", name: "thumbnail", widget: "image", required: false}
-      - {label: "Activités", name: "activities", widget: "markdown",required: false}
+      - { label: "Nom", name: "lastname", widget: "string", required: true }
+      - { label: "Prénom", name: "firstname", widget: "string", required: true }
+      - {
+          label: "Laboratoire",
+          name: "laboratory",
+          widget: "string",
+          required: true,
+        }
+      - {
+          label: "Featured Image",
+          name: "thumbnail",
+          widget: "image",
+          required: false,
+        }
+      - {
+          label: "Activités",
+          name: "activities",
+          widget: "markdown",
+          required: false,
+        }
   - label: Laboratoires
     name: laboratories
     folder: nuxt-app/public/data/laboratories
     create: true
     identifier_field: name
     fields:
-      - {label: "Nom", name: "name", widget: "string", required: true}
-      - {label: "GPS", name: "GPS", widget: "string", required: true}
-      - {label: "Logo", name: "logo", widget: "image", required: false}
-      - {label: "Description", name: "description", widget: "markdown", required: false}
+      - { label: "Nom", name: "name", widget: "string", required: true }
+      - { label: "GPS", name: "GPS", widget: "string", required: true }
+      - { label: "Logo", name: "logo", widget: "image", required: false }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "markdown",
+          required: false,
+        }
   - label: Événements
     name: events
     folder: nuxt-app/public/data/events
     create: true
     identifier_field: title
-    fields :
-      - {label: "Titre", name: "title", widget: "string", required: true}
-      - {label: "Type", name: "type", widget: "select", options: ["séminaire", "réunion", "publication"], required: true}
-      - {label: "Date", name: "date", widget: "datetime", required: true}
-      - {label: "Image", name: "image", widget: "image", required: false}
-      - {label: "Description", name: "description", widget: "markdown", required: false}
+    fields:
+      - { label: "Titre", name: "title", widget: "string", required: true }
+      - {
+          label: "Type",
+          name: "type",
+          widget: "select",
+          options: ["séminaire", "réunion", "publication"],
+          required: true,
+        }
+      - { label: "Date", name: "date", widget: "datetime", required: true }
+      - { label: "Image", name: "image", widget: "image", required: false }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "markdown",
+          required: false,
+        }
   - label: Pages
     name: pages
     files:
       - label: "Home"
         name: "home"
-        file: "nuxt-app/pages/index.yml"
+        file: "nuxt-app/public/data/pages/index.yml"
         fields:
-          - {label: "Title", name: "title", widget: "string", required: true}
-          - {label: "Description", name: "description", widget: "markdown", required: false}
-          - {label: "Featured Image", name: "thumbnail", widget: "image", required: false}
+          - { label: "Title", name: "title", widget: "string", required: true }
+          - {
+              label: "Description",
+              name: "description",
+              widget: "markdown",
+              required: false,
+            }
+          - {
+              label: "Featured Image",
+              name: "thumbnail",
+              widget: "image",
+              required: false,
+            }
       - label: "About"
         name: "about"
-        file: "nuxt-app/pages/about.yml"
+        file: "nuxt-app/public/data/pages/about.yml"
         fields:
-          - {label: "Title1", name: "title1", widget: "string", required: true}
-          - {label: "Description1", name: "description1", widget: "markdown", required: false}
-          - {label: "Title2", name: "title2", widget: "string", required: true}
-          - {label: "Description2", name: "description2", widget: "markdown", required: false}
-          - {label: "Title3", name: "title3", widget: "string", required: true}  
-          - {label: "Description3", name: "description3", widget: "markdown", required: false}
+          - {
+              label: "Title1",
+              name: "title1",
+              widget: "string",
+              required: true,
+            }
+          - {
+              label: "Description1",
+              name: "description1",
+              widget: "markdown",
+              required: false,
+            }
+          - {
+              label: "Title2",
+              name: "title2",
+              widget: "string",
+              required: true,
+            }
+          - {
+              label: "Description2",
+              name: "description2",
+              widget: "markdown",
+              required: false,
+            }
+          - {
+              label: "Title3",
+              name: "title3",
+              widget: "string",
+              required: true,
+            }
+          - {
+              label: "Description3",
+              name: "description3",
+              widget: "markdown",
+              required: false,
+            }
+          - {
+              label: "Title4",
+              name: "title4",
+              widget: "string",
+              required: true,
+            }
+          - {
+              label: "Description4",
+              name: "description4",
+              widget: "markdown",
+              required: false,
+            }
       - label: "Contact"
         name: "contact"
         file: "nuxt-app/pages/contact.yml"
         fields:
-          - {label: "Title", name: "title", widget: "string", required: true}
-          - {label: "Description", name: "description", widget: "markdown", required: false}
-          - {label: "Featured Image", name: "thumbnail", widget: "image", required: false}
+          - { label: "Title", name: "title", widget: "string", required: true }
+          - {
+              label: "Description",
+              name: "description",
+              widget: "markdown",
+              required: false,
+            }
+          - {
+              label: "Featured Image",
+              name: "thumbnail",
+              widget: "image",
+              required: false,
+            }

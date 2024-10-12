@@ -18,16 +18,16 @@
         <div>
           <h2 class="text-3xl font-bold mb-4">{{ data.title1 }}</h2>
           <p class="text-gray-700 dark:text-white leading-loose mb-6">
-            {{ data.paragraph1 }}
+            {{ data.description1 }}
           </p>
 
           <h2 class="text-3xl font-bold mb-4">{{ data.title2 }}</h2>
           <p class="text-gray-700 dark:text-white leading-loose mb-6">
-            {{ data.paragraph2 }}
+            {{ data.description2 }}
           </p>
 
           <h2 class="text-3xl font-bold mb-4">{{ data.title3 }}</h2>
-          {{ data.paragraph3 }}
+          {{ data.description3 }}
         </div>
 
         <!-- Image or Milestone Section -->
@@ -74,8 +74,18 @@
 <script setup>
 const placeholderImage = "/images/placeholder.jpg";
 const team = ref([]);
-
+// await queryContent("/about").findOne();
+import { parse, stringify } from "yaml";
 const data = ref([]);
+onMounted(async () => {
+  try {
+    const newsResponse = await fetch("/data/pages/about.yml");
+    const x = await newsResponse.text();
+    data.value = parse(x);
+  } catch (error) {
+    console.error("Error fetching news data:", error);
+  }
+});
 
 onMounted(() => {
   team.value = [
