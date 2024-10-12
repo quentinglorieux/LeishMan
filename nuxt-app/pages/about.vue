@@ -27,7 +27,7 @@
           </p>
 
           <h2 class="text-3xl font-bold mb-4">{{ data.title3 }}</h2>
-          {{ data.description3 }}
+          <VueShowdown :markdown="data.description3" flavor="original" />
         </div>
 
         <!-- Image or Milestone Section -->
@@ -39,7 +39,7 @@
           />
           <h2 class="text-3xl font-bold mb-4">{{ data.title4 }}</h2>
           <p class="text-gray-700 leading-loose dark:text-white">
-            {{ data.paragraph4 }}
+            {{ data.description4 }}
           </p>
         </div>
       </div>
@@ -72,6 +72,7 @@
 </template>
 
 <script setup>
+import { VueShowdown } from "vue-showdown";
 const placeholderImage = "/images/placeholder.jpg";
 const team = ref([]);
 // await queryContent("/about").findOne();
@@ -79,9 +80,10 @@ import { parse, stringify } from "yaml";
 const data = ref([]);
 onMounted(async () => {
   try {
-    const newsResponse = await fetch("/data/pages/about.yml");
-    const x = await newsResponse.text();
-    data.value = parse(x);
+    const aboutResponse = await fetch("/data/pages/about.yml");
+    const aboutText = await aboutResponse.text();
+    const aboutParse = parse(aboutText);
+    data.value = aboutParse;
   } catch (error) {
     console.error("Error fetching news data:", error);
   }

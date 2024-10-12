@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "showdown": "^2.1.0",
+    "vue-showdown": "^4.2.0"
+  }
+}

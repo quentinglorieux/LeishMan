@@ -143,7 +143,7 @@ collections:
             }
       - label: "Contact"
         name: "contact"
-        file: "nuxt-app/pages/contact.yml"
+        file: "nuxt-app/public/data/pages/contact.yml"
         fields:
           - { label: "Title", name: "title", widget: "string", required: true }
           - {
