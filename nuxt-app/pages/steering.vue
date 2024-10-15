@@ -6,18 +6,30 @@
         <div
           v-for="member in team"
           :key="member.id"
-          class="bg-white p-6 rounded-lg shadow-md"
+          class="bg-white dark:bg-gray-600 p-6 rounded-lg shadow-md"
         >
           <img
             :src="member.image || placeholderImage"
             alt="Team Member"
             class="h-32 w-32 mx-auto rounded-full object-cover mb-4"
           />
-          <h3 class="text-xl font-bold dark:text-gray-600">
+          <h3 class="text-xl font-bold dark:text-gray-100">
             {{ member.name }}
           </h3>
-          <p class="text-gray-600">{{ member.role }}</p>
-          <p class="dark:text-gray-600">Contact : {{ member.email_adress }}</p>
+          <p class="text-gray-600 dark:text-gray-100">{{ member.role }}</p>
+          <p class="dark:text-gray-100 ">Contact : {{ member.email_adress }}</p>
+
+          <UAccordion
+          class="mt-4 dark:text-gray-100"
+          color="gray"
+          variant="solid"
+          size="md"
+          open-icon="i-heroicons-plus"
+        close-icon="i-heroicons-minus"
+           :items="[{ label: 'Short biography', content:  member.bio  }]"
+          />
+
+
         </div>
       </div>
     </div>

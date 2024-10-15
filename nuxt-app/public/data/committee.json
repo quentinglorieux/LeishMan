@@ -6,7 +6,8 @@
       "email_adress": "buffet@leishman.fr",
       "isCommittee": true,
       "role": "MD, PhD, Coordinator",
-      "image": "images/steering/pierre.webp"
+      "image": "images/steering/pierre.webp",
+      "bio":"Pierre Buffet is coordinator of the LeishMan group. He is an expert in leishmaniasis, malaria and other parasitic diseases. He has been working on leishmaniasis since the 1980s, and has clinical and microbiological expertise in this field (in vitro and animal models). He works closely with the National Reference Center for Leishmaniasis and the Parasitology Laboratory at Hôpital Cochin. He is also Medical Director of the Institut Pasteur."
     },
     {
       "id": 2,
@@ -14,7 +15,8 @@
       "email_adress": "auwera@leisman.fr",
       "isCommittee": true,
       "role": "PhD",
-      "image": "images/steering/gert.webp"
+      "image": "images/steering/gert.webp",
+      "bio":"Gert Van der Auwera works as a postdoctoral researcher at the Institute of Tropical Medicine (Antwerp, Belgium). His research topics are development and implementation of molecular diagnostics for leishmaniasis for improving patient care and studying transmission and epidemiology. He is course director of a short course on implementation of molecular biology techniques in low-resource settings, and is active in capacity building projects. Finally, he coordinates a leishmaniasis surveillance database of Europe in collaboration with WHO"
     },
     {
       "id": 3,
@@ -22,7 +24,8 @@
       "email_adress": "melenotte@leisman.fr",
       "isCommittee": true,
       "role": "MD, PhD",
-      "image": "images/steering/clea.webp"
+      "image": "images/steering/clea.webp",
+      "bio":"Clea Melenotte is an infectiologist. She co-coordinates the LeishMan network and works closely with the national reference center for leishmaniasis in France. She is developing her expertise in parasitic infections at the Institut Pasteur in Paris, in collaboration with the Assistance Publique des Hôpitaux de Paris."
     },
     {
       "id": 4,
@@ -30,7 +33,8 @@
       "email_adress": "sobirk@leisman.fr",
       "isCommittee": true,
       "role": "MD, PhD",
-      "image": "images/steering/sara.webp"
+      "image": "images/steering/sara.webp",
+      "bio":"Sara Karlsson Söbirk is specialized in infectious diseases and clinical microbiology, currently head of the medical unit at Clinical microbiology and Infection Control, Region Skåne, Sweden. Since a PhD on Leishmaniasis in Sweden, her postdoctoral research at the Department of Infection Medicine at Lund University focuses on diagnostic and clinical parasitology, gastrointestinal infections, host response to parasitic infection and epidemiology. She is co-managing and teaches parasitology and microbiology in the curriculum for medical students at Lund University, and parasitology for postgraduate physicians under specialization."
     },
     {
       "id": 5,
@@ -38,7 +42,8 @@
       "email_adress": "varani@leisman.fr",
       "isCommittee": true,
       "role": "MD, PhD",
-      "image": "images/steering/stefania.webp"
+      "image": "images/steering/stefania.webp",
+      "bio":"Department of Medical and Surgical Sciences, University of Bologna, Bologna, Italy Associate Professor at the University of Bologna from 2018. She is currently teaching in courses at the School of Medicine, University of Bologna, including Microbiology, Clinical Microbiology, Parasitology, Tropical Infections and Travel Medicine. The research activity focuses on epidemiological aspects, diagnosis and pathogenesis of parasitic infections, in particular human leishmaniasis"
     },
     {
       "id": 6,
@@ -46,7 +51,8 @@
       "email_adress": "zonneveld@leisman.fr",
       "isCommittee": true,
       "role": "MD",
-      "image": "images/steering/rens.webp"
+      "image": "images/steering/rens.webp",
+      "bio": "Rens Zonneveld works as a clinical parasitologist and postdoctoral researcher at the Department of Medical Microbiology & Infection Prevention of Amsterdam University Medical Centers, Amsterdam, The Netherlands. His work focuses on the (improvement of) diagnosis, treatment, and clinical management of human parasitic disease. He has a specific research interest in protozoan infections, such as malaria, leishmaniasis and toxoplasmosis. Lastly, he coordinates, and participates in, several national and international parasitology courses."
     },
     {
       "id": 7,
@@ -54,17 +60,17 @@
       "email_adress": "Neumayr@leisman.fr",
       "isCommittee": true,
       "role": "MD",
-      "image": "images/steering/andreas.webp"
+      "image": "images/steering/andreas.webp",
+      "bio":"Andreas  heads the Centre for Tropical and Travel Medicine at the Swiss Tropical and Public Health Institute in Basel, Switzerland. He is specialized in Internal Medicine, Infectious Diseases, and Tropical and Travel Medicine, an Associate Professor at the University of Basel, Switzerland, and an Adjunct Professor at James Cook University in Townsville, Australia."
     },
-      {
+    {
       "id": 9,
       "name": "Owain Donnelly",
       "email_adress": "owain@leisman.fr",
-      "isCommittee": true,  
+      "isCommittee": true,
       "role": "MD",
-      "image": "images/steering/owain.webp"
+      "image": "images/steering/owain.webp",
+      "bio": "Owain Donnelly is an Infectious Diseases and Microbiology doctor in London. He holds a National Institute for Health Research-funded Academic Clinical Fellowship based at the London School of Hygiene and Tropical Medicine (LSHTM), and has an honorary contract at the Hospital for Tropical Diseases, London. He is passionate about clinical and academic parasitology, particularly in the areas of diagnostics and drug resistance, and his research experience includes work on malaria, leishmaniasis, and schistosomiasis."
     }
-
-
   ]
 }
