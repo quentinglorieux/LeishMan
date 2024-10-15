@@ -45,7 +45,7 @@
       </div>
     </section>
 
-    <!-- Team or Key Figures Section (Optional) -->
+    <!--
     <section class="py-16 bg-gray-100 px-10 dark:bg-gray-600">
       <div class="container mx-auto text-center">
         <h2 class="text-3xl font-bold mb-6">Meet Our Team</h2>
@@ -68,6 +68,7 @@
         </div>
       </div>
     </section>
+     Team or Key Figures Section (Optional) -->
   </div>
 </template>
 

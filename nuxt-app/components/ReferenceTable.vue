@@ -1,31 +1,18 @@
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
+
 const columns = [
-  {
-    key: "name",
-    label: "Center Name",
-    sortable: true,
-  },
-  {
-    key: "country",
-    label: "Country",
-    sortable: true,
-  },
-  {
-    key: "city",
-    label: "City",
-    sortable: true,
-  },
-  {
-    key: "mtgs",
-    label: "Speciality",
-  },
-  { key: "representatives", label: "Representative(s)" },
+  { key: "name", label: "Center Name", sortable: true },
+  { key: "country", label: "Country", sortable: true },
+  { key: "city", label: "City", sortable: true },
+  { key: "mtgs", label: "Speciality" },
+  { key: "representatives", label: "Representative(s)" }
 ];
 
 const referenceCenters = ref([]);
-
 const q = ref("");
 
+// Fetch reference centers data
 onMounted(async () => {
   try {
     const response = await fetch("/data/reference-centers.json");
@@ -41,8 +28,8 @@ const filteredRows = computed(() => {
     return referenceCenters.value;
   }
 
-  return referenceCenters.value.filter((lab) => {
-    return Object.values(lab).some((value) => {
+  return referenceCenters.value.filter((center) => {
+    return Object.values(center).some((value) => {
       return String(value).toLowerCase().includes(q.value.toLowerCase());
     });
   });
@@ -52,19 +39,19 @@ const filteredRows = computed(() => {
 <template>
   <div class="bg-white dark:bg-slate-700 dark:text-white mb-10">
     <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-      <UInput v-model="q" placeholder="Filter people..." />
+      <UInput v-model="q" placeholder="Filter centers..." />
     </div>
 
     <UTable
+      :rows="filteredRows"
+      :columns="columns"
       style="color: white"
       loading
       :loading-state="{
         icon: 'i-heroicons-arrow-path-20-solid',
-        label: 'Loading...',
+        label: 'Loading...'
       }"
       class="dark:text-white"
-      :rows="filteredRows"
-      :columns="columns"
     />
   </div>
 </template>
