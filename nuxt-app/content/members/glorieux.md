@@ -3,5 +3,5 @@ lastname: Glorieux
 firstname: Quentin
 laboratory: LKB
 thumbnail: ""
-activities: ""
+activities: Quentin descriotipn
 ---

@@ -8,7 +8,7 @@ public_folder: images
 collections:
   - label: Members
     name: members
-    folder: nuxt-app/public/data/members
+    folder: nuxt-app/content/members
     create: true
     identifier_field: lastname
     fields:
@@ -19,7 +19,7 @@ collections:
       - {label: "Activités", name: "activities", widget: "markdown",required: false}
   - label: Laboratoires
     name: laboratories
-    folder: nuxt-app/public/data/laboratories
+    folder: nuxt-app/content/laboratories
     create: true
     identifier_field: name
     fields:
@@ -29,7 +29,7 @@ collections:
       - {label: "Description", name: "description", widget: "markdown", required: false}
   - label: Événements
     name: events
-    folder: nuxt-app/public/data/events
+    folder: nuxt-app/content/events
     create: true
     identifier_field: title
     fields :
@@ -43,14 +43,14 @@ collections:
     files:
       - label: "Home"
         name: "home"
-        file: "nuxt-app/pages/index.yml"
+        file: "nuxt-app/content/pages/index.yml"
         fields:
           - {label: "Title", name: "title", widget: "string", required: true}
           - {label: "Description", name: "description", widget: "markdown", required: false}
           - {label: "Featured Image", name: "thumbnail", widget: "image", required: false}
       - label: "About"
         name: "about"
-        file: "nuxt-app/pages/about.yml"
+        file: "nuxt-app/content/pages/about.yml"
         fields:
           - {label: "Title1", name: "title1", widget: "string", required: true}
           - {label: "Description1", name: "description1", widget: "markdown", required: false}
@@ -60,7 +60,7 @@ collections:
           - {label: "Description3", name: "description3", widget: "markdown", required: false}
       - label: "Contact"
         name: "contact"
-        file: "nuxt-app/pages/contact.yml"
+        file: "nuxt-app/content/pages/contact.yml"
         fields:
           - {label: "Title", name: "title", widget: "string", required: true}
           - {label: "Description", name: "description", widget: "markdown", required: false}

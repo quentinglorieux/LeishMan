@@ -8,7 +8,19 @@
   </head>
   <body>
     <!-- Include the script that builds the page and powers Decap CMS -->
-     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script> 
-    <!-- <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>-->
+    <!-- <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script> 
+     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>-->
+
+     <script>
+        const cmsType = 'sveltia'; // You can replace this with dynamic logic
+        
+        const script = document.createElement('script');
+        if (cmsType === 'decap') {
+          script.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
+        } else {
+          script.src = 'https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js';
+        }
+          document.head.appendChild(script);
+      </script>
   </body>
 </html>
