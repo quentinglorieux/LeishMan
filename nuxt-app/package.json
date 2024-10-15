@@ -16,6 +16,7 @@
     "parse-md": "^3.0.3",
     "vue": "latest",
     "vue-router": "latest",
+    "vue-showdown": "^4.2.0",
     "vue3-google-map": "^0.21.0"
   },
   "devDependencies": {

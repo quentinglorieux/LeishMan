@@ -6,7 +6,7 @@
       "email_adress": "buffet@leishman.fr",
       "isCommittee": true,
       "role": "MD, PhD, Coordinator",
-      "image": "images/noprofile.jpg"
+      "image": "images/steering/pierre.webp"
     },
     {
       "id": 2,
@@ -14,7 +14,7 @@
       "email_adress": "auwera@leisman.fr",
       "isCommittee": true,
       "role": "PhD",
-      "image": "images/noprofile.jpg"
+      "image": "images/steering/gert.webp"
     },
     {
       "id": 3,
@@ -22,15 +22,15 @@
       "email_adress": "melenotte@leisman.fr",
       "isCommittee": true,
       "role": "MD, PhD",
-      "image": "images/noprofile.jpg"
+      "image": "images/steering/clea.webp"
     },
     {
       "id": 4,
-      "name": "Sara Sobirk",
+      "name": "Sara Karlsson Sobirk",
       "email_adress": "sobirk@leisman.fr",
       "isCommittee": true,
       "role": "MD, PhD",
-      "image": "images/noprofile.jpg"
+      "image": "images/steering/sara.webp"
     },
     {
       "id": 5,
@@ -38,7 +38,7 @@
       "email_adress": "varani@leisman.fr",
       "isCommittee": true,
       "role": "MD, PhD",
-      "image": "images/noprofile.jpg"
+      "image": "images/steering/stefania.webp"
     },
     {
       "id": 6,
@@ -46,7 +46,7 @@
       "email_adress": "zonneveld@leisman.fr",
       "isCommittee": true,
       "role": "MD",
-      "image": "images/noprofile.jpg"
+      "image": "images/steering/rens.webp"
     },
     {
       "id": 7,
@@ -54,7 +54,17 @@
       "email_adress": "Neumayr@leisman.fr",
       "isCommittee": true,
       "role": "MD",
-      "image": "images/noprofile.jpg"
+      "image": "images/steering/andreas.webp"
+    },
+      {
+      "id": 9,
+      "name": "Owain Donnelly",
+      "email_adress": "owain@leisman.fr",
+      "isCommittee": true,  
+      "role": "MD",
+      "image": "images/steering/owain.webp"
     }
+
+
   ]
 }
