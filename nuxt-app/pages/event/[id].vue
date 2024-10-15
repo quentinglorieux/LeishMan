@@ -1,6 +1,6 @@
 <template>
  <div class="container mx-auto py-8">
-  <h1 class="text-3xl font-bold text-center mb-8">LeishMan Program</h1>
+  <h1 class="text-3xl font-bold text-center mb-8">October 18th 2024 Program</h1>
   </div>
     <ProgDisplay :programData="programJson" />
   </template>
