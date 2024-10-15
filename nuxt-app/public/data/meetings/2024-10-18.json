@@ -1,0 +1,104 @@
+[
+  {
+    "topic": "COMMON \nASPECTS",
+    "time": "10:00 AM",
+    "session": "Introduction & Welcome",
+    "speaker": "Pierre Buffet"
+  },
+  {
+    "topic": "COMMON \nASPECTS",
+    "time": "10:10 AM",
+    "session": "Evolution of the Website",
+    "speaker": "Pierre Buffet"
+  },
+  {
+    "topic": "COMMON \nASPECTS",
+    "time": "10:25 AM",
+    "session": "Consortium agreement / membership/ sharepoint",
+    "speaker": "Cléa Melenotte & Andrea Neymar"
+  },
+  {
+    "topic": "COMMON \nASPECTS",
+    "time": "10:30 AM",
+    "session": "Database update",
+    "speaker": "Gert Van der Auwera"
+  },
+  {
+    "topic": "COMMON \nASPECTS",
+    "time": "10:45 AM",
+    "session": "Key findings & publications",
+    "speaker": "Selected authors-30min"
+  },
+  {
+    "topic": "EPIDEMIOLOGY",
+    "time": "11:15 AM",
+    "session": "Survey Gangneux",
+    "speaker": "Jean-Pierre Gangneux"
+  },
+  {
+    "topic": "EPIDEMIOLOGY",
+    "time": "11:35 AM",
+    "session": "The experience of the UK",
+    "speaker": "Owain Donnelly"
+  },
+  {
+    "topic": "EPIDEMIOLOGY",
+    "time": "11:55 AM",
+    "session": "Lunch break",
+    "speaker": "nan"
+  },
+  {
+    "topic": "DIAGNOSIS \nAND \nPARASITES",
+    "time": "2:00 PM",
+    "session": "Hybrid Li/Ld strain in northern Italy",
+    "speaker": "Gianluca Rugna"
+  },
+  {
+    "topic": "DIAGNOSIS \nAND \nPARASITES",
+    "time": "2:20 PM",
+    "session": "Molecular Assay on cutaneous swabs",
+    "speaker": "Anna Barbiero"
+  },
+  {
+    "topic": "DIAGNOSIS \nAND \nPARASITES",
+    "time": "2:40 PM",
+    "session": "Clinical relevance of Leishmania culture",
+    "speaker": "Rens Zonneveld"
+  },
+  {
+    "topic": "THERAPEUTICS",
+    "time": "2:55 PM",
+    "session": "VL relapse project (VITAL ESCMID Project)",
+    "speaker": "Clea Melenotte"
+  },
+  {
+    "topic": "THERAPEUTICS",
+    "time": "3:10 PM",
+    "session": "Topical paromomycin access and trial",
+    "speaker": "Pierre Bufffet"
+  },
+  {
+    "topic": "CLINICAL CASES",
+    "time": "3:30 PM",
+    "session": "Clinical case",
+    "speaker": "Andrea Angheben"
+  },
+  {
+    "topic": "CLINICAL CASES",
+    "time": "3:40 PM",
+    "session": "Clinical case",
+    "speaker": "Owain Donnelly"
+  },
+  {
+    "topic": "CLINICAL CASES",
+    "time": "3:50 PM",
+    "session": "Clinical case",
+    "speaker": "Cléa Melenotte"
+  },
+  {
+    "topic": "CLINICAL CASES",
+    "time": "4:00 PM",
+    "session": "Wrap Up",
+    "speaker": "Pierre Buffet"
+  }
+]

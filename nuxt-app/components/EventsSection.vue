@@ -34,7 +34,7 @@ onMounted(async () => {
       throw new Error("Failed to fetch events data.");
     }
     const eventsData = await eventsResponse.json();
-    eventItems.value = eventsData.events.slice(0, 2); // Show the first 3 events
+    eventItems.value = eventsData.meetings.slice(0, 2); // Show the first 3 events
   } catch (error) {
     fetchError.value = error.message;
     console.error("Error fetching events data:", error);

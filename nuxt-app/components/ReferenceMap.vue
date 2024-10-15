@@ -1,13 +1,11 @@
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted } from "vue";
-import { applyPlugin } from "#app";
 import { GoogleMap, Marker, InfoWindow, MarkerCluster } from "vue3-google-map";
 
 // Default values for center and markerOptions
 const center = ref({ lat: 48.866667, lng: 2.333 }); // Default center
 const center0 = ref({ lat: 48.866667, lng: 22.333 }); // Default center
 const markerOptions = ref({ position: center.value, label: "L1", title: "Labo 1" }); // Default markerOptions
-const isOpen = ref(false);
 const locations = ref([]); // Empty array, will be filled with data from JSON
 
 const config = useRuntimeConfig();

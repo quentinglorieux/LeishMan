@@ -2,7 +2,7 @@
   "menuItems": [
     {
       "name": "The Network",
-      "link": "/about",
+      "link": "",
       "icon": "zondicons:network",
       "submenu": [
         { "name": "About LeishMan", "link": "/about" },
@@ -14,7 +14,7 @@
     {
       "name": "What We Do ?",
       "icon": "grommet-icons:workshop",
-      "link": "/news",
+      "link": "",
       "submenu": [
         { "name": "Seminar/meeting", "link": "/activities#seminar" },
         { "name": "On-going Projects", "link": "/activities#project" },
@@ -24,7 +24,7 @@
     {
       "name": "LeishMania",
       "icon": "i-heroicons-light-bulb",
-      "link": "/LeishMania",
+      "link": "",
       "submenu": [
         { "name": "Gallery", "link": "/gallery" },
         { "name": "protocols", "link": "/protocols" }

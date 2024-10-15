@@ -1,6 +1,6 @@
 <template>
   <div
-    class="block m-4 px-2 py-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+    class="block w-full m-4 px-2 py-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
   >
     <div class="flex">
       <h3 class="p-4 md:uppercase text-gray-800 font-bold text-xl dark:text-white">
