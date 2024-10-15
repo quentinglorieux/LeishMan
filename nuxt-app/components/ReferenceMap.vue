@@ -1,38 +1,50 @@
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
 import { applyPlugin } from "#app";
-import {
-  GoogleMap,
-  Marker,
-  CustomMarker,
-  InfoWindow,
-  MarkerCluster,
-} from "vue3-google-map";
+import { GoogleMap, Marker, InfoWindow, MarkerCluster } from "vue3-google-map";
 
-const center = { lat: 48.866667, lng: 2.333 };
-// const center = { lat: 52.36834, lng: 4.88635 };
-const markerOptions = { position: center, label: "L1", title: "Labo 1" };
+// Default values for center and markerOptions
+const center = ref({ lat: 48.866667, lng: 2.333 }); // Default center
+const center0 = ref({ lat: 48.866667, lng: 22.333 }); // Default center
+const markerOptions = ref({ position: center.value, label: "L1", title: "Labo 1" }); // Default markerOptions
 const isOpen = ref(false);
-const locations = [
-  { lat: 48.866667, lng: 2.333, info: "Labo 1" },
-  { lat: 48.866667, lng: 2.534, info: "Labo 2" },
-  { lat: 48.866667, lng: 2.735, info: "Labo 3" },
-  { lat: 49.866667, lng: 5.333, info: "Labo 4" },
-  { lat: 42.866667, lng: 1.333, info: "Labo 5" },
-  { lat: 41.866667, lng: -1.333, info: "Labo 6" },
-  { lat: 43.866667, lng: 5.333, info: "Labo 7" },
-  { lat: 40.866667, lng: 2.233, info: "Labo 8" },
-];
+const locations = ref([]); // Empty array, will be filled with data from JSON
 
 const config = useRuntimeConfig();
 const api_key = config.public.publicApiKey;
 
+// Fetch the location data from the JSON file
+onMounted(async () => {
+  try {
+    const response = await fetch("/data/reference-centers-gps.json"); // Adjust the path if needed
+    const data = await response.json();
+    
+    // Populate locations with the fetched data
+    locations.value = data.map(center => ({
+      lat: parseFloat(center.lat),
+      lng: parseFloat(center.lng),
+      info: center.institution,
+      city: center.city,
+      country: center.country
+    }));
+
+    // Optionally, update the center based on the first location
+    if (locations.value.length > 0) {
+      center.value = { lat: locations.value[0].lat, lng: locations.value[0].lng };
+      markerOptions.value = { position: center.value, label: "L1", title: locations.value[0].info };
+    }
+  } catch (error) {
+    console.error("Error fetching location data:", error);
+  }
+});
 </script>
+
 <template>
   <GoogleMap
     :api-key="api_key"
     style="width: 100%; height: 500px"
-    :center="center"
-    :zoom="5"
+    :center="center0"
+    :zoom="4"
   >
     <Marker
       v-for="(location, i) in locations"
@@ -41,12 +53,16 @@ const api_key = config.public.publicApiKey;
       clickable="true"
     >
       <InfoWindow :options="{ position: location }">
-        <InfoLabo
+        <div>
+          <h3 class="font-bold text-md">{{ location['info'] }}</h3>
+          <p>{{ location['city'] }}, {{ location['country'] }}</p>
+        </div>
+         <!--<InfoLabo
           :labo="location['info']"
           :lat="location['lat']"
           :lng="location['lng']"
         >
-        </InfoLabo>
+        </InfoLabo>-->
       </InfoWindow>
     </Marker>
 

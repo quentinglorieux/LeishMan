@@ -1,0 +1,485 @@
+[
+  {
+    "country":"UK ",
+    "city":"London",
+    "institution":"Hospital for Tropical Diseases",
+    "lat":"51.5074456",
+    "lng":"-0.1277653"
+  },
+  {
+    "country":"Italy",
+    "city":"Rome",
+    "institution":"National Institute for Infectious Diseases L. Spallanzani",
+    "lat":"41.8933203",
+    "lng":"12.4829321"
+  },
+  {
+    "country":"Germany",
+    "city":"Munich",
+    "institution":"Ludwig Maximilians-Universiteit Hospital",
+    "lat":"48.1371079",
+    "lng":"11.5753822"
+  },
+  {
+    "country":"France",
+    "city":"Paris",
+    "institution":"Hopital de la Piti\u00e9-Salp\u00eatri\u00e8re",
+    "lat":"48.8588897",
+    "lng":"2.3200410217200766"
+  },
+  {
+    "country":"Germany",
+    "city":"Tubingen",
+    "institution":"Institut f\u00fcr Tropenmedizin T\u00fcbingen",
+    "lat":"48.5203263",
+    "lng":"9.053596"
+  },
+  {
+    "country":"Switzerland",
+    "city":"Basel",
+    "institution":"Swiss Tropical and Public Health Institute",
+    "lat":"47.5581077",
+    "lng":"7.5878261"
+  },
+  {
+    "country":"Sweden",
+    "city":"Stockholm",
+    "institution":"Swedish reference laboratory for Parasitology",
+    "lat":"59.3251172",
+    "lng":"18.0710935"
+  },
+  {
+    "country":"The Netherlands",
+    "city":"Amsterdam",
+    "institution":"Amsterdam University Medical Center",
+    "lat":"52.3730796",
+    "lng":"4.8924534"
+  },
+  {
+    "country":"Spain",
+    "city":"Majadahonda",
+    "institution":"Instituto de Salud Carlos III",
+    "lat":"40.473055",
+    "lng":"-3.8724138"
+  },
+  {
+    "country":"France",
+    "city":"Paris",
+    "institution":"H\u00f4pital Necker",
+    "lat":"48.8588897",
+    "lng":"2.3200410217200766"
+  },
+  {
+    "country":"Germany",
+    "city":"Homburg",
+    "institution":"Institut f\u00fcr Medizinische Mikrobiologie und Hygiene",
+    "lat":"49.3181673",
+    "lng":"7.3340336"
+  },
+  {
+    "country":"Italy",
+    "city":"Bologna",
+    "institution":"St.Orsola-Malpighi University Hospital",
+    "lat":"44.4938203",
+    "lng":"11.3426327"
+  },
+  {
+    "country":"Switzerland",
+    "city":"Basel",
+    "institution":"Swiss Tropical and Public Health Institute",
+    "lat":"47.5581077",
+    "lng":"7.5878261"
+  },
+  {
+    "country":"Switzerland",
+    "city":"Basel",
+    "institution":"Swiss Tropical and Public Health Institute",
+    "lat":"47.5581077",
+    "lng":"7.5878261"
+  },
+  {
+    "country":"Norway",
+    "city":"Oslo",
+    "institution":"Oslo University Hospital ",
+    "lat":"59.9133301",
+    "lng":"10.7389701"
+  },
+  {
+    "country":"Norway",
+    "city":"Oslo",
+    "institution":"Oslo University Hospital ",
+    "lat":"59.9133301",
+    "lng":"10.7389701"
+  },
+  {
+    "country":"Sweden",
+    "city":"Stockholm",
+    "institution":"Karolinska University Hospital",
+    "lat":"59.3251172",
+    "lng":"18.0710935"
+  },
+  {
+    "country":"Sweden",
+    "city":"G\u00f6teborg",
+    "institution":"Department of Communicable Disease Control, Region Vastra Gotaland",
+    "lat":"57.7072326",
+    "lng":"11.9670171"
+  },
+  {
+    "country":"Norway",
+    "city":"Oslo",
+    "institution":"Oslo University Hospital ",
+    "lat":"59.9133301",
+    "lng":"10.7389701"
+  },
+  {
+    "country":"Belgium",
+    "city":"Antwerp",
+    "institution":"Institute of Tropical Medicine Antwerp",
+    "lat":"51.2211097",
+    "lng":"4.3997081"
+  },
+  {
+    "country":"Italy",
+    "city":"Bologna",
+    "institution":"St.Orsola-Malpighi University Hospital",
+    "lat":"44.4938203",
+    "lng":"11.3426327"
+  },
+  {
+    "country":"Belgium",
+    "city":"Antwerp",
+    "institution":"Institute of Tropical Medicine Antwerp",
+    "lat":"51.2211097",
+    "lng":"4.3997081"
+  },
+  {
+    "country":"France",
+    "city":"Nantes",
+    "institution":"Centre Hospitalier Universitaire de Nantes",
+    "lat":"47.2186371",
+    "lng":"-1.5541362"
+  },
+  {
+    "country":"Sweden",
+    "city":"Stockholm",
+    "institution":"Swedish reference laboratory for Parasitology",
+    "lat":"59.3251172",
+    "lng":"18.0710935"
+  },
+  {
+    "country":"Turkey",
+    "city":"Yunusemre",
+    "institution":"Manisa Celal Bayar University",
+    "lat":"38.6086543",
+    "lng":"27.4194561"
+  },
+  {
+    "country":"Sweden",
+    "city":"Helsingborg",
+    "institution":"Regional Hospital of Helsingborg, Region Sk\u00e5ne",
+    "lat":"56.0442098",
+    "lng":"12.703706"
+  },
+  {
+    "country":"Sweden",
+    "city":"Stockholm",
+    "institution":"The Public Health Agency of Sweden",
+    "lat":"59.3251172",
+    "lng":"18.0710935"
+  },
+  {
+    "country":"The Netherlands",
+    "city":"Amsterdam",
+    "institution":"Tergooi Hospital",
+    "lat":"52.3730796",
+    "lng":"4.8924534"
+  },
+  {
+    "country":"Belgium",
+    "city":"Antwerp",
+    "institution":"Institute of Tropical Medicine Antwerp",
+    "lat":"51.2211097",
+    "lng":"4.3997081"
+  },
+  {
+    "country":"Belgium",
+    "city":"Antwerp",
+    "institution":"Institute of Tropical Medicine Antwerp",
+    "lat":"51.2211097",
+    "lng":"4.3997081"
+  },
+  {
+    "country":"The Netherlands",
+    "city":"Amsterdam",
+    "institution":"Amsterdam University Medical Center",
+    "lat":"52.3730796",
+    "lng":"4.8924534"
+  },
+  {
+    "country":"The Netherlands",
+    "city":"Tilburg",
+    "institution":"St. Elisabeth Hospital",
+    "lat":"51.58561845",
+    "lng":"5.0660616131367675"
+  },
+  {
+    "country":"The Netherlands",
+    "city":"Leiden",
+    "institution":"Leiden University Medical Center",
+    "lat":"52.1594747",
+    "lng":"4.4908843"
+  },
+  {
+    "country":"UK",
+    "city":"Birmingham",
+    "institution":"Birmingham Heartlands Hospital",
+    "lat":"52.4796992",
+    "lng":"-1.9026911"
+  },
+  {
+    "country":"Turkey",
+    "city":"Izmir",
+    "institution":"Ege University Medical School",
+    "lat":"38.4237433",
+    "lng":"27.1428019"
+  },
+  {
+    "country":"Turkey",
+    "city":"Manisa",
+    "institution":"Manisa Celal Bayar University",
+    "lat":"38.6125793",
+    "lng":"27.4333969"
+  },
+  {
+    "country":"Turkey",
+    "city":"Izmir",
+    "institution":"Ege University Medical School",
+    "lat":"38.4237433",
+    "lng":"27.1428019"
+  },
+  {
+    "country":"UK",
+    "city":"liverpool ",
+    "institution":"Liverpool School of Tropical Medicine",
+    "lat":"53.4071991",
+    "lng":"-2.99168"
+  },
+  {
+    "country":"UK",
+    "city":"London",
+    "institution":"London School of Hygiene and Tropical Medicine",
+    "lat":"51.5074456",
+    "lng":"-0.1277653"
+  },
+  {
+    "country":"UK",
+    "city":"London",
+    "institution":"Hospital for Tropical Diseases",
+    "lat":"51.5074456",
+    "lng":"-0.1277653"
+  },
+  {
+    "country":"UK",
+    "city":"Cambridge ",
+    "institution":"Cambridge University Hospitals",
+    "lat":"52.2055314",
+    "lng":"0.1186637"
+  },
+  {
+    "country":"UK",
+    "city":"London",
+    "institution":"Hospital for Tropical Diseases",
+    "lat":"51.5074456",
+    "lng":"-0.1277653"
+  },
+  {
+    "country":"France",
+    "city":"Paris",
+    "institution":"H\u00f4pital Necker",
+    "lat":"48.8588897",
+    "lng":"2.3200410217200766"
+  },
+  {
+    "country":"France",
+    "city":"Paris",
+    "institution":"H\u00f4pital Necker",
+    "lat":"48.8588897",
+    "lng":"2.3200410217200766"
+  },
+  {
+    "country":"France",
+    "city":"Rennes",
+    "institution":"Centre Hospitalier Universitaire de Rennes",
+    "lat":"48.1113387",
+    "lng":"-1.6800198"
+  },
+  {
+    "country":"France",
+    "city":"Rennes",
+    "institution":"Centre Hospitalier Universitaire de Rennes",
+    "lat":"48.1113387",
+    "lng":"-1.6800198"
+  },
+  {
+    "country":"Switzerland",
+    "city":"Basel",
+    "institution":"Swiss Tropical and Public Health Institute",
+    "lat":"47.5581077",
+    "lng":"7.5878261"
+  },
+  {
+    "country":"Switzerland",
+    "city":"Basel",
+    "institution":"Swiss Tropical and Public Health Institute",
+    "lat":"47.5581077",
+    "lng":"7.5878261"
+  },
+  {
+    "country":"Italy",
+    "city":"Bologna",
+    "institution":"St.Orsola-Malpighi University Hospital",
+    "lat":"44.4938203",
+    "lng":"11.3426327"
+  },
+  {
+    "country":"Italy",
+    "city":"Rome",
+    "institution":"Istituto Superiore di Sanit\u00e0",
+    "lat":"41.8933203",
+    "lng":"12.4829321"
+  },
+  {
+    "country":"Italy",
+    "city":"Rome",
+    "institution":"Istituto Superiore di Sanit\u00e0",
+    "lat":"41.8933203",
+    "lng":"12.4829321"
+  },
+  {
+    "country":"Italy",
+    "city":"Rome",
+    "institution":"National Institute for Infectious Diseases L. Spallanzani",
+    "lat":"41.8933203",
+    "lng":"12.4829321"
+  },
+  {
+    "country":"Germany",
+    "city":"Berlin",
+    "institution":"Charit\u00e9-Universit\u00e4tsmedizin Berlin",
+    "lat":"52.510885",
+    "lng":"13.3989367"
+  },
+  {
+    "country":"Spain",
+    "city":"Madrid",
+    "institution":"Hospital Ram\u00f3n y Cajal",
+    "lat":"40.4167047",
+    "lng":"-3.7035825"
+  },
+  {
+    "country":"Spain",
+    "city":"Majadahonda",
+    "institution":"Instituto de Salud Carlos III",
+    "lat":"40.473055",
+    "lng":"-3.8724138"
+  },
+  {
+    "country":"Italy",
+    "city":"Bologna",
+    "institution":"University of Bologna",
+    "lat":"44.4938203",
+    "lng":"11.3426327"
+  },
+  {
+    "country":"Italy",
+    "city":"Florence",
+    "institution":"University of Florence",
+    "lat":"43.7697955",
+    "lng":"11.2556404"
+  },
+  {
+    "country":"Italy",
+    "city":"Florence",
+    "institution":"SIMIT - Societ\u00e0 Italiana di Malattie Infettive e Tropicali",
+    "lat":"43.7697955",
+    "lng":"11.2556404"
+  },
+  {
+    "country":"Italy",
+    "city":"Rome",
+    "institution":"INFN - Istituto Nazionale di Fisica Nucleare | INFN\u00a0\u00b7\u00a0Rome I",
+    "lat":"41.8933203",
+    "lng":"12.4829321"
+  },
+  {
+    "country":"Italy",
+    "city":"Florence",
+    "institution":"University of Florence",
+    "lat":"43.7697955",
+    "lng":"11.2556404"
+  },
+  {
+    "country":"Switzerland",
+    "city":"Zurich",
+    "institution":"University of Zurich",
+    "lat":"47.3744489",
+    "lng":"8.5410422"
+  },
+  {
+    "country":"France",
+    "city":"Rennes",
+    "institution":"CHU de Rennes",
+    "lat":"48.1113387",
+    "lng":"-1.6800198"
+  },
+  {
+    "country":"France",
+    "city":"Paris",
+    "institution":"Institut Pasteur",
+    "lat":"48.8588897",
+    "lng":"2.3200410217200766"
+  },
+  {
+    "country":"Spain",
+    "city":"Madrid",
+    "institution":"Hospital Universitario La Paz\u00a0\u00b7\u00a0Grupo de Investigaci\u00f3n de Sida y Enfermedades Infecciosas",
+    "lat":"40.4167047",
+    "lng":"-3.7035825"
+  },
+  {
+    "country":"Italy",
+    "city":"Negrar",
+    "institution":"Department of Infectious, Tropical Diseases and Microbiology - Hospital Sacro Cuore",
+    "lat":"45.5296706",
+    "lng":"10.9400217"
+  },
+  {
+    "country":"Arm\u00e9nie",
+    "city":"Erevan",
+    "institution":"Yerevan State Medical University | YSMU\u00a0\u00b7\u00a0Infectious Diseases",
+    "lat":"40.1777112",
+    "lng":"44.5126233"
+  },
+  {
+    "country":"P\u00e9rou",
+    "city":"Lima",
+    "institution":"Universidad Peruana Cayetano Heredia",
+    "lat":"-12.0621065",
+    "lng":"-77.0365256"
+  },
+  {
+    "country":"Israel",
+    "city":"Hadassah",
+    "institution":"Hadassah Medical Center | hadassah \u00b7 Division of Microbiology and Infectious Diseases",
+    "lat":"31.7653138",
+    "lng":"35.150195"
+  },
+  {
+    "country":"Australia",
+    "city":"Sydney",
+    "institution":"The New South Wales Department of Health | NSW\u00a0\u00b7\u00a0NSW Health Pathology",
+    "lat":"-33.8698439",
+    "lng":"151.2082848"
+  }
+]
