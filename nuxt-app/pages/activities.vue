@@ -66,7 +66,7 @@
           :ui="{ item: 'basis-full' }"
           class="overflow-hidden p-10"
           indicators
-        >
+        />
           <div class="text-center mx-auto">
             <div class="mt-1 mb-5">
               <h2 class="text-xl text-center font-bold">{{ item.title }}</h2>
