@@ -1,4 +1,4 @@
 [build]
   base = "nuxt-app"
-  command = "npx nuxi generate"
+  command = "nuxi generate"
 
