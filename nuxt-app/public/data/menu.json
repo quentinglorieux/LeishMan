@@ -16,9 +16,9 @@
       "icon": "grommet-icons:workshop",
       "link": "",
       "submenu": [
-        { "name": "Seminar/meeting", "link": "/activities#seminar" },
-        { "name": "On-going Projects", "link": "/activities#project" },
-        { "name": "Collaborations", "link": "/activities#collaborations" }
+        { "name": "Seminar/meeting", "link": "/seminars" },
+        { "name": "On-going Projects", "link": "/projects" },
+        { "name": "Collaborations", "link": "/collaborations" }
       ]
     },
     {

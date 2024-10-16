@@ -33,14 +33,21 @@
         <!-- Image or Milestone Section -->
         <div>
           <img
-            src="/images/about-image.jpg"
+            src="/images/logo.png"
             alt="About Us"
             class="rounded-lg shadow-lg mb-6"
           />
           <h2 class="text-3xl font-bold mb-4">{{ data.title4 }}</h2>
-          <p class="text-gray-700 leading-loose dark:text-white">
+          <p class="text-gray-700 leading-loose dark:text-white mb-4">
             {{ data.description4 }}
           </p>
+
+          <h2 class="text-3xl font-bold my-4">Consortium Agreement</h2>
+           <a href="/pdf/CA.pdf"
+        class="mt-6 bg-pasteur-blue hover:bg-pasteur-dark text-white px-6 py-3 rounded-full"
+      >
+        Download here
+        </a>
         </div>
       </div>
     </section>
