@@ -1,4 +1,5 @@
 [build]
   base = "nuxt-app"
-  command = "nuxi generate"
+  command = "npx nuxi generate"
+  publish = "nuxt-app/dist"
 
