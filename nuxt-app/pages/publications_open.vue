@@ -57,7 +57,7 @@
                 class="inline-block align-middle ml-1"
               >
                 <img
-                  src="https://orcid.org/sites/default/files/images/orcid_24x24.png"
+                  src="https://orcid.org/sites/default/files/images/orcid_24x24.webp"
                   alt="ORCID Logo"
                   class="w-3 h-3 align-text-top"
                   style="position: relative; top: -0.5em; left: -0.4em"

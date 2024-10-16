@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-const placeholderImage = "/images/placeholder.jpg";
+const placeholderImage = "/images/placeholder.webp";
 const team = ref([]);
 
 onMounted(async () => {

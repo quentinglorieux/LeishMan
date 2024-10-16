@@ -33,7 +33,7 @@
         <!-- Image or Milestone Section -->
         <div>
           <img
-            src="/images/logo.png"
+            src="/images/logo.webp"
             alt="About Us"
             class="rounded-lg shadow-lg mb-6"
           />
@@ -81,7 +81,7 @@
 
 <script setup>
 import { VueShowdown } from "vue-showdown";
-const placeholderImage = "/images/placeholder.jpg";
+const placeholderImage = "/images/placeholder.webp";
 const team = ref([]);
 // await queryContent("/about").findOne();
 import { parse, stringify } from "yaml";
@@ -103,19 +103,19 @@ onMounted(() => {
       id: 1,
       name: "Dr. Jane Doe",
       title: "Chief Scientist",
-      image: "/images/noprofile.jpg",
+      image: "/images/noprofile.webp",
     },
     {
       id: 2,
       name: "Dr. John Smith",
       title: "Researcher",
-      image: "/images/noprofile.jpg",
+      image: "/images/noprofile.webp",
     },
     {
       id: 3,
       name: "Dr. Emily Zhang",
       title: "Research Coordinator",
-      image: "/images/noprofile.jpg",
+      image: "/images/noprofile.webp",
     },
   ];
 });
