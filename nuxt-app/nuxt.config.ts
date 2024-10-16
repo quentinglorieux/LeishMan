@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   ssr: true, // Enable or Disable SSR
   compatibilityDate: "2024-04-03",
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   components: true,
   modules: ["@nuxt/ui"],
 
