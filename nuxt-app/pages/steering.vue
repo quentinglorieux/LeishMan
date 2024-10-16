@@ -17,7 +17,7 @@
           <img
             :src="member.image || placeholderImage"
             alt="Team Member"
-            class="h-32 w-32 mx-auto rounded-full object-cover mb-4"
+            class="h-32 w-32 mx-auto rounded-full object-cover object-top mb-4"
           />
           <h3 class="text-xl font-bold dark:text-gray-100">
             {{ member.name }}
