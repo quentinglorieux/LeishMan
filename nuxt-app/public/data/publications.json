@@ -207,6 +207,119 @@
       "volume": "9(2)",
       "doi": "10.1093/jpids/piz055",
       "pmid": "31589299"
-    }
-  ]
+    },
+  {
+    "title": "Re-emergence of human leishmaniasis in northern Italy, 2004 to 2022: a retrospective analysis",
+    "authors": [
+      "Renato Todeschini",
+      "Muriel Assunta Musti",
+      "Paolo Pandolfi",
+      "Mattea Troncatti",
+      "Morena Baldini",
+      "Davide Resi",
+      "Silvano Natalini",
+      "Federica Bergamini",
+      "Giorgio Galletti",
+      "Annalisa Santi",
+      "others"
+    ],
+    "journal": "Eurosurveillance",
+    "year": "2024",
+    "volume": "29",
+    "number": "4",
+    "pages": "2300190",
+    "publisher": "European Centre for Disease Prevention and Control",
+    "doi": "10.2807/1560-7917.es.2024.29.4.2300190"
+  },
+  {
+    "title": "Molecular Typing of Leishmania spp. Causing Tegumentary Leishmaniasis in Northeastern Italy, 2014-2020",
+    "authors": [
+      "Tommaso Gritti",
+      "Elena Carra",
+      "Gert Van der Auwera",
+      "José Carlos Solana",
+      "Valeria Gaspari",
+      "Silvana Trincone",
+      "Margherita Ortalli",
+      "Alice Rabitti",
+      "Alessandro Reggiani",
+      "Gianluca Rugna",
+      "others"
+    ],
+    "journal": "Pathogens",
+    "year": "2023",
+    "volume": "13",
+    "number": "1",
+    "pages": "19",
+    "publisher": "MDPI",
+    "doi": "10.3390/pathogens13010019"
+  },
+  {
+    "title": "A 10-year retrospective study on pediatric visceral leishmaniasis in a European endemic area: diagnostic and short-course therapeutic strategies",
+    "authors": [
+      "Arianna Dondi",
+      "Elisa Manieri",
+      "Giacomo Gambuti",
+      "Stefania Varani",
+      "Caterina Campoli",
+      "Daniele Zama",
+      "Luca Pierantoni",
+      "Michelangelo Baldazzi",
+      "Arcangelo Prete",
+      "Luciano Attard",
+      "others"
+    ],
+    "booktitle": "Healthcare",
+    "year": "2023",
+    "volume": "12",
+    "number": "1",
+    "pages": "23",
+    "publisher": "MDPI",
+    "doi": "10.3390/healthcare12010023"
+  },
+  {
+    "title": "Identification of asymptomatic Leishmania infection in patients undergoing kidney transplant using multiple tests",
+    "authors": [
+      "Alessandro Deni",
+      "Alessandra Mistral De Pascali",
+      "Margherita Ortalli",
+      "Emma Balducelli",
+      "Michele Provenzano",
+      "Francesca Ferrara",
+      "Marco Busutti",
+      "Gaetano La Manna",
+      "Lorenzo Zammarchi",
+      "Alessandro Bartoloni",
+      "others"
+    ],
+    "journal": "International Journal of Infectious Diseases",
+    "year": "2024",
+    "volume": "138",
+    "pages": "81-83",
+    "publisher": "Elsevier",
+    "doi": "10.1016/j.ijid.2023.11.012"
+  },
+  {
+    "title": "Genomic and epidemiological evidence for the emergence of a L. infantum/L. donovani hybrid with unusual epidemiology in northern Italy",
+    "authors": [
+      "F. Bruno",
+      "G. Castelli",
+      "B. Li",
+      "S. Reale",
+      "E. Carra",
+      "F. Vitale",
+      "S. Scibetta",
+      "M. Calzolari",
+      "S. Varani",
+      "M. Ortalli",
+      "others"
+    ],
+    "journal": "Mbio",
+    "year": "2024",
+    "pages": "e00995-24",
+    "publisher": "Am Soc Microbiol",
+    "doi": "10.1128/mbio.00995-24"
+  }
+]
+
   

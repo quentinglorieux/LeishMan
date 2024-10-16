@@ -9,13 +9,13 @@
           :eventItem="event"
         />
       </div>
-      <div class="mt-8 text-center">
+      <!--<div class="mt-8 text-center">
         <nuxt-link
           to="/events"
           class="bg-pasteur-blue text-white px-6 py-3 rounded hover:bg-pasteur-dark"
           >View All Events</nuxt-link
         >
-      </div>
+      </div> -->
     </div>
   </section>
 </template>
