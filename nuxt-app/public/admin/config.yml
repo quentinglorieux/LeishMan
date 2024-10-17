@@ -7,7 +7,7 @@ backend:
     delete: Delete - {{collection}} “{{slug}}”
     uploadMedia: Upload - “{{path}}”
     deleteMedia: Delete - “{{path}}”
-    openAuthoring: '{{message}}'
+    openAuthoring: "{{message}}"
   automatic_deployments: false
 
 media_folder: static/img
@@ -136,7 +136,7 @@ collections:
               required: false,
             }
 
-          - { label: "Type", name: "type", widget: "string", required: false }
+          - { label: "Topic", name: "topic", widget: "string", required: false }
   - label: Reference Centers
     name: refcenters
     folder: nuxt-app/public/data/laboratories
