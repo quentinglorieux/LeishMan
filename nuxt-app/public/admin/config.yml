@@ -63,12 +63,12 @@ collections:
       - { label: "Volume", name: "volume", widget: "string", required: false }
       - { label: "DOI or link", name: "DOI", widget: "string", required: false }
       - { label: "PubMedId", name: "pmid", widget: "string", required: false }
-      - { label: "AuthorsList", 
+      -  label: "AuthorsList", 
           name: "authorsList",
           widget: object,
           fields : - {label: Last Name, name: lastname, widget: string, default: ""}
-                - {label: First Name, name: firstname, widget: string, default: ""}
-      }
+                   - {label: First Name, name: firstname, widget: string, default: ""}
+        
   - label: Laboratoires
     name: laboratories
     folder: nuxt-app/public/data/laboratories
