@@ -14,12 +14,32 @@ collections:
     fields:
       - { label: "Nom", name: "lastname", widget: "string", required: true }
       - { label: "Prénom", name: "firstname", widget: "string", required: true }
-      - { label: "Laboratoire", name: "laboratory", widget: "string", , required: false }
-      - { label: "Featured Image", name: "thumbnail", widget: "image" , required: false}
-      - { label: "Short Bio", name: "shortbio", widget: "markdown" , required: false}
+      - {
+          label: "Laboratoire",
+          name: "laboratory",
+          widget: "string",
+          required: false,
+        }
+      - {
+          label: "Featured Image",
+          name: "thumbnail",
+          widget: "image",
+          required: false,
+        }
+      - {
+          label: "Short Bio",
+          name: "shortbio",
+          widget: "markdown",
+          required: false,
+        }
       - { label: "Role", name: "role", widget: "string", required: false }
-      - { label: "E-mail", name: "mail", widget: "string" , required: false}
-      - { label: "Coordinator ?", name: "coordinator", widget: "boolean", required: false }
+      - { label: "E-mail", name: "mail", widget: "string", required: false }
+      - {
+          label: "Coordinator ?",
+          name: "coordinator",
+          widget: "boolean",
+          required: false,
+        }
   - label: Publications
     name: publications
     folder: nuxt-app/public/data/publications
