@@ -58,6 +58,8 @@ collections:
           name: "authorlist",
           widget: "object",
           required: false,
+          fields:
+            - {label: Name, name: name, widget: string}
         }
   - label: Reference Centers
     name: refcenters
