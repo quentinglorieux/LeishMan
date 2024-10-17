@@ -8,11 +8,11 @@ backend:
     uploadMedia: Upload - “{{path}}”
     deleteMedia: Delete - “{{path}}”
     openAuthoring: '{{message}}'
+  automatic_deployments: false
 
 media_folder: static/img
 public_folder: images
 show_preview_links: false
-
 
 collections:
   - label: Members
