@@ -53,14 +53,17 @@ collections:
       - { label: "Volume", name: "volume", widget: "string", required: false }
       - { label: "DOI or link", name: "DOI", widget: "string", required: false }
       - { label: "PubMedId", name: "pmid", widget: "string", required: false }
-  - label: Laboratoires
-    name: laboratories
+  - label: Reference Centers
+    name: refcenters
     folder: nuxt-app/public/data/laboratories
     create: true
     identifier_field: name
     fields:
-      - { label: "Nom", name: "name", widget: "string", required: true }
-      - { label: "GPS", name: "GPS", widget: "string", required: true }
+      - { label: "Institution", name: "name", widget: "string", required: true }
+      - { label: "Longitude", name: "lng", widget: "string", required: true }
+      - { label: "Latitude", name: "lat", widget: "string", required: true }
+      - { label: "Country", name: "country", widget: "string", required: true }
+      - { label: "City", name: "city", widget: "string", required: true }
       - { label: "Logo", name: "logo", widget: "image", required: false }
       - {
           label: "Description",
