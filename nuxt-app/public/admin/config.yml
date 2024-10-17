@@ -61,6 +61,14 @@ collections:
           fields:
             - {label: Name, name: name, widget: string}
         }
+      - {
+          label: "authorList",
+          name: "authorlist",
+          widget: "list",
+          required: false,
+          fields:
+            - {label: Name, name: name, widget: string}
+        }
   - label: Reference Centers
     name: refcenters
     folder: nuxt-app/public/data/laboratories
