@@ -33,7 +33,6 @@ collections:
       - { label: "Volume", name: "volume", widget: "string", required: false }
       - { label: "DOI or link", name: "DOI", widget: "string", required: false }
       - { label: "PubMedId", name: "pmid", widget: "string", required: false }
-
   - label: Laboratoires
     name: laboratories
     folder: nuxt-app/public/data/laboratories
