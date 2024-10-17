@@ -7,5 +7,5 @@ shortbio: Pierre Buffet is coordinator of the LeishMan group. He is an expert in
 role: MD, PhD, Coordinator
 mail: buffet@leishman.fr
 coordinator: true
-thumbmail: images/steering/pierre.webp
+thumbmail: /images/pierre.webp
 ---

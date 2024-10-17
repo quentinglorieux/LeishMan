@@ -7,4 +7,5 @@ shortbio: Gert Van der Auwera works as a postdoctoral researcher at the Institut
 role: PhD
 mail: auwera@leisman.fr
 coordinator: false
+thumbmail: /images/gert.webp
 ---

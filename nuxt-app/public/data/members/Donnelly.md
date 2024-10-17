@@ -7,5 +7,5 @@ shortbio: Owain Donnelly is an Infectious Diseases and Microbiology doctor in Lo
 role: MD
 mail: owain@leisman.fr
 coordinator: false
-thumbmail: images/steering/owain.webp
+thumbmail: /images/owain.webp
 ---
