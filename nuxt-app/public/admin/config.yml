@@ -27,10 +27,28 @@ collections:
           required: false,
         }
       - {
-          label: "Activités",
-          name: "activities",
+          label: "Short Bio",
+          name: "shortbio",
           widget: "markdown",
           required: false,
+        }
+        - {
+        label: "Role",
+          name: "role",
+          widget: "string",
+
+        }
+          - {
+        label: "E-mail",
+          name: "mail",
+          widget: "string",
+
+        }
+                  - {
+        label: "Coordinator ?",
+          name: "coordinator",
+          widget: "boolean",
+
         }
   - label: Publications
     name: publications
