@@ -40,19 +40,6 @@ collections:
           widget: "boolean",
           required: false,
         }
-  - label: Publications
-    name: publications
-    folder: nuxt-app/public/data/publications
-    create: true
-    identifier_field: title
-    fields:
-      - { label: "Title", name: "title", widget: "string", required: true }
-      - { label: "Authors", name: "authors", widget: "string", required: true }
-      - { label: "Journal", name: "journal", widget: "string" }
-      - { label: "Year", name: "year", widget: "string", required: false }
-      - { label: "Volume", name: "volume", widget: "string", required: false }
-      - { label: "DOI or link", name: "DOI", widget: "string", required: false }
-      - { label: "PubMedId", name: "pmid", widget: "string", required: false }
   - label: Laboratoires
     name: laboratories
     folder: nuxt-app/public/data/laboratories
