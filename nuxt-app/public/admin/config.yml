@@ -51,7 +51,7 @@ collections:
       - { label: "Journal", name: "journal", widget: "string" }
       - { label: "Year", name: "year", widget: "string", required: false }
       - { label: "Volume", name: "volume", widget: "string", required: false }
-      - { label: "DOI or link", name: "DOI", widget: "string", required: false }
+      - { label: "DOI or link", name: "doi", widget: "string", required: false }
       - { label: "PubMedId", name: "pmid", widget: "string", required: false }
   - label: Reference Centers
     name: refcenters
