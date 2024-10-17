@@ -53,6 +53,12 @@ collections:
       - { label: "Volume", name: "volume", widget: "string", required: false }
       - { label: "DOI or link", name: "DOI", widget: "string", required: false }
       - { label: "PubMedId", name: "pmid", widget: "string", required: false }
+      - {
+          label: "authorList",
+          name: "authorlist",
+          widget: "object",
+          required: false,
+        }
   - label: Reference Centers
     name: refcenters
     folder: nuxt-app/public/data/laboratories
