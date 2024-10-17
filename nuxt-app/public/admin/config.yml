@@ -39,19 +39,18 @@ collections:
     identifier_field: title
     fields:
       - { label: "Title", name: "title", widget: "string", required: true }
-      - { label: "Prénom", name: "firstname", widget: "string", required: true }
+      - { label: "Authors", name: "authors", widget: "string", required: true }
       - { label: "Journal", name: "journal", widget: "string" }
-      - {
-          label: "Start time",
-          name: "start",
-          widget: "datetime",
-          date_format: "YYYY", # e.g. 24.12.2021
-          picker_utc: false,
-        }
       - { label: "Year", name: "year", widget: "string", required: false }
       - { label: "Volume", name: "volume", widget: "string", required: false }
       - { label: "DOI or link", name: "DOI", widget: "string", required: false }
       - { label: "PubMedId", name: "pmid", widget: "string", required: false }
+      - { label: "AuthorsList", 
+          name: "authorsList",
+          widget: object,
+          fields : - {label: Last Name, name: lastname, widget: string, default: ""}
+                - {label: First Name, name: firstname, widget: string, default: ""}
+      }
   - label: Laboratoires
     name: laboratories
     folder: nuxt-app/public/data/laboratories
