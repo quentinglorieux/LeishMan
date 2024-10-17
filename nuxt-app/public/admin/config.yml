@@ -64,7 +64,70 @@ collections:
       - { label: "Volume", name: "volume", widget: "string", required: false }
       - { label: "DOI or link", name: "DOI", widget: "string", required: false }
       - { label: "PubMedId", name: "pmid", widget: "string", required: false }
+  - label: Events
+    name: events
+    folder: nuxt-app/public/data/events
+    create: true
+    identifier_field: title
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - {
+          label: "Location",
+          name: "location",
+          widget: "string",
+          required: false,
+        }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "markdown",
+          required: false,
+        }
+      - {
+          label: "date",
+          name: "date",
+          widget: "datetime",
+          time_format: false,
+          date_format: "DD:MM:YYYY",
+          required: false,
+        }
+      - label: "Talk"
+        name: "talk"
+        widget: "list"
+        required: false
+        fields:
+          - {
+              label: "Speaker",
+              name: "speaker",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "Title",
+              name: "talktitle",
+              widget: "string",
+              required: false,
+            }
+          - {
+              label: "Starting Time",
+              name: "starttime",
+              widget: "datetime",
+              time_format: "HH:mm",
+              default: "{{now}}",
+              date_format: false,
+              required: false,
+            }
+          - {
+              label: "Ending Time",
+              name: "endingtime",
+              widget: "datetime",
+              time_format: "HH:mm",
+              default: "{{now}}",
+              date_format: false,
+              required: false,
+            }
 
+          - { label: "Type", name: "type", widget: "string", required: false }
   - label: Reference Centers
     name: refcenters
     folder: nuxt-app/public/data/laboratories
