@@ -1,5 +1,5 @@
 ---
-title: Identification of asymptomatic Leishmania infection in patients undergoing kidney transplant using multiple tests
+title: "Identification of asymptomatic Leishmania infection in patients undergoing kidney transplant using multiple tests"
 authors: "Alessandro Deni"
 journal: "International Journal of Infectious Diseases"
 year: 2024

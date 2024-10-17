@@ -1,5 +1,5 @@
 ---
-title: Molecular Typing of Leishmania spp. Causing Tegumentary Leishmaniasis in Northeastern Italy, 2014-2020
+title: "Molecular Typing of Leishmania spp. Causing Tegumentary Leishmaniasis in Northeastern Italy, 2014-2020"
 authors: "Tommaso Gritti"
 journal: "Pathogens"
 year: 2023

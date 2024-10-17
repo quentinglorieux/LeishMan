@@ -1,5 +1,5 @@
 ---
-title: A 10-year retrospective study on pediatric visceral leishmaniasis in a European endemic area: diagnostic and short-course therapeutic strategies
+title: "A 10-year retrospective study on pediatric visceral leishmaniasis in a European endemic area: diagnostic and short-course therapeutic strategies"
 authors: "Arianna Dondi"
 journal: "Healthcare"
 year: 2023

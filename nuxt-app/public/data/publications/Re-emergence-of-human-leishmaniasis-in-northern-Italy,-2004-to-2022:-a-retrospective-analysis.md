@@ -1,5 +1,5 @@
 ---
-title: Re-emergence of human leishmaniasis in northern Italy, 2004 to 2022: a retrospective analysis
+title: "Re-emergence of human leishmaniasis in northern Italy, 2004 to 2022: a retrospective analysis"
 authors: "Renato Todeschini"
 journal: "Eurosurveillance"
 year: 2024

@@ -1,5 +1,5 @@
 ---
-title: Leishmaniasis epidemiology in endemic areas of metropolitan France and its overseas territories from 1998 to 2020
+title: "Leishmaniasis epidemiology in endemic areas of metropolitan France and its overseas territories from 1998 to 2020"
 authors: "Pasquier G"
 journal: "PLoS Negl Trop Dis"
 year: 2022

@@ -1,5 +1,5 @@
 ---
-title: Congenital Leishmaniasis in a Newborn Infant Whose Mother was Coinfected With Leishmaniasis and HIV
+title: "Congenital Leishmaniasis in a Newborn Infant Whose Mother was Coinfected With Leishmaniasis and HIV"
 authors: "Argy N"
 journal: "J Pediatric Infect Dis Soc"
 year: 2020

@@ -1,5 +1,5 @@
 ---
-title: Surveillance of leishmaniasis cases from 15 European centres 2014 to 2019: a retrospective analysis
+title: "Surveillance of leishmaniasis cases from 15 European centres 2014 to 2019: a retrospective analysis"
 authors: "Van der Auwera G"
 journal: "Euro Surveill"
 year: 2022

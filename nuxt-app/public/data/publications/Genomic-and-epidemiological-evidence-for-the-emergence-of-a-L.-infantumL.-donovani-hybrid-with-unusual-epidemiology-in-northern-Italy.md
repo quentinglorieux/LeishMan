@@ -1,5 +1,5 @@
 ---
-title: Genomic and epidemiological evidence for the emergence of a L. infantumL. donovani hybrid with unusual epidemiology in northern Italy
+title: "Genomic and epidemiological evidence for the emergence of a L. infantumL. donovani hybrid with unusual epidemiology in northern Italy"
 authors: "F. Bruno"
 journal: "Mbio"
 year: 2024
