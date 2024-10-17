@@ -27,8 +27,41 @@ collections:
           required: false,
         }
       - {
-          label: "Activités",
-          name: "activities",
+          label: "Short Bio",
+          name: "shortbio",
+          widget: "markdown",
+          required: false,
+        }
+        - {
+        label: "Role",
+          name: "role",
+          widget: "string",
+
+        }
+          - {
+        label: "E-mail",
+          name: "mail",
+          widget: "string",
+
+        }
+        - {
+        label: "Coordinator ?",
+          name: "coordinator",
+          widget: "boolean",
+
+        }
+  - label: Laboratoires
+    name: laboratories
+    folder: nuxt-app/public/data/laboratories
+    create: true
+    identifier_field: name
+    fields:
+      - { label: "Nom", name: "name", widget: "string", required: true }
+      - { label: "GPS", name: "GPS", widget: "string", required: true }
+      - { label: "Logo", name: "logo", widget: "image", required: false }
+      - {
+          label: "Description",
+          name: "description",
           widget: "markdown",
           required: false,
         }
