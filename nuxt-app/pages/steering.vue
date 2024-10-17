@@ -1,10 +1,9 @@
 <template>
-        <section class="bg-pasteur-blue text-white py-16">
-      <div class="container mx-auto text-center">
-        <h1 class="text-4xl font-bold">Our steering committee</h1>
-
-      </div>
-    </section>
+  <section class="bg-pasteur-blue text-white py-16">
+    <div class="container mx-auto text-center">
+      <h1 class="text-4xl font-bold">Our steering committee</h1>
+    </div>
+  </section>
 
   <section class="py-16 bg-gray-100 px-10 dark:bg-slate-600">
     <div class="container mx-auto text-center">
@@ -23,19 +22,17 @@
             {{ member.name }}
           </h3>
           <p class="text-gray-600 dark:text-gray-100">{{ member.role }}</p>
-          <p class="dark:text-gray-100 ">Contact : {{ member.email_adress }}</p>
+          <p class="dark:text-gray-100">Contact : {{ member.email_adress }}</p>
 
           <UAccordion
-          class="mt-4 dark:text-gray-100"
-          color="gray"
-          variant="solid"
-          size="md"
-          open-icon="i-heroicons-plus"
-        close-icon="i-heroicons-minus"
-           :items="[{ label: 'Short biography', content:  member.bio  }]"
+            class="mt-4 dark:text-gray-100"
+            color="gray"
+            variant="solid"
+            size="md"
+            open-icon="i-heroicons-plus"
+            close-icon="i-heroicons-minus"
+            :items="[{ label: 'Short biography', content: member.bio }]"
           />
-
-
         </div>
       </div>
     </div>
