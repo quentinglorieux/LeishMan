@@ -1,9 +1,18 @@
 backend:
   name: github
   repo: quentinglorieux/leishman # Path to your GitHub repository
+  commit_messages:
+    create: Create - {{collection}} “{{slug}}”
+    update: Update - {{collection}} “{{slug}}”
+    delete: Delete - {{collection}} “{{slug}}”
+    uploadMedia: Upload - “{{path}}”
+    deleteMedia: Delete - “{{path}}”
+    openAuthoring: '{{message}}'
+  automatic_deployments: false
 
 media_folder: static/img
 public_folder: images
+show_preview_links: false
 
 collections:
   - label: Members
