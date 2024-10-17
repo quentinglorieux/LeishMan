@@ -14,27 +14,6 @@ collections:
     fields:
       - { label: "Nom", name: "lastname", widget: "string", required: true }
       - { label: "Prénom", name: "firstname", widget: "string", required: true }
-      - {
-          label: "Laboratoire",
-          name: "laboratory",
-          widget: "string",
-          required: true,
-        }
-      - {
-          label: "Featured Image",
-          name: "thumbnail",
-          widget: "image",
-          required: false,
-        }
-      - {
-          label: "Short Bio",
-          name: "shortbio",
-          widget: "markdown",
-          required: false,
-        }
-      - { label: "Role", name: "role", widget: "string" }
-      - { label: "E-mail", name: "mail", widget: "string" }
-      - { label: "Coordinator ?", name: "coordinator", widget: "boolean" }
   - label: Publications
     name: publications
     folder: nuxt-app/public/data/publications
@@ -48,7 +27,6 @@ collections:
       - { label: "Volume", name: "volume", widget: "string", required: false }
       - { label: "DOI or link", name: "DOI", widget: "string", required: false }
       - { label: "PubMedId", name: "pmid", widget: "string", required: false }
-
   - label: Laboratoires
     name: laboratories
     folder: nuxt-app/public/data/laboratories
