@@ -14,42 +14,12 @@ collections:
     fields:
       - { label: "Nom", name: "lastname", widget: "string", required: true }
       - { label: "Prénom", name: "firstname", widget: "string", required: true }
-      - {
-          label: "Laboratoire",
-          name: "laboratory",
-          widget: "string",
-          required: true,
-        }
-      - {
-          label: "Featured Image",
-          name: "thumbnail",
-          widget: "image",
-          required: false,
-        }
-      - {
-          label: "Short Bio",
-          name: "shortbio",
-          widget: "markdown",
-          required: false,
-        }
-        - {
-        label: "Role",
-          name: "role",
-          widget: "string",
-
-        }
-          - {
-        label: "E-mail",
-          name: "mail",
-          widget: "string",
-
-        }
-        - {
-        label: "Coordinator ?",
-          name: "coordinator",
-          widget: "boolean",
-
-        }
+      - { label: "Laboratoire", name: "laboratory", widget: "string" }
+      - { label: "Featured Image", name: "thumbnail", widget: "image" }
+      - { label: "Short Bio", name: "shortbio", widget: "markdown" }
+      - { label: "Role", name: "role", widget: "string" }
+      - { label: "E-mail", name: "mail", widget: "string" }
+      - { label: "Coordinator ?", name: "coordinator", widget: "boolean" }
   - label: Laboratoires
     name: laboratories
     folder: nuxt-app/public/data/laboratories
