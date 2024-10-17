@@ -14,6 +14,24 @@ collections:
     fields:
       - { label: "Nom", name: "lastname", widget: "string", required: true }
       - { label: "Prénom", name: "firstname", widget: "string", required: true }
+      - {
+          label: "Laboratoire",
+          name: "laboratory",
+          widget: "string",
+          required: true,
+        }
+      - {
+          label: "Featured Image",
+          name: "thumbnail",
+          widget: "image",
+          required: false,
+        }
+      - {
+          label: "Activités",
+          name: "activities",
+          widget: "markdown",
+          required: false,
+        }
   - label: Publications
     name: publications
     folder: nuxt-app/public/data/publications
@@ -21,8 +39,15 @@ collections:
     identifier_field: title
     fields:
       - { label: "Title", name: "title", widget: "string", required: true }
-      - { label: "Authors", name: "authors", widget: "string", required: true }
+      - { label: "Prénom", name: "firstname", widget: "string", required: true }
       - { label: "Journal", name: "journal", widget: "string" }
+      - {
+          label: "Start time",
+          name: "start",
+          widget: "datetime",
+          date_format: "YYYY", # e.g. 24.12.2021
+          picker_utc: false,
+        }
       - { label: "Year", name: "year", widget: "string", required: false }
       - { label: "Volume", name: "volume", widget: "string", required: false }
       - { label: "DOI or link", name: "DOI", widget: "string", required: false }
