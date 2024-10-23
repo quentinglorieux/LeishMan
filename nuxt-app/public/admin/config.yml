@@ -98,8 +98,10 @@ collections:
           widget: "datetime",
           time_format: false,
           date_format: "DD:MM:YYYY",
+          format: "YYYY:MM:DD",
           required: false,
         }
+      - { label: "Image", name: "image", widget: "image", required: false }
       - label: "Talk"
         name: "talk"
         widget: "list"

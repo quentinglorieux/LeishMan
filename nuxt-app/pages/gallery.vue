@@ -7,7 +7,7 @@
         <h1 v-if="!isAuthenticated" class="text-4xl font-bold">
           Password Protected Page
         </h1>
-        <h1 v-else class="text-4xl font-bold">Gallery</h1>
+        <h1 v-else class="text-4xl font-bold">{{ page.title }}</h1>
         <p v-if="!isAuthenticated" class="mt-4 text-lg max-w-2xl mx-auto">
           This page is protected. Please enter the password to proceed or
           contact us if you need access.
