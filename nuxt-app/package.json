@@ -10,9 +10,12 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/content": "^2.13.4",
     "@nuxt/nitro": "^0.10.0",
     "@nuxtjs/style-resources": "^1.2.2",
+    "content": "^4.0.6",
     "nuxt": "^3.13.0",
+    "ordered-uuid-v4": "^0.2.1",
     "parse-md": "^3.0.3",
     "vue": "latest",
     "vue-router": "latest",
