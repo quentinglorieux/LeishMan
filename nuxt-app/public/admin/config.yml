@@ -10,7 +10,7 @@ backend:
     openAuthoring: "{{message}}"
   automatic_deployments: false
 
-media_folder: images
+media_folder: nuxt-app/public/images
 public_folder: images
 show_preview_links: false
 
@@ -244,3 +244,18 @@ collections:
               widget: "image",
               required: false,
             }
+      - label: "Gallery"
+        name: "gallery"
+        file: "nuxt-app/content/gallery.yml"
+        fields:
+          - { label: "Title", name: "title", widget: "string", required: true }
+          - label: "Pictures"
+            name: "pictureList"
+            widget: "list"
+            fields:
+              - {
+                  label: "image",
+                  name: "image",
+                  widget: "image",
+                  required: false,
+                }
