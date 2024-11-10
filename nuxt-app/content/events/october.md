@@ -2,52 +2,52 @@
 title: October Leishman Meeting
 location: Paris, France
 description: Our Monthly october meeting in Zoom
-date: October 24, 2024 12:00 AM
+date: 10/11/2024
 image: /images/annual_conference.webp
 talk:
   - speaker: Pierre Buffet
     talktitle: Wrap Up
-    starttime: 10:00
+    starttime: 10:00:00
     endingtime: ""
     topic: CLINICAL CASES
   - speaker: Pierre Buffet
     talktitle: Introduction & Welcome
-    starttime: 10:00
+    starttime: 10:00:00
     endingtime: ""
     topic: COMMON ASPECTS
   - speaker: Pierre Buffet
     talktitle: Evolution of the Website
-    starttime: 10:10
+    starttime: 10:10:00
     endingtime: ""
     topic: COMMON ASPECTS
   - speaker: Cléa Melenotte & Andrea Neymar
     talktitle: Consortium agreement / membership/ sharepoint
-    starttime: 10:25
+    starttime: 10:25:00
     endingtime: ""
     topic: COMMON ASPECTS
   - speaker: Gert Van der Auwera
     talktitle: Database update
-    starttime: 10:30
+    starttime: 10:30:00
     endingtime: ""
     topic: COMMON ASPECTS
   - speaker: Selected authors-30min
     talktitle: Key findings & publications
-    starttime: 10:45
+    starttime: 10:45:00
     endingtime: ""
     topic: COMMON ASPECTS
   - speaker: Jean-Pierre Gangneux
     talktitle: Survey Gangneux
-    starttime: 11:15
+    starttime: 11:15:00
     endingtime: ""
     topic: EPIDEMIOLOGY
   - speaker: Owain Donnelly
     talktitle: The experience of the UK
-    starttime: 11:35
+    starttime: 11:35:00
     endingtime: ""
     topic: EPIDEMIOLOGY
   - speaker: nan
     talktitle: Lunch break
-    starttime: 11:55
+    starttime: 11:55:00
     endingtime: ""
     topic: EPIDEMIOLOGY
   - speaker: Gianluca Rugna

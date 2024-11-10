@@ -20,6 +20,13 @@
         </div>
         <div class="md:w-5/6 p-4 text-gray-800 dark:text-white">
           {{ abstract }}
+          <div v-if="date" class="mt-4">
+            <nuxt-link
+              :to="`event/` + date"
+              class="bg-pasteur-blue text-white px-4 py-2 rounded hover:bg-pasteur-dark"
+              >See the programm</nuxt-link
+            >
+          </div>
         </div>
       </div>
     </div>

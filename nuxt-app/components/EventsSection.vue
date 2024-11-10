@@ -1,10 +1,10 @@
 <template>
-  <section class="py-12">
+  <section v-if="futureseminars.length > 0" class="py-12">
     <div class="container mx-auto px-10">
       <h2 class="text-3xl font-bold mb-6">Upcoming Events</h2>
       <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
         <EventCard
-          v-for="event in eventItems"
+          v-for="event in futureseminars"
           :key="event.id"
           :eventItem="event"
         />
@@ -21,6 +21,13 @@
 </template>
 
 <script setup>
+const seminars = await queryContent("events").sort({ date: 1 }).find();
+const today = new Date();
+const nextseminar = seminars.filter(
+  (event) => new Date(event.date) > today && Date(event.date) < today + 10
+)[0];
+const futureseminars = seminars.filter((event) => new Date(event.date) > today);
+
 import { ref, onMounted } from "vue";
 import EventCard from "@/components/EventCard.vue";
 
