@@ -11,7 +11,6 @@ backend:
   automatic_deployments: false
 
 media_folder: nuxt-app/public/images
-media_folder: nuxt-app/public/data/images
 public_folder: images
 show_preview_links: false
 
