@@ -118,7 +118,7 @@ async function filterByYear(year) {
   } else {
     printedYears.value = [year];
     filteredPublications.value = await queryContent("publications")
-      .where({ year: Number(year) })
+      .where({ year: parseInt(year) })
       .find();
   }
 }
