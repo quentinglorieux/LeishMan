@@ -5,10 +5,10 @@
     </div>
   </section>
   <!-- Next Meeting Section -->
-  <Titleheader class="p-10" title="Next Meeting"></Titleheader>
+  <Titleheader v-if="nextseminar" class="p-10" title="Next Meeting"></Titleheader>
 
   <!-- Display the next event as a card (full width) -->
-  <div class="w-80 bg-white p-6 shadow-md rounded-lg mx-auto">
+  <div v-if="nextseminar" class="w-80 bg-white p-6 shadow-md rounded-lg mx-auto">
     <div class="flex flex-col md:flex-row">
       <div class="md:w-1/3">
         <img
@@ -68,7 +68,13 @@
 <script setup>
 const seminars = await queryContent("events").sort({ date: 1 }).find();
 const today = new Date();
-const nextseminar = seminars.filter((event) => new Date(event.date) > today)[0];
+const futurseminar = seminars.filter((event) => new Date(event.date) > today);
+var nextseminar=false;
+if (futurseminar.length>0){
+  nextseminar=futurseminar[0]
+}
+
+
 </script>
 
 <style scoped>

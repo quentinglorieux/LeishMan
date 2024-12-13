@@ -15,6 +15,18 @@ public_folder: images
 show_preview_links: false
 
 collections:
+  - name: posts
+    label: Posts
+    folder: nuxt-app/content/post
+    create: true
+    fields:
+      - name: title
+        label: Title
+        widget: string
+      - name: categories
+        label: Categories
+        widget: categories
+        separator: __
   - label: Members
     name: members
     folder: nuxt-app/content/members
