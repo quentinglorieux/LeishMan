@@ -5,17 +5,5 @@ year: 2024
 volume: 138
 DOI: 10.1093/jtm/taae051
 pmid: 38578988
-authorslist:
- -  author: Equihua Martinez G
- -  author: Moreno-Del Castillo MC
- -  author: Lindner AK
- -  author: Gargala G
- -  author: Cessot G
- -  author: van de Werve C
- -  author: Caumes E
- -  author: Harms G
- -  author: Aurbach U
- -  author: Kampmann B
- -  author: Buffet P
- -  author: Melenotte C
+authors: 'Equihua Martinez G, Moreno-Del Castillo MC, Lindner AK, Gargala G, Cessot G, van de Werve C, Caumes E, Harms G, Aurbach U, Kampmann B, Buffet P, Melenotte C'
 ---

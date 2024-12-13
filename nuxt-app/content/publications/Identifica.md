@@ -5,16 +5,5 @@ year: 2024
 volume: 138
 DOI: 10.1016/j.ijid.2023.11.012
 pmid: 
-authorslist:
- -  author: Alessandro Deni
- -  author: Alessandra Mistral De Pascali
- -  author: Margherita Ortalli
- -  author: Emma Balducelli
- -  author: Michele Provenzano
- -  author: Francesca Ferrara
- -  author: Marco Busutti
- -  author: Gaetano La Manna
- -  author: Lorenzo Zammarchi
- -  author: Alessandro Bartoloni
- -  author: others
+authors: 'Alessandro Deni, Alessandra Mistral De Pascali, Margherita Ortalli, Emma Balducelli, Michele Provenzano, Francesca Ferrara, Marco Busutti, Gaetano La Manna, Lorenzo Zammarchi, Alessandro Bartoloni, others'
 ---

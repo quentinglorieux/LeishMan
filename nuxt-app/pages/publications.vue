@@ -61,14 +61,15 @@
               </a>
             </div>
             <div class="text-gray-600 mb-2 dark:text-gray-300">
-              <span
+              {{ work.authors }}
+              <!-- <span
                 v-for="(author, index) in work.authorslist"
                 :key="author"
                 class="mr-2"
               >
                 {{ author.author
                 }}<span v-if="index < work.authorslist.length - 1">,</span>
-              </span>
+              </span> -->
             </div>
 
             <div v-if="work.DOI" class="text-sm text-blue-500">

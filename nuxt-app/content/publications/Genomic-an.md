@@ -5,16 +5,5 @@ year: 2024
 volume: 138
 DOI: 10.1128/mbio.00995-24
 pmid: 
-authorslist:
- -  author: F. Bruno
- -  author: G. Castelli
- -  author: B. Li
- -  author: S. Reale
- -  author: E. Carra
- -  author: F. Vitale
- -  author: S. Scibetta
- -  author: M. Calzolari
- -  author: S. Varani
- -  author: M. Ortalli
- -  author: others
+authors: 'F. Bruno, G. Castelli, B. Li, S. Reale, E. Carra, F. Vitale, S. Scibetta, M. Calzolari, S. Varani, M. Ortalli, others'
 ---

@@ -5,15 +5,5 @@ year: 2021
 volume: 138
 DOI: 10.1093/jac/dkab218
 pmid: 34189571
-authorslist:
- -  author: Contejean A
- -  author: Ayral X
- -  author: Dorlo TPC
- -  author: Roseboom IC
- -  author: Yera H
- -  author: Gana I
- -  author: Chouchana L
- -  author: Canouï E
- -  author: Buffet P
- -  author: Charlier C
+authors: ' Contejean A,  Ayral X,  Dorlo TPC,  Roseboom IC,  Yera H,  Gana I,  Chouchana L,  Canouï E,  Buffet P,  Charlier C'
 ---

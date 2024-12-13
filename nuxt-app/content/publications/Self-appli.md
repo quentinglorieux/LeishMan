@@ -5,25 +5,5 @@ year: 2023
 volume: 138
 DOI: 10.1371/journal.pntd.0011492
 pmid: 37561802
-authorslist:
- -  author: Mouri O
- -  author: Melenotte C
- -  author: Guéry R
- -  author: Cotteret C
- -  author: Schweitzer-Chaput A
- -  author: Perignon A
- -  author: Thellier M
- -  author: Bourrat E
- -  author: Kaguelidou F
- -  author: Siriez JY
- -  author: Malvy D
- -  author: Gangneux JP
- -  author: Duvignaud A
- -  author: Ravel C
- -  author: Cisternino S
- -  author: Ransom J
- -  author: Caumes E
- -  author: Lortholary O
- -  author: Grogl M
- -  author: Buffet P
+authors: 'Mouri O, Melenotte C, Guéry R, Cotteret C, Schweitzer-Chaput A, Perignon A, Thellier M, Bourrat E, Kaguelidou F, Siriez JY, Malvy D, Gangneux JP, Duvignaud A, Ravel C, Cisternino S, Ransom J, Caumes E, Lortholary O, Grogl M, Buffet P'
 ---

@@ -1,16 +1,6 @@
 ---
 title: "Re-emergence of human leishmaniasis in northern Italy, 2004 to 2022: a retrospective analysis"
-authorslist:
-  - author: Renato Todeschini
-  - author: Muriel Assunta Musti
-  - author: Paolo Pandolfi
-  - author: Mattea Troncatti
-  - author: Morena Baldini
-  - author: Davide Resi
-  - author: Silvano Natalini
-  - author: Federica Bergamini
-  - author: Giorgio Galletti
-  - author: Annalisa Santi
+authors: "Renato Todeschini,  Muriel Assunta Musti,  Paolo Pandolfi,  Mattea Troncatti,  Morena Baldini,  Davide Resi,  Silvano Natalini,  Federica Bergamini,  Giorgio Galletti,  Annalisa Santi"
 journal: Eurosurveillance
 year: ""
 volume: ""

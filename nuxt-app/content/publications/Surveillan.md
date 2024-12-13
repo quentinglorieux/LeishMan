@@ -1,30 +1,6 @@
 ---
 title: "Surveillance of leishmaniasis cases from 15 European centres 2014 to 2019: a retrospective analysis"
-authorslist:
-  - author: Van der Auwera G
-  - author: Davidsson L
-  - author: Buffet P
-  - author: Ruf MT
-  - author: Gramiccia M
-  - author: Varani S
-  - author: Chicharro C
-  - author: Bart A
-  - author: Harms G
-  - author: Chiodini PL
-  - author: Brekke H
-  - author: Robert-Gangneux F
-  - author: Cortes S
-  - author: Verweij JJ
-  - author: Scarabello A
-  - author: Karlsson Söbirk S
-  - author: Guéry R
-  - author: van Henten S
-  - author: Di Muccio T
-  - author: Carra E
-  - author: van Thiel P
-  - author: Vandeputte M
-  - author: Gaspari V
-  - author: Blum J
+authors: 'Van der Auwera G, Davidsson L, Buffet P, Ruf MT, Gramiccia M, Varani S, Chicharro C, Bart A, Harms G, Chiodini PL, Brekke H, Robert-Gangneux F, Cortes S, Verweij JJ, Scarabello A, Karlsson Söbirk S, Guéry R, van Henten S, Di Muccio T, Carra E, van Thiel P, Vandeputte M, Gaspari V, Blum J'
 journal: Euro Surveill
 year: ""
 volume: ""

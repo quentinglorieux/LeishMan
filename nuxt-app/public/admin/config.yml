@@ -130,16 +130,7 @@ collections:
     identifier_field: title
     fields:
       - { label: "Title", name: "title", widget: "string", required: true }
-      - label: "authors List"
-        name: "authorslist"
-        widget: "list"
-        fields:
-          - {
-              label: "Author",
-              name: "author",
-              widget: "string",
-              required: false,
-            }
+      - { label: "Authors", name: "authors", widget: "string", required: true }
       - { label: "Journal", name: "journal", widget: "string" }
       - { label: "Year", name: "year", widget: "string", required: false }
       - { label: "Volume", name: "volume", widget: "string", required: false }

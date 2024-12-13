@@ -5,20 +5,5 @@ year: 2022
 volume: 138
 DOI: 10.1016/j.ijid.2022.06.025
 pmid: 35728749
-authorslist:
- -  author: Glans H
- -  author: Dotevall L
- -  author: Van der Auwera G
- -  author: Bart A
- -  author: Blum J
- -  author: Buffet P
- -  author: Guery R
- -  author: Gangneux JP
- -  author: van Henten S
- -  author: Harms G
- -  author: Varani S
- -  author: Robert-Gangneux F
- -  author: Rongisch R
- -  author: Andersson B
- -  author: Bradley M
+authors: 'Glans H, Dotevall L, Van der Auwera G, Bart A, Blum J, Buffet P, Guery R, Gangneux JP, van Henten S, Harms G, Varani S, Robert-Gangneux F, Rongisch R, Andersson B, Bradley M'
 ---

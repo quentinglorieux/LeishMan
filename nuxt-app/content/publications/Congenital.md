@@ -5,18 +5,5 @@ year: 2020
 volume: 138
 DOI: 10.1093/jpids/piz055
 pmid: 31589299
-authorslist:
- -  author: Argy N
- -  author: Lariven S
- -  author: Rideau A
- -  author: Lemoine A
- -  author: Bourgeois Moine A
- -  author: Allal L
- -  author: Choudat L
- -  author: Ravel C
- -  author: Michard F
- -  author: Buffet P
- -  author: Faye A
- -  author: Houze S
- -  author: Yazdanpanah Y
+authors: 'Argy N , Lariven S , Rideau A , Lemoine A , Bourgeois Moine A , Allal L , Choudat L , Ravel C , Michard F , Buffet P , Faye A , Houze S , Yazdanpanah Y'
 ---
