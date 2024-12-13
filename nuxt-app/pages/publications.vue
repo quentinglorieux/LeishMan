@@ -108,11 +108,12 @@ onMounted(async () => {
 });
 
 async function filterByYear(year) {
+
+
   selectedYear.value = year;
   if (year === "all") {
     printedYears.value = availableYears.value;
     filteredPublications.value = await queryContent("publications")
-      .sort({ year: -1 })
       .find();
   } else {
     printedYears.value = [year];
