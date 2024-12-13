@@ -1,7 +1,8 @@
 ---
-title: Award Received
+title: Award Received !
 shortdescription: We are honored to receive the prestigious award...
 longdescription: ""
-image: ""
-date: 2024:11:10
+image: /images/project3-1.webp
+date: ""
 ---
+
