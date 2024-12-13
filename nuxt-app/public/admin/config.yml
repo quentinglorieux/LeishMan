@@ -15,18 +15,6 @@ public_folder: images
 show_preview_links: false
 
 collections:
-  - name: posts
-    label: Posts
-    folder: nuxt-app/content/post
-    create: true
-    fields:
-      - name: title
-        label: Title
-        widget: string
-      - name: categories
-        label: Categories
-        widget: categories
-        separator: __
   - label: Members
     name: members
     folder: nuxt-app/content/members
@@ -63,6 +51,78 @@ collections:
         }
     summary: "{{lastname}} {{firstname}}"
     sortable_fields: [lastname]
+  - label: Collaborations
+    name: collaborations
+    folder: nuxt-app/content/collaborations
+    create: true
+    identifier_field: institution
+    fields:
+      - {
+          label: "Institution",
+          name: "institution",
+          widget: "string",
+          required: true,
+        }
+      - { label: "Link", name: "lien", widget: "string", required: false }
+      - {
+          label: "Featured Image",
+          name: "image",
+          widget: "image",
+          required: false,
+        }
+  - label: On-going Projects
+    name: projects
+    folder: nuxt-app/content/projects
+    create: true
+    identifier_field: title
+    fields:
+      - { label: "Titre", name: "title", widget: "string", required: true }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "markdown",
+          required: false,
+        }
+      - {
+          label: "Featured Image",
+          name: "image",
+          widget: "image",
+          required: false,
+        }
+  - label: News
+    name: news
+    folder: nuxt-app/content/news
+    create: true
+    identifier_field: title
+    fields:
+      - { label: "Titre", name: "title", widget: "string", required: true }
+      - {
+          label: "Short Description",
+          name: "shortdescription",
+          widget: "string",
+          required: false,
+        }
+      - {
+          label: "Long Description",
+          name: "longdescription",
+          widget: "markdown",
+          required: false,
+        }
+      - {
+          label: "Featured Image",
+          name: "image",
+          widget: "image",
+          required: false,
+        }
+      - {
+          label: "date",
+          name: "date",
+          widget: "datetime",
+          time_format: false,
+          date_format: "DD:MM:YYYY",
+          format: "DD/MM/YYYY",
+          required: false,
+        }
   - label: Publications
     name: publications
     folder: nuxt-app/content/publications
@@ -110,7 +170,7 @@ collections:
           widget: "datetime",
           time_format: false,
           date_format: "DD:MM:YYYY",
-          format: "YYYY:MM:DD",
+          format: "DD/MM/YYYY",
           required: false,
         }
       - { label: "Image", name: "image", widget: "image", required: false }
