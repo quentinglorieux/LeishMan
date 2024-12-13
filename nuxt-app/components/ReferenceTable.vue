@@ -1,53 +1,38 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-
-// Define the columns based on the JSON structure
 const columns = [
   { key: "institution", label: "Institution Name", sortable: true },
   { key: "country", label: "Country", sortable: true },
   { key: "city", label: "City", sortable: true },
-
 ];
 
-const referenceCenters = ref([]);
+const laboratories = await queryContent("laboratories").find();
+const filterLab = ref([]);
+
 const q = ref("");
 const sort = ref({
-  column: 'institution',
-  direction: 'asc'
-})
+  column: "institution",
+  direction: "asc",
+});
 
-
-// Fetch reference centers data (update the file path to match your actual JSON file)
 onMounted(async () => {
   try {
-    const response = await fetch("/data/reference-centers-gps.json"); // Update the path
-    const data = await response.json();
-    
-    // Remove duplicates based on 'institution', 'city', and 'country'
-    const uniqueCenters = [];
-    const uniqueKeys = new Set();
-    
-    data.forEach((center) => {
-      const key = `${center.institution}-${center.city}-${center.country}`;
-      if (!uniqueKeys.has(key)) {
-        uniqueKeys.add(key);
-        uniqueCenters.push(center);
-      }
-    });
-
-    referenceCenters.value = uniqueCenters;  // Store unique values only
+    laboratories.forEach((x) =>
+      filterLab.value.push({
+        country: x.country,
+        city: x.city,
+        institution: x.title,
+      })
+    );
   } catch (error) {
     console.error("Error fetching reference center data:", error);
   }
 });
-
-// Filter the rows based on search input
 const filteredRows = computed(() => {
   if (!q.value) {
-    return referenceCenters.value;
+    return filterLab.value;
   }
 
-  return referenceCenters.value.filter((center) => {
+  return filterLab.value.filter((center) => {
     return Object.values(center).some((value) => {
       return String(value).toLowerCase().includes(q.value.toLowerCase());
     });
@@ -66,10 +51,9 @@ const filteredRows = computed(() => {
       :columns="columns"
       :sort="sort"
       style="color: white"
-      
       :loading-state="{
         icon: 'i-heroicons-arrow-path-20-solid',
-        label: 'Loading...'
+        label: 'Loading...',
       }"
       class="dark:text-white"
     />

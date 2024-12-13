@@ -1,23 +1,17 @@
 <template>
- <div class="container mx-auto py-8">
-  <h1 class="text-3xl font-bold text-center mb-8">October 18th 2024 Program</h1>
+  <div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold text-center mb-8">
+      October 18th 2024 Program
+    </h1>
   </div>
-    <ProgDisplay :programData="programJson" />
-  </template>
-  
-  <script setup>
-  const route = useRoute()
-  
-  // Reactive state to hold the dynamically fetched JSON data
-const programJson = ref([])
+  <ProgDisplay :programData="seminars[0].talk" />
+</template>
 
-onMounted(async () => {
-  try {
-    // Fetch the JSON data dynamically (e.g., from a file or API)
-    const response = await fetch(`/data/meetings/${route.params.id}.json`);
-        programJson.value = await response.json() // Store the JSON data in the reactive variable
-  } catch (error) {
-    console.error('Error fetching program data:', error)
-  }
-})  </script>
-  
+<script setup>
+const route = useRoute();
+
+// Reactive state to hold the dynamically fetched JSON data
+const programJson = ref([]);
+const date = route.params.id;
+const seminars = await queryContent("events").where({ date: date }).find();
+</script>
