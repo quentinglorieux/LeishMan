@@ -29,7 +29,7 @@ onMounted(async () => {
     const response = await fetch("/data/pages/index.yml");
 
     const Text = await response.text();
-    console.log(Text);
+
     const Parse = parse(Text);
     data.value = Parse;
   } catch (error) {
