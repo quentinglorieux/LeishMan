@@ -107,18 +107,18 @@ onMounted(async () => {
   }
 });
 
-async function filterByYear(year) {
+async function filterByYear(yr) {
 
 
-  selectedYear.value = year;
-  if (year === "all") {
+  selectedYear.value = yr;
+  if (yr === "all") {
     printedYears.value = availableYears.value;
     filteredPublications.value = await queryContent("publications")
       .find();
   } else {
-    printedYears.value = [year];
+    printedYears.value = [yr];
     filteredPublications.value = await queryContent("publications")
-      .where({ year: parseInt(year) })
+      .where({ year : parseInt(yr) })
       .find();
   }
 }
