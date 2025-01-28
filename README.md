@@ -24,4 +24,4 @@
  ```html
  <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
 ```
-dyn-oliv
+<!-- dyn-oliv -->
