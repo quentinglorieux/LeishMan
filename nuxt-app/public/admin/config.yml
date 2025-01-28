@@ -17,9 +17,9 @@ show_preview_links: false
 collections:
   - label: Documents
     name: documents
-    folder: nuxt-app/public/data/documents
-    media_folder: /nuxt-app/public/documents 
-    public_folder: documents
+    folder: nuxt-app/content/documents
+    media_folder: /nuxt-app/static/documents 
+    public_folder: /assets/documents
     create: true
     identifier_field: title
     fields:
@@ -33,6 +33,8 @@ collections:
   - label: Members
     name: members
     folder: nuxt-app/content/members
+    media_folder: /nuxt-app/static/members 
+    public_folder: /assets/members
     create: true
     identifier_field: lastname
     fields:
