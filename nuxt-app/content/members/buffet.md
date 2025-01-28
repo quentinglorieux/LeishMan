@@ -1,5 +1,5 @@
 ---
-lastname: Buffet
+lastname: Buffetx
 firstname: Pierre
 laboratory: Institut Pasteur
 thumbnail: /images/pierre.webp
@@ -9,3 +9,4 @@ mail: pierre.buffet@aphp.fr
 coordinator: true
 thumbmail: /images/pierre.webp
 ---
+
