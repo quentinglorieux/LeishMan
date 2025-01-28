@@ -245,22 +245,24 @@ collections:
           widget: "markdown",
           required: false,
         }
-  - label: Gallery
-    name: gallery
-    folder: nuxt-app/content/gallery
+  # - label: Gallery
+  #   name: gallery
+  #   folder: nuxt-app/content/gallery
+  #   media_folder: /nuxt-app/public/assets/gallery 
+  #   public_folder: /assets/gallery
+  #   create: true
+  #   identifier_field: title
+  #   fields:
+  #     - { label: "Title", name: "title", widget: "string", required: true }
+  #     - label: "Image"
+  #       name: "galleryImages"
+  #       widget: "list"
+  #       summary: '{{fields.image}}'
+  #       field: {label: Image, name: image, widget: image}
+  - label: Settings and Gallery
+    name: pages
     media_folder: /nuxt-app/public/assets/gallery 
     public_folder: /assets/gallery
-    create: true
-    identifier_field: title
-    fields:
-      - { label: "Title", name: "title", widget: "string", required: true }
-      - label: "Image"
-        name: "galleryImages"
-        widget: "list"
-        summary: '{{fields.image}}'
-        field: {label: Image, name: image, widget: image}
-  - label: Pages
-    name: pages
     files:
       - label: "Home"
         name: "home"
@@ -351,6 +353,8 @@ collections:
       - label: "Gallery"
         name: "gallery"
         file: "nuxt-app/content/gallery.yml"
+        media_folder: /nuxt-app/public/assets/gallery 
+        public_folder: /assets/gallery
         fields:
           - { label: "Title", name: "title", widget: "string", required: true }
           - label: "Pictures"
