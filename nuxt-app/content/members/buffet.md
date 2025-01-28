@@ -1,5 +1,5 @@
 ---
-lastname: Buffet
+lastname: Buffetd
 firstname: Pierre
 laboratory: Institut Pasteur
 thumbnail: /images/pierre.webp
