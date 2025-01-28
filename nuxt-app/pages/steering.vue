@@ -13,8 +13,8 @@
           :key="member.lastname"
           class="bg-white dark:bg-gray-600 p-6 rounded-lg shadow-md"
         >
-          <img
-            :src="member.thumbmail || placeholderImage"
+        
+          <img :src="member.thumbnail"
             alt="Team Member"
             class="h-32 w-32 mx-auto rounded-full object-cover object-top mb-4"
           />

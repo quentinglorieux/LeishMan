@@ -46,13 +46,14 @@
     <p class="m-10"></p>
     <div class="flex flex-wrap sbt">
       <div class="col" v-for="(seminar, index) in seminars" :key="index">
+
         <CardL
           v-if="index % 2 == 1"
           :title="seminar.title"
           :location="seminar.location"
           :imageURL="seminar.image"
           :abstract="seminar.description"
-        />
+        />        
         <CardR
           v-else
           :title="seminar.title"

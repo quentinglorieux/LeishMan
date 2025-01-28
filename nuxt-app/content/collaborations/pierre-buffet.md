@@ -1,5 +1,6 @@
 ---
 institution: Pierre Buffet
-lien: ""
-image: ""
+lien: ''
+image: /assets/collaborations/orcid-og-image.png
 ---
+

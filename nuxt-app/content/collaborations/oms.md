@@ -1,5 +1,5 @@
 ---
 institution: OMS
 lien: ""
-image: /images/oms-1.webp
+image: /assets/collaborations/oms.webp
 ---
