@@ -17,6 +17,7 @@ show_preview_links: false
 collections:
   - label: Documents
     name: documents
+    icon: description
     folder: nuxt-app/content/documents
     media_folder: /nuxt-app/public/assets/documents 
     public_folder: /assets/documents
@@ -32,6 +33,7 @@ collections:
         }
   - label: Members
     name: members
+    icon: group
     folder: nuxt-app/content/members
     media_folder: /nuxt-app/public/assets/members
     public_folder: /assets/members
@@ -70,6 +72,7 @@ collections:
     sortable_fields: [lastname]
   - label: Collaborations
     name: collaborations
+    icon: diversity_3
     folder: nuxt-app/content/collaborations
     media_folder: /nuxt-app/public/assets/collaborations
     public_folder: /assets/collaborations
@@ -91,6 +94,7 @@ collections:
         }
   - label: On-going Projects
     name: projects
+    icon: build
     folder: nuxt-app/content/projects
     media_folder: /nuxt-app/public/assets/projects
     public_folder: /assets/projects
@@ -112,6 +116,7 @@ collections:
         }
   - label: News
     name: news
+    icon: brand_awareness
     folder: nuxt-app/content/news
     media_folder: /nuxt-app/public/assets/news
     public_folder: /assets/news
@@ -148,6 +153,7 @@ collections:
         }
   - label: Publications
     name: publications
+    icon: library_books
     folder: nuxt-app/content/publications
     create: true
     identifier_field: title
@@ -161,6 +167,7 @@ collections:
       - { label: "PubMedId", name: "pmid", widget: "string", required: false }
   - label: Events
     name: events
+    icon: event
     folder: nuxt-app/content/events
     media_folder: /nuxt-app/public/assets/events
     public_folder: /assets/events    
@@ -229,6 +236,7 @@ collections:
           - { label: "Topic", name: "topic", widget: "string", required: false }
   - label: Reference Centers
     name: refcenters
+    icon: hub
     folder: nuxt-app/content/laboratories
     create: true
     identifier_field: name
@@ -261,6 +269,7 @@ collections:
   #       field: {label: Image, name: image, widget: image}
   - label: Pages and Settings
     name: pages
+    icon: settings
     media_folder: /nuxt-app/public/assets/general
     public_folder: /assets/general
     files:
@@ -352,6 +361,7 @@ collections:
             }
   - label: Gallery
     name: gallery
+    icon: image
     media_folder: /nuxt-app/public/assets/gallery 
     public_folder: /assets/gallery
     files:
