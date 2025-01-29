@@ -50,49 +50,46 @@ const logError = (ex) => {
  * backend is Git-based and user’s auth token is found.
  */
 export const signInAutomatically = async () => {
-  // Find cached user info, including a compatible Netlify/Decap CMS user object
   const userCache =
     (await LocalStorage.get('sveltia-cms.user')) ||
     (await LocalStorage.get('decap-cms-user')) ||
     (await LocalStorage.get('netlify-cms-user'));
 
   let _user = isObject(userCache) && !!userCache.backendName ? userCache : undefined;
+  console.log("🔍 Cached User:", _user); // ✅ Debug
 
-  // Netlify/Decap CMS uses `proxy` as the backend name when running the local proxy server and
-  // leaves it in local storage. Sveltia CMS uses `local` instead.
   const _backendName =
     _user?.backendName?.replace('proxy', 'local') ?? get(siteConfig)?.backend?.name;
 
   backendName.set(_backendName);
+  console.log("🛠 Backend Name:", _backendName); // ✅ Debug
 
   const _backend = get(backend);
+  console.log("🛠 Backend Object:", _backend); // ✅ Debug
 
   if (_user && _backend) {
     try {
+      console.log("🔑 Attempting to Sign In with token:", _user.token);
       _user = await _backend.signIn({ token: _user.token, auto: true });
-    } catch {
-      // The local backend may throw if the file handle permission is not given
+      console.log("✅ Successfully signed in!", _user);
+    } catch (ex) {
+      console.error("❌ Sign-in failed:", ex);
       _user = undefined;
     }
   }
 
   unauthenticated.set(!_user);
-
+  
   if (!_user || !_backend) {
     return;
   }
 
-  // Use the cached user to start fetching files
   user.set(_user);
 
   try {
     await _backend.fetchFiles();
-    // Reset error
     signInError.set({ message: '', canRetry: false });
-  } catch (/** @type {any} */ ex) {
-    // The API request may fail if the cached token has been expired or revoked. Then let the user
-    // sign in again. 404 Not Found is also considered an authentication error.
-    // https://docs.github.com/en/rest/overview/troubleshooting-the-rest-api#404-not-found-for-an-existing-resource
+  } catch (ex) {
     if ([401, 403, 404].includes(ex.cause?.status)) {
       unauthenticated.set(true);
     } else {

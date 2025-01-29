@@ -34,6 +34,19 @@
 
     signInAutomatically();
   });
+
+  // Code to update the user's token when the backend sends it (QGX)
+  window.addEventListener("message", (event) => {
+  if (event.data.backendName === "github" && event.data.token) {
+
+    localStorage.setItem("sveltia-cms.user", JSON.stringify({
+      backendName: "github",
+      token: event.data.token
+    }));
+    window.location.reload();
+  }
+});
+
 </script>
 
 <div role="none" class="buttons">
