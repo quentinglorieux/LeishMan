@@ -1,7 +1,7 @@
 ---
 title: "Clinical diversity and treatment results in Tegumentary Leishmaniasis: A European clinical report in 459 patients"
 journal: "PLoS Negl Trop Dis"
-year: 2021
+year: '2021'
 volume: 138
 DOI: 10.1371/journal.pntd.0009863
 pmid: 34644288

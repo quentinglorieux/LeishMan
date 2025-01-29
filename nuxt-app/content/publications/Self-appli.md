@@ -1,7 +1,7 @@
 ---
 title: "Self-application of aminoglycoside-based creams to treat cutaneous leishmaniasis in travelers"
 journal: "PLoS Negl Trop Dis"
-year: 2023
+year: '2023'
 volume: 138
 DOI: 10.1371/journal.pntd.0011492
 pmid: 37561802

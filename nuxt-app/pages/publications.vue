@@ -53,7 +53,7 @@
           <div v-if="work.year == yr">
             <div class="text-xl font-semibold">
               <a
-                :href="'https://pubmed.ncbi.nlm.nih.gov/' + work.pmid"
+                :href="'https://doi.org/' + work.DOI"
                 target="_blank"
                 class="hover:underline text-black dark:text-gray-300"
               >
@@ -73,7 +73,7 @@
             </div>
 
             <div v-if="work.DOI" class="text-sm text-blue-500">
-              <a :href="'https://doi.org/' + work.doi" target="_blank" class="">
+              <a :href="'https://doi.org/' + work.DOI" target="_blank" class="">
                 <span>{{ work.journal }}, </span>
                 <span>
                   <strong> {{ work.volume }} </strong> ({{ work.year }})</span
@@ -109,17 +109,18 @@ onMounted(async () => {
 });
 
 async function filterByYear(yr) {
-
-
   selectedYear.value = yr;
+
   if (yr === "all") {
     printedYears.value = availableYears.value;
-    filteredPublications.value = await queryContent("publications")
-      .find();
+    filteredPublications.value = await queryContent("publications").find();
   } else {
     printedYears.value = [yr];
+
     filteredPublications.value = await queryContent("publications")
-      .where({ year : parseInt(yr) })
+      .where({
+        year: String(yr) 
+      })
       .find();
   }
 }
