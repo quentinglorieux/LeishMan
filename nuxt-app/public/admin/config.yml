@@ -259,10 +259,10 @@ collections:
   #       widget: "list"
   #       summary: '{{fields.image}}'
   #       field: {label: Image, name: image, widget: image}
-  - label: Settings and Gallery
+  - label: Pages and Settings
     name: pages
-    media_folder: /nuxt-app/public/assets/gallery 
-    public_folder: /assets/gallery
+    media_folder: /nuxt-app/public/assets/general
+    public_folder: /assets/general
     files:
       - label: "Home"
         name: "home"
@@ -350,6 +350,11 @@ collections:
               widget: "image",
               required: false,
             }
+  - label: Gallery
+    name: gallery
+    media_folder: /nuxt-app/public/assets/gallery 
+    public_folder: /assets/gallery
+    files:
       - label: "Gallery"
         name: "gallery"
         file: "nuxt-app/content/gallery.yml"
