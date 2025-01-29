@@ -122,6 +122,7 @@ export const strings = {
   // Update notification
   update_available: 'The latest version of Sveltia CMS is available.',
   update_now: 'Update Now',
+  import : 'Import from DOI',
 
   // Backend status indicator
   backend_status: {
@@ -691,3 +692,4 @@ export const strings = {
     tb: '{size} TB',
   },
 };
+

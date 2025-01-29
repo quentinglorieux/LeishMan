@@ -4,13 +4,13 @@
   import { marked } from 'marked';
   import { _ } from 'svelte-i18n';
   import DeleteEntriesDialog from '$lib/components/contents/shared/delete-entries-dialog.svelte';
-  import ImportPubliDialog from '$lib/components/contents/shared/import-publi-dialog.svelte';
+  // import ImportPubliDialog from '$lib/components/contents/shared/import-publi-dialog.svelte';
   import { goto } from '$lib/services/app/navigation';
   import { selectedCollection } from '$lib/services/contents/collection';
   import { selectedEntries } from '$lib/services/contents/collection/entries';
 
   let showDeleteDialog = $state(false);
-  let showImportDialog = $state(false);
+  // let showImportDialog = $state(false);
 
   /**
    * Parse the given string as Markdown and sanitize the result to only allow certain tags.
@@ -37,7 +37,7 @@
     <h2 role="none">{collectionLabel}</h2>
     <div role="none" class="description">{@html sanitize(description || '')}</div>
     <Spacer flex />
-    {#if collectionLabel === 'Publications'}
+    <!-- {#if collectionLabel === 'Publications'}
       <Button
         variant="secondary"
         label={$_('import')}
@@ -47,7 +47,7 @@
         }}
       >
       </Button>
-    {/if}
+    {/if} -->
 
     {#if !files}
       <Button
@@ -80,7 +80,6 @@
 {/if}
 
 <DeleteEntriesDialog bind:open={showDeleteDialog} />
-<ImportPubliDialog bind:open={showImportDialog} />
 
 <style lang="scss">
   h2 {

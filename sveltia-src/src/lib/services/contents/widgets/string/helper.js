@@ -14,7 +14,8 @@ export const validateStringField = (fieldConfig, value) => {
   const hasMax =
     Number.isInteger(maxlength) && (minlength ?? 0) <= /** @type {number} */ (maxlength);
 
-  const count = value ? [...value.trim()].length : 0;
+  const stringValue = typeof value === "string" ? value.trim() : "";
+  const count = [...stringValue].length;
   const tooShort = hasMin && count < /** @type {number} */ (minlength);
   const tooLong = hasMax && count > /** @type {number} */ (maxlength);
   const invalid = tooShort || tooLong;

@@ -32,9 +32,13 @@
   import { defaultI18nConfig, getLocaleLabel } from '$lib/services/contents/i18n';
   import { prefs } from '$lib/services/user/prefs';
 
+  import ImportPubliDialog from '$lib/components/contents/shared/import-publi-dialog.svelte';
+
+
   let showValidationToast = $state(false);
   let showDeleteDialog = $state(false);
   let showErrorDialog = $state(false);
+  let showImportDialog = $state(false);
   let errorMessage = $state('');
   let saving = $state(false);
   /** @type {any} */
@@ -163,7 +167,19 @@
       {/if}
     </strong>
   </h2>
-  <Spacer flex />
+  {#if collectionLabel === 'Publications'}
+  <Button
+  variant="primary"
+  label={$_('import')}
+  aria-label={$_('import_entries')}
+  onclick={() => {
+    showImportDialog = true;
+  }}
+>
+</Button> 
+{/if}
+
+  <!-- <Spacer flex /> -->
   {#if previewURL}
     <Button
       variant="tertiary"
@@ -236,6 +252,7 @@
       </Menu>
     {/snippet}
   </MenuButton>
+  
   {#if showSaveOptions}
     <SplitButton
       variant="primary"
@@ -269,7 +286,11 @@
       }}
     />
   {/if}
+
 </Toolbar>
+
+<ImportPubliDialog bind:open={showImportDialog} />
+
 
 <Toast bind:show={showValidationToast}>
   <Alert status="error">

@@ -161,7 +161,7 @@ export const restoreBackupIfNeeded = async (collectionName, slug = '') => {
           });
         });
       }
-
+      console.log(draft);
       return draft;
     });
 

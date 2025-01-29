@@ -13,6 +13,8 @@ backend:
 media_folder: nuxt-app/public/images
 public_folder: /assets/images
 show_preview_links: false
+# editor:
+#   preview: true
 
 collections:
   - label: Documents
