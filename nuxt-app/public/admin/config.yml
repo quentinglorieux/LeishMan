@@ -1,6 +1,8 @@
 backend:
   name: github
   repo: quentinglorieux/leishman # Path to your GitHub repository
+  base_url: https://orcid-sveltia.quentin-glorieux.workers.dev  # Your Cloudflare Worker
+  auth_endpoint: /auth/orcid  # Custom ORCID login flow
   commit_messages:
     create: Create - {{collection}} “{{slug}}”
     update: Update - {{collection}} “{{slug}}”
