@@ -386,3 +386,45 @@ collections:
                   widget: "image",
                   required: false,
                 }
+  - label: Users
+    name: users
+    icon: group
+    create: true
+    identifier_field: lastname
+    files:
+      - label: "Admin"
+        name: "admin"
+        file: "nuxt-app/public/data/users/admin.yml"
+        fields:
+          - label: "Admin"
+            name: "admin_list"
+            widget: "list"
+            fields:
+              - { label: "Nom", name: "lastname", widget: "string", required: true }
+              - { label: "Prénom", name: "firstname", widget: "string", required: false }
+              - { label: "Email", name: "email", widget: "string", required: false }
+              - { label: "ORCID", name: "orcid", widget: "string", required: true }
+      - label: "Editor"
+        name: "editor"
+        file: "nuxt-app/public/data/users/editor.yml"
+        fields:
+          - label: "Editor"
+            name: "editor_list"
+            widget: "list"
+            fields:
+              - { label: "Nom", name: "lastname", widget: "string", required: true }
+              - { label: "Prénom", name: "firstname", widget: "string", required: false }
+              - { label: "Email", name: "email", widget: "string", required: false }
+              - { label: "ORCID", name: "orcid", widget: "string", required: true }
+      - label: "Viewer"
+        name: "viewer"
+        file: "nuxt-app/public/data/users/viewer.yml"
+        fields:
+          - label: "Viewer"
+            name: "viewer_list"
+            widget: "list"
+            fields:
+              - { label: "Nom", name: "lastname", widget: "string", required: true }
+              - { label: "Prénom", name: "firstname", widget: "string", required: false }
+              - { label: "Email", name: "email", widget: "string", required: false }
+              - { label: "ORCID", name: "orcid", widget: "string", required: true }
