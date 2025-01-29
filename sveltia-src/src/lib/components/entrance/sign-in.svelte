@@ -47,6 +47,20 @@
   }
 });
 
+
+function signInWithOrcid() {
+    const width = 600;
+    const height = 800;
+    const { availHeight, availWidth } = window.screen;
+    const top = availHeight / 2 - height / 2;
+    const left = availWidth / 2 - width / 2;
+
+    window.open(
+      "https://orcid-sveltia.quentin-glorieux.workers.dev/auth/orcid",
+      "orcid-auth",
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
+  }
 </script>
 
 <div role="none" class="buttons">
@@ -64,6 +78,13 @@
         await signInManually(/** @type {string} */ (configuredBackendName));
       }}
     />
+        <!-- ORCID Sign-in  QG-->
+        <Button
+        variant="primary"
+        label="Sign in with ORCID"
+        onclick={signInWithOrcid}
+      />
+
     {#if isLocalHost}
       <Button
         variant="primary"
