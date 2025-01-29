@@ -38,5 +38,5 @@ const formattedDate = computed(() => {
   return new Date(eventItem.date).toLocaleDateString();
 });
 
-const placeholderImage = "/images/placeholder.webp";
+const placeholderImage = "placeholder.webp";
 </script>

@@ -33,7 +33,7 @@
         <!-- Image or Milestone Section -->
         <div>
           <img
-            src="/images/logo.webp"
+            src="/assets/general/logo.webp"
             alt="About Us"
             class="rounded-lg shadow-lg mb-6"
           />
@@ -43,7 +43,7 @@
           </p>
 
           <h2 class="text-3xl font-bold my-4">Consortium Agreement</h2>
-           <a href="/pdf/CA.pdf"
+           <a href="/assets/documents/CA.pdf"
         class="mt-6 bg-pasteur-blue hover:bg-pasteur-dark text-white px-6 py-3 rounded-full"
       >
         Download here
@@ -81,7 +81,7 @@
 
 <script setup>
 import { VueShowdown } from "vue-showdown";
-const placeholderImage = "/images/placeholder.webp";
+const placeholderImage = "placeholder.webp";
 const team = ref([]);
 // await queryContent("/about").findOne();
 import { parse, stringify } from "yaml";
@@ -103,19 +103,19 @@ onMounted(() => {
       id: 1,
       name: "Dr. Jane Doe",
       title: "Chief Scientist",
-      image: "/images/noprofile.webp",
+      image: "placeholder.webp",
     },
     {
       id: 2,
       name: "Dr. John Smith",
       title: "Researcher",
-      image: "/images/noprofile.webp",
+      image: "placeholder.webp",
     },
     {
       id: 3,
       name: "Dr. Emily Zhang",
       title: "Research Coordinator",
-      image: "/images/noprofile.webp",
+      image: "placeholder.webp",
     },
   ];
 });

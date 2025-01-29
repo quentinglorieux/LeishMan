@@ -34,7 +34,7 @@ const props = defineProps({
 });
 
 // Placeholder image if the news item doesn't have an image
-const placeholderImage = "/images/placeholder.webp";
+const placeholderImage = "placeholder.webp";
 
 // Computed property to format the date
 const formattedDate = computed(() => {
