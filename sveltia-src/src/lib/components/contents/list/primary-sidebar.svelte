@@ -9,7 +9,28 @@
   import { getEntriesByCollection } from '$lib/services/contents/collection/entries';
 
   const numberFormatter = $derived(Intl.NumberFormat($appLocale ?? undefined));
-  const collections = $derived($siteConfig?.collections.filter(({ hide }) => !hide) ?? []);
+  const userRole = localStorage.getItem("sveltia-cms.userRole") || "viewer"; // Default to viewer
+
+  // ✅ Filter collections based on `is_admin`
+  const collections = $derived(
+    $siteConfig?.collections.filter(({ hide, is_admin }) => {
+      if (hide) return false;
+      if (is_admin && userRole !== "admin") return false; 
+      return true;
+    }) ?? []
+  );
+
+    // Find the current collection
+    const currentCollection = $siteConfig?.collections.find(
+    (collection) => collection.name === $selectedCollection?.name
+  );
+
+  // ✅ If collection is admin-only & user isn't admin → Redirect to Home
+  if (currentCollection?.is_admin && userRole !== "admin") {
+    goto("/"); // Redirect unauthorized users
+  }
+
+  
 </script>
 
 <div role="none" class="primary-sidebar">

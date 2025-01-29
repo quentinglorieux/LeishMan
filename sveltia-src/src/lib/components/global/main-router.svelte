@@ -32,22 +32,34 @@
    * Select one of the pages given the URL path.
    * @todo Show Not Found page.
    */
-  export const selectPage = () => {
-    $showContentOverlay = false;
-    $showAssetOverlay = false;
+   export const selectPage = () => {
+  $showContentOverlay = false;
+  $showAssetOverlay = false;
 
-    const { path } = parseLocation();
+  const { path } = parseLocation();
+  const { pageName } = path.match(`^\\/(?<pageName>${Object.keys(pages).join('|')})\\b`)?.groups ?? {};
 
-    const { pageName } =
-      path.match(`^\\/(?<pageName>${Object.keys(pages).join('|')})\\b`)?.groups ?? {};
+  const userRole = localStorage.getItem("sveltia-cms.userRole") || "viewer"; // Default role: viewer
 
-    if (!pageName) {
-      // Redirect any invalid page to the contents page
-      window.location.replace(`#/collections/${$selectedCollection?.name}`);
-    } else if ($selectedPageName !== pageName) {
-      $selectedPageName = pageName;
-    }
-  };
+  // ✅ Check if user is accessing an admin-only collection
+  if (pageName === "collections" && $selectedCollection?.is_admin && userRole !== "admin") {
+
+    // Show alert, but ensure it does not interfere with redirection
+    setTimeout(() => {
+      window.alert("🚫 You do not have permission to access this collection.");
+    }, 100);
+
+    // Redirect to a safe location
+    window.location.replace("#/collections/members");
+    return;
+  }
+
+  if (!pageName) {
+    window.location.replace(`#/collections/${$selectedCollection?.name}`);
+  } else if ($selectedPageName !== pageName) {
+    $selectedPageName = pageName;
+  }
+};
 
   onMount(() => {
     selectPage();

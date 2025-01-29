@@ -14,7 +14,6 @@
   const viewType = $derived($currentView.type);
   const allEntries = $derived($entryGroups.map(({ entries }) => entries).flat(1));
 </script>
-
 <ListContainer aria-label={collection?.files ? $_('file_list') : $_('entry_list')}>
   {#if collection}
     {#if allEntries.length}

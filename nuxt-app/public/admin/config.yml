@@ -19,25 +19,10 @@ superadmin: false
 #   preview: true
 
 collections:
-  - label: Documents
-    name: documents
-    icon: description
-    folder: nuxt-app/content/documents
-    media_folder: /nuxt-app/public/assets/documents 
-    public_folder: /assets/documents
-    create: true
-    identifier_field: title
-    fields:
-      - { label: "Title", name: "title", widget: "string", required: true }
-      - {
-          label: "File",
-          name: "file",
-          widget: "file",
-          required: true,
-        }
   - label: Members
     name: members
     icon: group
+    is_admin: false
     folder: nuxt-app/content/members
     media_folder: /nuxt-app/public/assets/members
     public_folder: /assets/members
@@ -274,6 +259,7 @@ collections:
   - label: Pages and Settings
     name: pages
     icon: settings
+    is_admin: true
     media_folder: /nuxt-app/public/assets/general
     public_folder: /assets/general
     files:
@@ -386,10 +372,28 @@ collections:
                   widget: "image",
                   required: false,
                 }
+  - label: Documents
+    name: documents
+    icon: description
+    is_admin: true
+    folder: nuxt-app/content/documents
+    media_folder: /nuxt-app/public/assets/documents 
+    public_folder: /assets/documents
+    create: true
+    identifier_field: title
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - {
+          label: "File",
+          name: "file",
+          widget: "file",
+          required: true,
+        }
   - label: Users
     name: users
     icon: group
     create: true
+    is_admin: true
     identifier_field: lastname
     files:
       - label: "Admin"
