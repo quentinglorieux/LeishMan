@@ -1,0 +1,98 @@
+version: "0.2"
+language: en
+dictionaries:
+  - css
+  - html
+  - typescript
+enableFiletypes:
+  - ignore
+  - properties
+  - svelte
+  - xml
+files:
+  - "**/.*"
+  - "**/*.{css,js,json,jsonc,html,md,scss,svelte,svg,yaml,yml,xml}"
+useGitignore: true
+ignorePaths:
+  - pnpm-lock.yaml
+  - data/**/*.json
+  - dist/**
+words:
+  - astrolicious
+  - astros
+  - brotlied
+  - camelcase
+  - Cloudinary
+  - CVEs
+  - danurbanowicz
+  - Decap
+  - DeepL
+  - deepmerge
+  - dompurify
+  - embeddable
+  - Flavored
+  - Forgejo
+  - Gitea
+  - Gittech
+  - hotlinking
+  - hugolify
+  - iarna
+  - IIFE
+  - indexeddb
+  - infobars
+  - jsdoc
+  - keymap
+  - keyvalue
+  - kyoshino
+  - mdwn
+  - mkdn
+  - Mullvad
+  - onkeydowncapture
+  - onwheelcapture
+  - pexels
+  - Photoshop
+  - Pixabay
+  - PKCE
+  - plusplus
+  - pnpm
+  - popups
+  - postcss
+  - prefs
+  - previewable
+  - privatemaker
+  - proxified
+  - proxify
+  - Ragdoll
+  - reimagined
+  - Roadmap
+  - safesearch
+  - sebousan
+  - sindresorhus
+  - singleline
+  - smol
+  - strikethrough
+  - stylelint
+  - Sveitia
+  - sveltejs
+  - Sveltia
+  - templatized
+  - Typecheck
+  - unadded
+  - uncategorized
+  - unflatten
+  - unflattened
+  - unflattening
+  - unlinkable
+  - unproxify
+  - Uploadcare
+  - videoseries
+  - Vite
+  - WCAG
+  - weba
+  - webformat
+  - whitespaces
+  - xslx
+  - zanhk
+overrides:
+  - language: en-gb
+    filename: "**/*.md"
