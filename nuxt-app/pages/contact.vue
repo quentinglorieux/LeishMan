@@ -10,7 +10,7 @@
       v-if="index % 2 == 0"
       :title="m['firstname'] + ' ' + m['lastname']"
       :location="m['mail']"
-      :imageURL="m['thumbmail']"
+      :imageURL="m.thumbnail"
       :abstract="m['shortbio']"
     />
 
@@ -18,7 +18,7 @@
       v-else
       :title="m['firstname'] + ' ' + m['lastname']"
       :location="m['mail']"
-      :imageURL="m['thumbmail']"
+      :imageURL="m['thumbnail']"
       :abstract="m['shortbio']"
     />
   </div>
