@@ -6,6 +6,8 @@ import { backend, backendName } from '$lib/services/backends';
 import { siteConfig } from '$lib/services/config';
 import { dataLoaded } from '$lib/services/contents';
 import { user } from '$lib/services/user';
+import { userRole } from "$lib/services/user/role";
+
 
 /**
  * @type {import('svelte/store').Writable<{ message: string, canRetry: boolean }>}
@@ -62,16 +64,12 @@ export const signInAutomatically = async () => {
     _user?.backendName?.replace('proxy', 'local') ?? get(siteConfig)?.backend?.name;
 
   backendName.set(_backendName);
-  console.log("🛠 Backend Name:", _backendName); // ✅ Debug
 
   const _backend = get(backend);
-  console.log("🛠 Backend Object:", _backend); // ✅ Debug
 
   if (_user && _backend) {
     try {
-      console.log("🔑 Attempting to Sign In with token:", _user.token);
       _user = await _backend.signIn({ token: _user.token, auto: true });
-      console.log("✅ Successfully signed in!", _user);
     } catch (ex) {
       console.error("❌ Sign-in failed:", ex);
       _user = undefined;
@@ -144,9 +142,11 @@ export const signInManually = async (_backendName) => {
  */
 export const signOut = async () => {
   await get(backend)?.signOut();
-  await LocalStorage.delete('sveltia-cms.user');
+  await LocalStorage.delete("sveltia-cms.user"); // Remove user info
+  await LocalStorage.delete("sveltia-cms.userRole"); // Remove user role
   backendName.set(undefined);
   user.set(undefined);
   unauthenticated.set(true);
   dataLoaded.set(false);
+  userRole.set(null); // Reset the user role store
 };

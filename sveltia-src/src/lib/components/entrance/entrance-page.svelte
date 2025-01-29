@@ -12,6 +12,8 @@
   import { user } from '$lib/services/user';
   import { signInError, unauthenticated } from '$lib/services/user/auth';
   import { prefs, prefsError } from '$lib/services/user/prefs';
+  import { userRole } from "$lib/services/user/role";
+
 
   $effect(() => {
     $announcedPageStatus = $_('welcome_to_sveltia_cms');
@@ -24,6 +26,24 @@
       {@const logoURL = $siteConfig?.logo_url}
       <img src={logoURL || `data:image/svg+xml;base64,${btoa(SveltiaLogo)}`} alt="" class="logo" />
     {/if}
+
+    {#if $userRole === "admin"}
+  <div class="admin-section">
+    <h2>🔧 Admin Controls</h2>
+  </div>
+{:else if $userRole === "editor"}
+  <div class="editor-section">
+    <h2>✍️ Editor Controls</h2>
+  </div>
+{:else if $userRole === "viewer"}
+  <div class="viewer-section">
+    <h2>👀 Viewer Mode</h2>
+  </div>
+{:else}
+  <p>🔒 You are not logged in.</p>
+{/if}
+
+
     <h1> Rubidium CMS for Leishman</h1>
     {#if $siteConfigError}
       <div role="alert" class="message">
