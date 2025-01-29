@@ -24,7 +24,7 @@
       {@const logoURL = $siteConfig?.logo_url}
       <img src={logoURL || `data:image/svg+xml;base64,${btoa(SveltiaLogo)}`} alt="" class="logo" />
     {/if}
-    <h1>Sveltia CMS</h1>
+    <h1> Rubidium CMS for Leishman</h1>
     {#if $siteConfigError}
       <div role="alert" class="message">
         {$siteConfigError.message}
