@@ -15,7 +15,9 @@
   let isLocalHost = $state(false);
   let isLocalBackendSupported = $state(false);
   let isBrave = $state(false);
+  let isSuperAdmin = $derived($siteConfig?.superadmin ?? false); 
 
+  
   const configuredBackendName = $derived($siteConfig?.backend?.name);
   const configuredBackend = $derived(
     configuredBackendName ? allBackendServices[configuredBackendName] : null,
@@ -63,6 +65,13 @@ function signInWithOrcid() {
   }
 </script>
 
+<div class="superadmin-banner">
+  {#if isSuperAdmin}
+    <p class="superadmin-message">👋 Superadmin Login Page </p>
+  {/if}
+</div>
+
+
 <div role="none" class="buttons">
   {#if !$unauthenticated}
     <div role="alert" class="message">{$_('signing_in')}</div>
@@ -71,6 +80,7 @@ function signInWithOrcid() {
       {$_('config.error.unsupported_backend', { values: { name: configuredBackendName } })}
     </div>
   {:else}
+  {#if isSuperAdmin}
     <Button
       variant="primary"
       label={$_('sign_in_with_x', { values: { service: configuredBackend.label } })}
@@ -78,6 +88,7 @@ function signInWithOrcid() {
         await signInManually(/** @type {string} */ (configuredBackendName));
       }}
     />
+  {/if}
         <!-- ORCID Sign-in  QG-->
         <Button
         variant="primary"

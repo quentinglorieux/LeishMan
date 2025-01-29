@@ -327,7 +327,8 @@
  * @property {string} [backend.app_id] - OAuth application ID. GitLab only.
  * @property {Record<string, string>} [backend.commit_messages] - Commit message map.
  * @property {boolean} [backend.automatic_deployments] - Whether to enable or disable automatic
- * deployments with any connected CI/CD provider, such as GitHub Actions or Cloudflare Pages. If
+ * @property {boolean} superadmin - Whether the user is a super admin. 
+* deployments with any connected CI/CD provider, such as GitHub Actions or Cloudflare Pages. If
  * `false`, the `[skip ci]` prefix will be added to commit messages. Git backends only.
  * @property {string} [site_url] - Site URL.
  * @property {string} [display_url] - Site URL linked from the UI.

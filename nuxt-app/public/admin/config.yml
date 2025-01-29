@@ -2,7 +2,6 @@ backend:
   name: github
   repo: quentinglorieux/leishman # Path to your GitHub repository
   # base_url: https://orcid-sveltia.quentin-glorieux.workers.dev  # Your Cloudflare Worker
-  
   commit_messages:
     create: Create - {{collection}} “{{slug}}”
     update: Update - {{collection}} “{{slug}}”
@@ -15,6 +14,7 @@ backend:
 media_folder: nuxt-app/public/images
 public_folder: /assets/images
 show_preview_links: false
+superadmin: false
 # editor:
 #   preview: true
 
