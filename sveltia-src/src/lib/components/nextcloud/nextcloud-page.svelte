@@ -9,12 +9,12 @@
   
     // ✅ Fetch Nextcloud Credentials from LocalStorage (Set at Login)
     const username = localStorage.getItem("nextcloudUsername") || "quentin";
-    const password = localStorage.getItem("nextcloudPassword") || "xxx";
+    const password = localStorage.getItem("nextcloudPassword") || "K7jPX-28Qdr-tPiMo-aSZas-K6Psc";
   
     async function fetchNextcloudFiles() {
       loading.set(true);
       error.set(null);
-  
+      console.log(username, password)
       try {
         const response = await fetch(
           "https://nextcloud.rubidiumweb.fr/remote.php/dav/files/" + username + "/",
@@ -33,7 +33,6 @@
         }
   
         const textResponse = await response.text();
-        console.log("📂 Nextcloud XML Response:", textResponse);
   
         // ✅ Parse XML response
         const parser = new DOMParser();
