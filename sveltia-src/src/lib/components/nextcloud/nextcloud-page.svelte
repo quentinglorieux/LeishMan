@@ -130,195 +130,193 @@ function downloadFile(filePath) {
   window.open(downloadURL, "_blank");
 }
   onMount(() => fetchNextcloudFiles());
-</script>
+  </script>
 
-<!-- Nextcloud File Browser UI -->
-<div class="file-browser">
-  <h2>📂 Leishman Files</h2>
-
-  {#if $loading}
-    <p class="loading">⏳ Loading files...</p>
-  {:else if $error}
-    <p class="error">❌ Error: {$error}</p>
-  {:else}
-    <div class="controls">
-      <button class="breadcrumb-button" on:click={goUpOneLevel}
-        >⬅️ Go Back</button
-      >
-
-      <!--  Upload File Input -->
-      <input type="file" on:change={uploadFile} />
-
-      <!--  Create Folder Input -->
-      <input class="new-folder-input"
-        type="text"
-        bind:value={$newFolderName}
-        placeholder="New folder name"
-      />
-      <button on:click={createFolder}>📁 Create Folder</button>
+<div class="file-manager">
+    <!-- 📂 Sidebar (Folders) -->
+    <div class="sidebar">
+      <h2>📂 Folders</h2>
+      <button class="breadcrumb-button" on:click={goUpOneLevel}>⬅️ Go Back</button>
+      
+      <div class="folder-list">
+        {#each $folders as folder}
+          <button class="folder-item" on:click={() => fetchNextcloudFiles(folder.path)}>
+            📁 {folder.name}
+          </button>
+        {/each}
+      </div>
+  
+      <!-- 📁 Create Folder (Bottom Section) -->
+      <div class="create-folder">
+        <input class="new-folder-input" type="text" bind:value={$newFolderName} placeholder="New folder name" />
+        <button class="folder-action-button" on:click={createFolder}>📁 Create Folder</button>
+      </div>
     </div>
-
-    <div class="file-container">
-      {#each $folders as folder}
-        <button
-          class="folder-item"
-          on:click={() => fetchNextcloudFiles(folder.path)}
-        >
-          📁 {folder.name}
-        </button>
-      {/each}
-
-      {#each $files as file}
-        <div class="file-item">
-          <span>📄 {file.name}</span>
-          <button
-            class="download-button"
-            on:click={() => downloadFile(file.path)}>⬇️ Download</button
-          >
+  
+    <!-- 📄 Main Content (Files + Upload) -->
+    <div class="main-content">
+      <div class="header">
+        <h2>📄 Files</h2>
+  
+        <!-- 📤 Upload Section -->
+        <div class="upload-container">
+          <label class="upload-label">
+            <input type="file" on:change={uploadFile} hidden />
+            📄 Upload File
+          </label>
         </div>
-      {/each}
+      </div>
+  
+      <div class="file-list">
+        {#each $files as file}
+          <button class="file-item" on:click={() => downloadFile(file.path)}>
+            📄 <span class="file-name">{file.name}</span>
+          </button>
+        {/each}
+      </div>
     </div>
-  {/if}
-</div>
-
-<style>
-  .controls {
+  </div>
+  
+  <style>
+  /* 🌟 Full-screen layout */
+  .file-manager {
     display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-
-  input[type="text"],
-  input[type="file"] {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-
-  .file-browser {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    height: 100vh;
     font-family: "Arial", sans-serif;
   }
-
-  h2 {
-    text-align: center;
-    font-size: 22px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 20px;
+  
+  /* 📂 Sidebar (Folders) */
+  .sidebar {
+    width: 280px;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
-
-  .breadcrumb {
-    margin-bottom: 15px;
+  
+  /* 📂 Folder List */
+  .folder-list {
+    flex-grow: 1;
+    overflow-y: auto;
   }
-
-  .breadcrumb-button {
-    background: #007bff;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background 0.2s ease-in-out;
-  }
-
-  .breadcrumb-button:hover {
-    background: #2d93ff;
-  }
-
-  .file-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 600px; 
-  overflow-y: auto;   
-  padding-right: 5px; 
-}
-
-.file-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.file-container::-webkit-scrollbar-thumb {
-  background: #007bff;
-  border-radius: 3px;
-}
-
-.file-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
+  
   .folder-item {
-    display: flex;
-    align-items: center;
-    /* background: #f0f8ff; */
-    padding: 10px 15px;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s ease-in-out;
-  }
-
-  .folder-item:hover {
-    background: #403f3f;
-  }
-
-  .file-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 15px;
-    border-radius: 6px;
-    background: #fff9f9;
-    color: #333;
-    border: 1px solid #ddd;
-    font-size: 16px;
-    transition: background 0.2s ease-in-out;
-  }
-
-  .file-item:hover {
-    background: #f9f9f9;
-  }
-
-  .new-folder-input
-  {
-    background: #f9f9f9;
-    color: gray;
-  }
-
-  /*  Download Button */
-  .download-button {
-    background: #007bff;
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: left;
+    background: transparent;
     color: white;
     border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    font-size: 14px;
     cursor: pointer;
     transition: background 0.2s ease-in-out;
-    margin-left: 20px;
   }
-
-  .download-button:hover {
-    background: #0056b3;
+  
+  .folder-item:hover {
+    background: #34495e;
   }
-
-  /*  Error & Loading States */
-  .loading,
-  .error {
-    text-align: center;
-    font-size: 16px;
-    font-weight: 500;
-    margin-top: 10px;
+  
+  /* 📁 Create Folder (Bottom Section) */
+  .create-folder {
+    padding-top: 10px;
+    border-top: 1px solid #7f8c8d;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
-
-  .error {
-    color: red;
+  
+  .new-folder-input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background: white;
+    color: black;
   }
-</style>
+  
+  .folder-action-button {
+    padding: 8px;
+    border-radius: 4px;
+    border: none;
+    background: #16a085;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+  }
+  
+  .folder-action-button:hover {
+    background: #138d75;
+  }
+  
+  /* 📄 Main Content */
+  .main-content {
+    flex-grow: 1;
+    padding: 20px;
+    background: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* 📤 Upload Section */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .upload-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .upload-label {
+    background: #16a085;
+    padding: 8px 22px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+  }
+  
+  .upload-label:hover {
+    background: #138d75;
+  }
+  
+  /* 📄 File List */
+  .file-list {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  
+  /* 📄 File Item (Button for full clickability) */
+  .file-item {
+    width: 100%;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #2c3e50;
+    text-align: left;
+    transition: background 0.2s ease-in-out, transform 0.1s;
+  }
+  
+  .file-item:hover {
+    background: #f5f5f5;
+    transform: scale(1.01);
+  }
+  
+  .file-name {
+    flex-grow: 1;
+    text-align: left;
+    padding-left: 10px;
+  }
+  </style>
