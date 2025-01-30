@@ -9,7 +9,7 @@
   
     // ✅ Fetch Nextcloud Credentials from LocalStorage (Set at Login)
     const username = localStorage.getItem("nextcloudUsername") || "quentin";
-    const password = localStorage.getItem("nextcloudPassword") || "8STdP-N7ai3-6sgwb-Qf8Qa-8xfiq";
+    const password = localStorage.getItem("nextcloudPassword") || "xxx";
   
     async function fetchNextcloudFiles() {
       loading.set(true);
