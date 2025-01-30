@@ -7,54 +7,35 @@
     const loading = writable(true);
     const error = writable(null);
   
-    // ✅ Fetch Nextcloud Credentials from LocalStorage (Set at Login)
-    const username = localStorage.getItem("nextcloudUsername") || "quentin";
-    const password = localStorage.getItem("nextcloudPassword") || "K7jPX-28Qdr-tPiMo-aSZas-K6Psc";
-  
     async function fetchNextcloudFiles() {
       loading.set(true);
       error.set(null);
-      console.log(username, password)
+  
       try {
         const response = await fetch(
-          "https://nextcloud.rubidiumweb.fr/remote.php/dav/files/" + username + "/",
-          {
-            method: "PROPFIND",
-            headers: {
-              Authorization: "Basic " + btoa(username + ":" + password),
-              Depth: "1",
-              "Content-Type": "application/xml",
-            },
-          }
+          "https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/files"
         );
   
         if (!response.ok) {
-          throw new Error(`Nextcloud access failed: ${response.statusText}`);
+          throw new Error(`❌ Nextcloud access failed: ${response.statusText}`);
         }
   
-        const textResponse = await response.text();
-  
-        // ✅ Parse XML response
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(textResponse, "application/xml");
-  
-        // ✅ Extract file list from WebDAV response
-        const fileNodes = [...xml.getElementsByTagName("d:response")].slice(1); // Skip first (root)
-        const fileList = fileNodes.map((node) => {
-          const href = node.getElementsByTagName("d:href")[0].textContent;
-          return {
-            name: decodeURIComponent(href.split("/").pop()), // Properly decode filenames
-            path: href,
-          };
-        });
-  
-        files.set(fileList);
+        const data = await response.json();
+        files.set(data.files);
       } catch (err) {
         console.error("❌ Nextcloud Fetch Error:", err);
         error.set(err.message);
       } finally {
         loading.set(false);
       }
+    }
+  
+    // ✅ **Download File from Cloudflare Proxy**
+    async function downloadFile(filePath) {
+      window.open(
+        `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/download?file=${encodeURIComponent(filePath)}`,
+        "_blank"
+      );
     }
   
     // ✅ Fetch files on mount
@@ -69,6 +50,9 @@
     }
   
     .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 10px;
       border-bottom: 1px solid #ddd;
     }
@@ -76,6 +60,19 @@
     .file-item a {
       text-decoration: none;
       color: blue;
+    }
+  
+    .download-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+  
+    .download-button:hover {
+      background-color: #0056b3;
     }
   </style>
   
@@ -93,9 +90,8 @@
       <ul>
         {#each $files as file}
           <li class="file-item">
-            <a href="https://nextcloud.rubidiumweb.fr/remote.php/dav/files/{username}/{file.name}" target="_blank">
-              📄 {file.name}
-            </a>
+            <span>📄 {file.name}</span>
+            <button class="download-button" on:click={() => downloadFile(file.path)}>⬇️ Download</button>
           </li>
         {/each}
       </ul>
