@@ -2,12 +2,12 @@
   import { writable } from "svelte/store";
   import { onMount } from "svelte";
 
-  // ✅ Stores for UI state
   const files = writable([]);
   const folders = writable([]);
-  const currentFolder = writable(""); // Track current folder path
+  const currentFolder = writable("");
   const loading = writable(true);
   const error = writable(null);
+  const newFolderName = writable(""); // Store new folder name
 
   async function fetchNextcloudFiles(folder = "") {
     loading.set(true);
@@ -16,7 +16,6 @@
     let cleanFolder = folder
       .replace(/^remote.php\/dav\/files\/quentin\//, "")
       .trim();
-
     const folderParam = cleanFolder
       ? `?folder=${encodeURIComponent(cleanFolder)}`
       : "";
@@ -49,6 +48,7 @@
       fetchNextcloudFiles("");
       return;
     }
+
     pathArray.pop();
     const newPath = pathArray.join("/");
     if (!newPath || newPath === "remote.php/dav/files/quentin") {
@@ -60,13 +60,75 @@
     }
   }
 
-  // Download File
-  function downloadFile(filePath) {
-    const downloadURL = `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/download?file=${encodeURIComponent(filePath)}`;
-    window.open(downloadURL, "_blank");
+//  Upload File
+async function uploadFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  loading.set(true);
+  error.set(null);
+
+  let cleanFolder = $currentFolder
+    .replace(/^\/?remote.php\/dav\/files\/quentin\/?/, "") // Remove WebDAV prefix
+    .replace(/^\/+|\/+$/g, "") // Remove leading/trailing slashes
+    .trim();
+
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("folder", cleanFolder || ""); 
+
+  try {
+    const response = await fetch(
+      `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (!response.ok) throw new Error("❌ Upload failed!");
+
+    fetchNextcloudFiles($currentFolder); 
+  } catch (err) {
+    console.error("❌ Upload Error:", err);
+    error.set(err.message);
+  } finally {
+    loading.set(false);
+  }
+}
+
+  //  Create Folder
+  async function createFolder() {
+    if (!$newFolderName) return;
+
+    const response = await fetch(
+      `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/create-folder`,
+      {
+        method: "POST",
+        body: JSON.stringify({ folder: `${$currentFolder}/${$newFolderName}` }),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    if (response.ok) {
+      fetchNextcloudFiles($currentFolder);
+      newFolderName.set("");
+    } else {
+      error.set("❌ Failed to create folder");
+    }
   }
 
-  // Fetch files on mount
+
+  // ✅ Download File Function
+function downloadFile(filePath) {
+  if (!filePath) return;
+  console.log("⬇️ Downloading:", filePath);
+
+  const downloadURL = `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/download?file=${encodeURIComponent(filePath)}`;
+  
+  window.open(downloadURL, "_blank");
+}
   onMount(() => fetchNextcloudFiles());
 </script>
 
@@ -79,42 +141,40 @@
   {:else if $error}
     <p class="error">❌ Error: {$error}</p>
   {:else}
-    <div class="breadcrumb">
-      {#if $currentFolder}
-        <button class="breadcrumb-button" on:click={goUpOneLevel}
-          >⬅️ Go Back</button
-        >
-      {/if}
+    <div class="controls">
+      <button class="breadcrumb-button" on:click={goUpOneLevel}
+        >⬅️ Go Back</button
+      >
+
+      <!--  Upload File Input -->
+      <input type="file" on:change={uploadFile} />
+
+      <!--  Create Folder Input -->
+      <input class="new-folder-input"
+        type="text"
+        bind:value={$newFolderName}
+        placeholder="New folder name"
+      />
+      <button on:click={createFolder}>📁 Create Folder</button>
     </div>
 
     <div class="file-container">
-      <!-- Folder List -->
       {#each $folders as folder}
-      <button
-      class="folder-item"
-      type="button"
-      on:click={() => fetchNextcloudFiles(folder.path)}
-      on:keypress={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          fetchNextcloudFiles(folder.path);
-        }
-      }}
-      aria-label="Open folder {folder.name}"
-    >
-      📁 {folder.name}
-    </button>
+        <button
+          class="folder-item"
+          on:click={() => fetchNextcloudFiles(folder.path)}
+        >
+          📁 {folder.name}
+        </button>
       {/each}
 
-      <!-- File List -->
       {#each $files as file}
         <div class="file-item">
           <span>📄 {file.name}</span>
           <button
             class="download-button"
-            on:click={() => downloadFile(file.path)}
+            on:click={() => downloadFile(file.path)}>⬇️ Download</button
           >
-            ⬇️ Download
-          </button>
         </div>
       {/each}
     </div>
@@ -122,8 +182,21 @@
 </div>
 
 <style>
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  input[type="text"],
+  input[type="file"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
   .file-browser {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 40px auto;
     padding: 20px;
     background: white;
@@ -159,10 +232,26 @@
   }
 
   .file-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 600px; 
+  overflow-y: auto;   
+  padding-right: 5px; 
+}
+
+.file-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.file-container::-webkit-scrollbar-thumb {
+  background: #007bff;
+  border-radius: 3px;
+}
+
+.file-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
 
   .folder-item {
     display: flex;
@@ -197,7 +286,13 @@
     background: #f9f9f9;
   }
 
-  /* ✅ Download Button */
+  .new-folder-input
+  {
+    background: #f9f9f9;
+    color: gray;
+  }
+
+  /*  Download Button */
   .download-button {
     background: #007bff;
     color: white;
@@ -214,7 +309,7 @@
     background: #0056b3;
   }
 
-  /* ✅ Error & Loading States */
+  /*  Error & Loading States */
   .loading,
   .error {
     text-align: center;

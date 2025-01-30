@@ -47,7 +47,7 @@
         ?.groups ?? {};
 
     const userRole = localStorage.getItem("sveltia-cms.userRole") || "viewer"; // Default role: viewer
-    // ✅ Check if user is accessing an admin-only collection
+    //  Check if user is accessing an admin-only collection
     if (
       pageName === "collections" &&
       $selectedCollection?.is_admin &&

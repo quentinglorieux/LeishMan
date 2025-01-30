@@ -58,7 +58,7 @@ export const signInAutomatically = async () => {
     (await LocalStorage.get('netlify-cms-user'));
 
   let _user = isObject(userCache) && !!userCache.backendName ? userCache : undefined;
-  console.log("🔍 Cached User:", _user); // ✅ Debug
+  console.log("🔍 Cached User:", _user); //  Debug
 
   const _backendName =
     _user?.backendName?.replace('proxy', 'local') ?? get(siteConfig)?.backend?.name;

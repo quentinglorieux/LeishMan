@@ -1,6 +1,6 @@
 # New features
 ## DOI Import Module
-✅ Summary of Fetching DOI Publications in Svelte
+ Summary of Fetching DOI Publications in Svelte
 
 We modularized the DOI import feature by separating concerns into distinct files:
 
@@ -163,7 +163,7 @@ Code:
 	•	Adds an “Import” button to open the modal.
 	•	Calls ImportPubliDialog, binding the state to showImportDialog.
 
-✅ Final Benefits
+ Final Benefits
 
 ✔ Clean architecture: Separate concerns for fetching data and UI.
 ✔ Minimal modifications: Your main file stays lightweight.
@@ -174,7 +174,7 @@ Code:
 
 
 ## Login
-✅ Explanation of ORCID Login Flow for Sveltia CMS with Cloudflare Worker
+ Explanation of ORCID Login Flow for Sveltia CMS with Cloudflare Worker
 
 🎯 Objective
 
@@ -288,7 +288,7 @@ async function getUserRole(orcidId) {
       const orcids = parseYAML(yamlText);
 
       if (orcids.includes(orcidId)) {
-        return role; // ✅ Return the first matched role
+        return role; //  Return the first matched role
       }
     }
   }
@@ -333,12 +333,12 @@ window.addEventListener("message", (event) => {
       })
     );
 
-    // ✅ Store user role (admin, editor, viewer)
+    //  Store user role (admin, editor, viewer)
     if (event.data.role) {
       localStorage.setItem("sveltia-cms.userRole", event.data.role);
     }
 
-    window.location.reload(); // ✅ Refresh CMS
+    window.location.reload(); //  Refresh CMS
   }
 });
 ```
@@ -375,4 +375,4 @@ if (pageName === "collections" && $selectedCollection?.is_admin && userRole !== 
 🚀 Next Steps
 
 Also done
-✅ Improve logout handling (Clear role on sign-out)
+ Improve logout handling (Clear role on sign-out)

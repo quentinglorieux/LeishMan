@@ -11,7 +11,7 @@
   const numberFormatter = $derived(Intl.NumberFormat($appLocale ?? undefined));
   const userRole = localStorage.getItem("sveltia-cms.userRole") || "viewer"; // Default to viewer
 
-  // ✅ Filter collections based on `is_admin`
+  //  Filter collections based on `is_admin`
   const collections = $derived(
     $siteConfig?.collections.filter(({ hide, is_admin }) => {
       if (hide) return false;
@@ -25,7 +25,7 @@
     (collection) => collection.name === $selectedCollection?.name
   );
 
-  // ✅ If collection is admin-only & user isn't admin → Redirect to Home
+  //  If collection is admin-only & user isn't admin → Redirect to Home
   if (currentCollection?.is_admin && userRole !== "admin") {
     goto("/"); // Redirect unauthorized users
   }
