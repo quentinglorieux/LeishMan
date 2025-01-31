@@ -13,37 +13,49 @@
 
 
   async function fetchNextcloudFiles(folder = "") {
-    loading.set(true);
-    error.set(null);
+  loading.set(true);
+  error.set(null);
 
-    let cleanFolder = folder
+  let cleanFolder = folder
     .replace(/^\/?remote.php\/dav\/files\/quentin\//, "")  // Remove WebDAV part
     .replace(/\/$/, "")  // Remove trailing slashes
     .trim();
-    const folderParam = cleanFolder
-      ? `?folder=${encodeURIComponent(cleanFolder)}`
-      : "";
 
-    try {
-      const response = await fetch(
-        `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/files${folderParam}`,
-        { method: "GET" }
-      );
+  const folderParam = cleanFolder ? `?folder=${encodeURIComponent(cleanFolder)}` : "";
 
-      if (!response.ok)
-        throw new Error(`Nextcloud access failed: ${response.statusText}`);
+  try {
+    const response = await fetch(
+      `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/files${folderParam}`,
+      { method: "GET" }
+    );
 
-      const data = await response.json();
-      files.set(data.files);
-      folders.set(data.folders);
-      currentFolder.set(cleanFolder);
-    } catch (err) {
-      console.error("❌ Nextcloud Fetch Error:", err);
-      error.set(err.message);
-    } finally {
-      loading.set(false);
-    }
+    if (!response.ok)
+      throw new Error(`Nextcloud access failed: ${response.statusText}`);
+
+    const data = await response.json();
+
+    const storedGroups = JSON.parse(localStorage.getItem("sveltia-cms.userGroups")) || [];
+
+    const filteredFolders = data.folders.filter(folder =>
+      storedGroups.some(group => folder.path.includes(group))
+    );
+
+    const filteredFiles = data.files.filter(file =>
+      filteredFolders.some(folder => file.path.startsWith(folder.path))
+    );
+
+
+
+    files.set(filteredFiles);
+    folders.set(filteredFolders);
+    currentFolder.set(cleanFolder);
+  } catch (err) {
+    console.error("❌ Nextcloud Fetch Error:", err);
+    error.set(err.message);
+  } finally {
+    loading.set(false);
   }
+}
 
   function goUpOneLevel() {
     let pathArray = $currentFolder.split("/").filter(Boolean);
@@ -222,10 +234,18 @@ async function openPreview(filePath) {
     previewFile.set({ url: previewUrl, type: `image/${fileType}` });
     loadingPreview.set(false);
   } else {
+    const storedGroups = JSON.parse(localStorage.getItem("sveltia-cms.userGroups")) || [];
+    console.log("🔹 Sending user groups for preview:", storedGroups);
     // ✅ Fetch the Nextcloud Share Link for PDFs, Markdown, and DOCX
     try {
       const response = await fetch(
-        `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/share?file=${encodeURIComponent(filePath)}`
+        `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/share?file=${encodeURIComponent(filePath)}`,
+        {
+          method: "GET",
+          headers: {
+            "X-User-Groups": storedGroups.join(","), // ✅ Send user groups
+          },
+        }
       );
       const data = await response.json();
 
