@@ -434,10 +434,10 @@ Deleting Files & Folders Implemented separate API endpoints for both
 
 7️⃣ Future Improvements 
 
-- Add file preview (images, PDFs, etc.). 
-- Group permissions to access specific folders. 
+- Add file preview (images, PDFs, etc.).  : DONE
+- Group permissions to access specific folders.   : DONE
   - Upgrade ed to be not hardcoded (usiing a yml file)
+  - edit permission based on group : DONE (for the moment its encoded in All or not All )
 - Bulk file operations (downloads, deletions).
 - Search functionality for files and folders.
-- edit files [jwt tokent for nextcloud]
 - improve secret management for NextCloud API (block access to the worker)

@@ -372,23 +372,23 @@ collections:
                   widget: "image",
                   required: false,
                 }
-  - label: Documents
-    name: documents
-    icon: description
-    is_admin: true
-    folder: nuxt-app/content/documents
-    media_folder: /nuxt-app/public/assets/documents 
-    public_folder: /assets/documents
-    create: true
-    identifier_field: title
-    fields:
-      - { label: "Title", name: "title", widget: "string", required: true }
-      - {
-          label: "File",
-          name: "file",
-          widget: "file",
-          required: true,
-        }
+  # - label: Documents
+  #   name: documents
+  #   icon: description
+  #   is_admin: true
+  #   folder: nuxt-app/content/documents
+  #   media_folder: /nuxt-app/public/assets/documents 
+  #   public_folder: /assets/documents
+  #   create: true
+  #   identifier_field: title
+  #   fields:
+  #     - { label: "Title", name: "title", widget: "string", required: true }
+  #     - {
+  #         label: "File",
+  #         name: "file",
+  #         widget: "file",
+  #         required: true,
+  #       }
   - label: Users
     name: users
     icon: group
