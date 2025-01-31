@@ -13,3 +13,11 @@ admin_list:
     group:
       - Group2
       - Group3
+  - lastname: Neumayr
+    firstname: Andreas
+    email: ''
+    orcid: 0000-0001-7358-2791
+    group:
+      - Group1
+      - Group3
+      - All
