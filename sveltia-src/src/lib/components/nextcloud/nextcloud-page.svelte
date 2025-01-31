@@ -14,8 +14,9 @@
     error.set(null);
 
     let cleanFolder = folder
-      .replace(/^remote.php\/dav\/files\/quentin\//, "")
-      .trim();
+    .replace(/^\/?remote.php\/dav\/files\/quentin\//, "")  // Remove WebDAV part
+    .replace(/\/$/, "")  // Remove trailing slashes
+    .trim();
     const folderParam = cleanFolder
       ? `?folder=${encodeURIComponent(cleanFolder)}`
       : "";
@@ -205,22 +206,31 @@ function downloadFile(filePath) {
     <!-- 📂 Sidebar (Folders) -->
     <div class="sidebar">
       <h2>📂 Documents</h2>
-      <button class="breadcrumb-button" on:click={goUpOneLevel}>⬅️ Go Back</button>
-      
+      <!-- <button class="breadcrumb-button" on:click={goUpOneLevel}>⬅️ Go Back</button> -->
+      <button class="breadcrumb-button" on:click={() => fetchNextcloudFiles("")}>
+        🏠 Root
+      </button>
+  
       <div class="folder-list">
         {#each $folders as folder}
-          <div class="folder-item">
+          <div class="folder-item" style="padding-left: { ((folder.depth-1) * 15)}px;">
             <button class="folder-name" on:click={() => fetchNextcloudFiles(folder.path)}>
               📁 {folder.name}
             </button>
             <button class="delete-folder" on:click={() => deleteFolder(folder.path)}>🗑️</button>
+
           </div>
         {/each}
       </div>
   
       <!-- 📁 Create Folder (Bottom Section) -->
       <div class="create-folder">
-        <input class="new-folder-input" type="text" bind:value={$newFolderName} placeholder="New folder name" />
+        <input
+          class="new-folder-input"
+          type="text"
+          bind:value={$newFolderName}
+          placeholder="New folder name"
+        />
         <button class="folder-action-button" on:click={createFolder}>📁 Create Folder</button>
       </div>
     </div>
@@ -241,13 +251,13 @@ function downloadFile(filePath) {
   
       <div class="file-list">
         {#each $files as file}
-        <div class="file-item">
-          <div class="file-info" on:click={() => downloadFile(file.path)}>
-            📄 <span class="file-name">{file.name}</span>
+          <div class="file-item">
+            <div class="file-info" on:click={() => downloadFile(file.path)}>
+              📄 <span class="file-name">{file.name}</span>
+            </div>
+            <button class="delete-file" on:click={() => deleteFile(file.path)}>🗑️</button>
           </div>
-          <button class="delete-file" on:click={() => deleteFile(file.path)}>🗑️</button>
-        </div>
-      {/each}
+        {/each}
       </div>
     </div>
   </div>
@@ -318,7 +328,7 @@ function downloadFile(filePath) {
   }
   
   .delete-folder:hover {
-    background: rgb(241, 221, 221);
+    background: rgba(128, 128, 128, 0.245);
 
   }
   
@@ -421,7 +431,7 @@ function downloadFile(filePath) {
 
 /* ✅ Delete File Button (Same Style as Folder) */
 .delete-file {
-    background: transparent;
+  background: transparent;
   border: none;
   padding: 9px 12px;
   border-radius: 40px;
@@ -431,9 +441,26 @@ function downloadFile(filePath) {
 }
 
 .delete-file:hover {
-  background: rgb(241, 221, 221);
+  /* background: rgb(241, 221, 221); */
   border-width: 1px;
   border-color: red;
+  background-color: #ccc;
+  
 
+}
+
+.breadcrumb-button {
+  background: #16a085;
+  border: none;
+  padding: 6px  6px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  color: white;
+}
+
+.breadcrumb-button:hover {
+  background: #138d75;
 }
   </style>

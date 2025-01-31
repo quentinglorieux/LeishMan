@@ -403,9 +403,9 @@ The app provides a file explorer-style UI:
 4️⃣ File Operations
 
 The system enables:
-	•	✅ Downloading Files: Clicking on a file retrieves it from Nextcloud.
-	•	✅ Uploading Files: Users can upload new files into the selected folder.
-	•	✅ Deleting Files & Folders: Users can remove items with a confirmation step.
+	•	 Downloading Files: Clicking on a file retrieves it from Nextcloud.
+	•	 Uploading Files: Users can upload new files into the selected folder.
+	•	 Deleting Files & Folders: Users can remove items with a confirmation step.
 
 5️⃣ UI Enhancements
 	•	Two-column layout: Folders on the left, files on the right.
