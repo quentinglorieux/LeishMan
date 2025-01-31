@@ -5,6 +5,7 @@ admin_list:
     orcid: 0000-0003-0903-0233
     group:
       - Group1
+      - Group2
   - lastname: Cléa
     firstname: ''
     email: ''
