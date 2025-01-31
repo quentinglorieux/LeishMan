@@ -144,6 +144,8 @@ export const signOut = async () => {
   await get(backend)?.signOut();
   await LocalStorage.delete("sveltia-cms.user"); // Remove user info
   await LocalStorage.delete("sveltia-cms.userRole"); // Remove user role
+  await LocalStorage.delete("sveltia-cms.userGroups");
+
   backendName.set(undefined);
   user.set(undefined);
   unauthenticated.set(true);

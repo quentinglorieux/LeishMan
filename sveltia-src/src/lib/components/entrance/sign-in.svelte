@@ -42,21 +42,23 @@
 
   // Code to update the user's token when the backend sends it 
   window.addEventListener("message", (event) => {
-    if (event.data.backendName === "github" && event.data.token) {
-      localStorage.setItem(
-        "sveltia-cms.user",
-        JSON.stringify({
-          backendName: "github",
-          token: event.data.token,
-        })
-      );
-      // Store user role (e.g., "admin", "editor", "viewer")
-      if (event.data.role) {
-        localStorage.setItem("sveltia-cms.userRole", event.data.role);
-      }
-      window.location.reload();
+  if (event.data.backendName === "github" && event.data.token) {
+    localStorage.setItem("sveltia-cms.user", JSON.stringify({
+      backendName: "github",
+      token: event.data.token,
+    }));
+
+    if (event.data.role) {
+      localStorage.setItem("sveltia-cms.userRole", event.data.role);
     }
-  });
+
+    if (event.data.groups) {
+      localStorage.setItem("sveltia-cms.userGroups", JSON.stringify(event.data.groups));
+    }
+
+    window.location.reload();
+  }
+});
 
   function signInWithOrcid() {
     const width = 600;
