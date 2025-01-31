@@ -52,3 +52,7 @@ This module adds a DOI import feature to fetch and display publication metadata 
 Using ORCID for login
 Via a worker in Cloudflare, the site is able to authenticate users via ORCID. This is done by redirecting the user to ORCID for authentication and then back to the site with the user's ORCID ID (and a GitHub generic token). 
 See details [new-features.md](new-features.md#login)
+
+### NextCloud
+The site is now using NextCloud for file storage. This is done via the NextCloud API.
+See details [new-features.md](new-features.md#nextcloud)

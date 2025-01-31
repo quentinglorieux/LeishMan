@@ -40,7 +40,7 @@
     signInAutomatically();
   });
 
-  // Code to update the user's token when the backend sends it (QGX)
+  // Code to update the user's token when the backend sends it 
   window.addEventListener("message", (event) => {
     if (event.data.backendName === "github" && event.data.token) {
       localStorage.setItem(

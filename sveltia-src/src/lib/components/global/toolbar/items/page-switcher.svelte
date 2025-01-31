@@ -15,8 +15,9 @@
     {
       key: 'assets',
       label: $_('assets'),
-      icon: 'photo_library',
-      link: $selectedAssetFolder ? `/assets/${$selectedAssetFolder.internalPath}` : '/assets',
+      icon: 'folder_open',
+      // link: $selectedAssetFolder ? `/assets/${$selectedAssetFolder.internalPath}` : '/assets',
+      link:  '/nextcloud',
     },
     // {
     //   key: 'workflow',

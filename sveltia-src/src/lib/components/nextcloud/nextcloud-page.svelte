@@ -98,27 +98,96 @@ async function uploadFile(event) {
   }
 }
 
-  //  Create Folder
-  async function createFolder() {
-    if (!$newFolderName) return;
+// ✅ Create Folder (Fix for Subfolders)
+async function createFolder() {
+  if (!$newFolderName.trim()) return;
 
+  // ✅ Ensure correct path formatting
+  const targetFolder = $currentFolder
+    ? `${$currentFolder}/${$newFolderName.trim()}`
+    : $newFolderName.trim();
+
+  loading.set(true);
+  error.set(null);
+
+  try {
     const response = await fetch(
       `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/create-folder`,
       {
         method: "POST",
-        body: JSON.stringify({ folder: `${$currentFolder}/${$newFolderName}` }),
+        body: JSON.stringify({ folder: targetFolder }),
         headers: { "Content-Type": "application/json" },
       }
     );
 
-    if (response.ok) {
-      fetchNextcloudFiles($currentFolder);
-      newFolderName.set("");
-    } else {
-      error.set("❌ Failed to create folder");
-    }
-  }
+    if (!response.ok) throw new Error("❌ Failed to create folder!");
 
+    console.log(`✅ Folder Created: ${targetFolder}`);
+    fetchNextcloudFiles($currentFolder); // ✅ Refresh file list
+    newFolderName.set(""); // ✅ Reset input field
+  } catch (err) {
+    console.error("❌ Create Folder Error:", err);
+    error.set(err.message);
+  } finally {
+    loading.set(false);
+  }
+}
+
+  // ✅ Delete Folder
+async function deleteFolder(folderPath) {
+  if (!folderPath) return;
+  
+  const confirmDelete = confirm(`⚠️ Are you sure you want to delete "${folderPath.split('/').pop()}"? This action cannot be undone!`);
+  if (!confirmDelete) return;
+  
+  loading.set(true);
+  error.set(null);
+
+  try {
+    const response = await fetch(
+      `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/delete-folder`,
+      {
+        method: "DELETE",
+        body: JSON.stringify({ folder: folderPath }),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    if (!response.ok) throw new Error("❌ Failed to delete folder!");
+
+    console.log(`✅ Folder Deleted: ${folderPath}`);
+    fetchNextcloudFiles($currentFolder); // ✅ Refresh file list
+  } catch (err) {
+    console.error("❌ Delete Folder Error:", err);
+    error.set(err.message);
+  } finally {
+    loading.set(false);
+  }
+}
+
+// ✅ Delete File
+async function deleteFile(filePath) {
+  if (!filePath) return;
+  
+  const confirmDelete = confirm(`🚨 Are you sure you want to delete "${filePath.split('/').pop()}"?`);
+  if (!confirmDelete) return;
+
+
+  try {
+    const response = await fetch(
+      `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/delete-file?file=${encodeURIComponent(filePath)}`,
+      { method: "DELETE" }
+    );
+
+    if (!response.ok) throw new Error("❌ File deletion failed!");
+
+    console.log("✅ File Deleted:", filePath);
+    fetchNextcloudFiles($currentFolder); // ✅ Refresh file list
+  } catch (err) {
+    console.error("❌ Delete File Error:", err);
+    error.set(err.message);
+  }
+}
 
   // ✅ Download File Function
 function downloadFile(filePath) {
@@ -135,14 +204,17 @@ function downloadFile(filePath) {
 <div class="file-manager">
     <!-- 📂 Sidebar (Folders) -->
     <div class="sidebar">
-      <h2>📂 Folders</h2>
+      <h2>📂 Documents</h2>
       <button class="breadcrumb-button" on:click={goUpOneLevel}>⬅️ Go Back</button>
       
       <div class="folder-list">
         {#each $folders as folder}
-          <button class="folder-item" on:click={() => fetchNextcloudFiles(folder.path)}>
-            📁 {folder.name}
-          </button>
+          <div class="folder-item">
+            <button class="folder-name" on:click={() => fetchNextcloudFiles(folder.path)}>
+              📁 {folder.name}
+            </button>
+            <button class="delete-folder" on:click={() => deleteFolder(folder.path)}>🗑️</button>
+          </div>
         {/each}
       </div>
   
@@ -162,17 +234,20 @@ function downloadFile(filePath) {
         <div class="upload-container">
           <label class="upload-label">
             <input type="file" on:change={uploadFile} hidden />
-            📄 Upload File
+            📤 Upload File
           </label>
         </div>
       </div>
   
       <div class="file-list">
         {#each $files as file}
-          <button class="file-item" on:click={() => downloadFile(file.path)}>
+        <div class="file-item">
+          <div class="file-info" on:click={() => downloadFile(file.path)}>
             📄 <span class="file-name">{file.name}</span>
-          </button>
-        {/each}
+          </div>
+          <button class="delete-file" on:click={() => deleteFile(file.path)}>🗑️</button>
+        </div>
+      {/each}
       </div>
     </div>
   </div>
@@ -203,10 +278,11 @@ function downloadFile(filePath) {
   }
   
   .folder-item {
-    width: 100%;
-    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
     border-radius: 4px;
-    text-align: left;
     background: transparent;
     color: white;
     border: none;
@@ -216,6 +292,34 @@ function downloadFile(filePath) {
   
   .folder-item:hover {
     background: #34495e;
+  }
+  
+  .folder-name {
+    flex-grow: 1;
+    text-align: left;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .folder-name:hover {
+    /* text-decoration: underline; */
+  }
+  
+  /* ❌ Delete Folder Button */
+  .delete-folder {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 3px 7px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .delete-folder:hover {
+    background: rgb(241, 221, 221);
+
   }
   
   /* 📁 Create Folder (Bottom Section) */
@@ -273,7 +377,7 @@ function downloadFile(filePath) {
   
   .upload-label {
     background: #16a085;
-    padding: 8px 22px;
+    padding: 8px 12px;
     border-radius: 6px;
     color: white;
     font-weight: bold;
@@ -291,32 +395,45 @@ function downloadFile(filePath) {
     overflow-y: auto;
   }
   
-  /* 📄 File Item (Button for full clickability) */
   .file-item {
-    width: 100%;
-    padding: 8px 12px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    font-size: 15px;
-    font-weight: bold;
-    color: #2c3e50;
-    text-align: left;
-    transition: background 0.2s ease-in-out, transform 0.1s;
-  }
-  
-  .file-item:hover {
-    background: #f5f5f5;
-    transform: scale(1.01);
-  }
-  
-  .file-name {
-    flex-grow: 1;
-    text-align: left;
-    padding-left: 10px;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  transition: background 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.file-item:hover {
+  background: #f9f9f9;
+}
+
+/* ✅ File Name Clickable */
+.file-info {
+  flex-grow: 1;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* ✅ Delete File Button (Same Style as Folder) */
+.delete-file {
+    background: transparent;
+  border: none;
+  padding: 9px 12px;
+  border-radius: 40px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.delete-file:hover {
+  background: rgb(241, 221, 221);
+  border-width: 1px;
+  border-color: red;
+
+}
   </style>

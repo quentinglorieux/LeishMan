@@ -3,7 +3,12 @@ admin_list:
     firstname: ''
     email: ''
     orcid: 0000-0003-0903-0233
+    group:
+      - Group1
   - lastname: Cléa
     firstname: ''
     email: ''
     orcid: 0000-0003-3159-1061
+    group:
+      - Group2
+      - Group3

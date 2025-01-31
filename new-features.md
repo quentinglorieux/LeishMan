@@ -376,3 +376,55 @@ if (pageName === "collections" && $selectedCollection?.is_admin && userRole !== 
 
 Also done
  Improve logout handling (Clear role on sign-out)
+
+
+## NextCloud
+
+📄 Nextcloud Integration - Overview
+
+1️⃣ Project Goals
+
+The goal of this integration was to embed Nextcloud inside our Svelte app, allowing users to view, navigate, upload, download, and manage files directly from the UI.
+
+2️⃣ Authentication & API Communication
+
+To interact with Nextcloud, we used a Cloudflare Worker as a proxy that:
+	•	Authenticates requests using Nextcloud credentials stored securely.
+	•	Handles CORS issues by allowing cross-origin requests.
+	•	Processes API calls from the Svelte frontend.
+
+3️⃣ Folder & File Navigation
+
+The app provides a file explorer-style UI:
+	•	Folder Navigation: Users can open folders and navigate back to the parent directory.
+	•	Breadcrumb System: Displays the current path and allows going back.
+	•	Nextcloud WebDAV Requests: Uses the PROPFIND method to fetch files and folders dynamically.
+
+4️⃣ File Operations
+
+The system enables:
+	•	✅ Downloading Files: Clicking on a file retrieves it from Nextcloud.
+	•	✅ Uploading Files: Users can upload new files into the selected folder.
+	•	✅ Deleting Files & Folders: Users can remove items with a confirmation step.
+
+5️⃣ UI Enhancements
+	•	Two-column layout: Folders on the left, files on the right.
+	•	Interactive buttons: Clickable file areas, hover effects, and smooth transitions.
+	•	Consistent design: Matching styles for uploads, deletions, and navigation.
+
+6️⃣ Challenges & Solutions
+
+Challenge	Solution
+CORS Issues	Cloudflare Worker Proxy
+Navigating Folders	Implemented a dynamic path tracking system
+Uploading in Subfolders	Properly formatted folder paths in requests
+Deleting Files & Folders	Implemented separate API endpoints for both
+
+7️⃣ Future Improvements
+	•	🛠 Add file preview (images, PDFs, etc.).
+	•	🛠 User permissions 
+  •	🛠 Bulk file operations (downloads, deletions).
+  •	🛠 Search functionality for files and folders.
+  . edit files [jwt tokent for nextcloud]
+  . improve secret management for NextCloud API (block access to the worker)
+
