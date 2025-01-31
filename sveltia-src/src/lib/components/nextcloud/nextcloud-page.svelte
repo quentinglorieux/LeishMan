@@ -9,6 +9,8 @@
   const error = writable(null);
   const newFolderName = writable(""); // Store new folder name
   const previewFile = writable(null);
+  const loadingPreview = writable(false); // ✅ Track loading state
+
 
   async function fetchNextcloudFiles(folder = "") {
     loading.set(true);
@@ -202,21 +204,33 @@ function downloadFile(filePath) {
 }
 
 
-
 function openPreview(filePath) {
   const fileType = filePath.split('.').pop().toLowerCase();
-  const previewableTypes = ['jpg', 'jpeg', 'png', 'gif', 'pdf'];
-  
+  const previewableTypes = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'md', 'docx'];
+
+  let previewUrl = `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/download?file=${encodeURIComponent(filePath)}`;
+
   if (previewableTypes.includes(fileType)) {
-    previewFile.set({ url: `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/download?file=${encodeURIComponent(filePath)}`, type: fileType.includes('pdf') ? 'application/pdf' : `image/${fileType}` });
+    if (fileType === "pdf") {
+      previewFile.set({ url: previewUrl, type: "application/pdf" });
+    } else if (["jpg", "jpeg", "png", "gif"].includes(fileType)) {
+      previewFile.set({ url: previewUrl, type: `image/${fileType}` });
+    } else if (fileType === "md") {
+      previewFile.set({ url: `https://nextcloud.rubidiumweb.fr/apps/files/?file=${encodeURIComponent(filePath)}`, type: "markdown" });
+    } else if (fileType === "docx") {
+      previewFile.set({ url: `https://nextcloud.rubidiumweb.fr/apps/onlyoffice/s/${encodeURIComponent(filePath)}`, type: "docx" });
+    }
   } else {
     alert("Preview not supported for this file type.");
   }
 }
 
-function closePreview() {
-  previewFile.set(null);
-}
+  function closePreview() {
+    previewFile.set(null);
+    loadingPreview.set(false); // ✅ Reset loading state
+  }
+
+
 
 // ✅ Close preview when pressing Escape
 function handleKeydown(event) {
@@ -301,20 +315,33 @@ onDestroy(() => {
   {#if $previewFile}
   <div class="preview-modal" class:visible={$previewFile}>
     <div class="preview-content">
-      <button class="close-preview" on:click={() => previewFile.set(null)}>✖ Close</button>
+      <button class="close-preview" on:click={closePreview}>✖ Close</button>
+
+      <!-- 🔄 Show Loading Spinner -->
+      {#if $loadingPreview}
+        <div class="loading-spinner">⏳ Loading...</div>
+      {/if}
 
       {#if $previewFile && $previewFile.type}
         {#if $previewFile.type.startsWith("image/")}
-          <img src="{$previewFile.url}" alt="Preview" class="preview-image" />
+          <img 
+            src={$previewFile.url} 
+            alt="Preview" 
+            class="preview-image" 
+            on:load={() => loadingPreview.set(false)} >
         {:else if $previewFile.type === "application/pdf"}
-          <embed src="{$previewFile.url}" type="application/pdf" class="preview-pdf" />
-        {:else}
-          <p>⚠️ File preview not available. <a href="{$previewFile.url}" target="_blank">Download it</a>.</p>
-        {/if}
-      {:else}
-        <p>⚠️ No file selected for preview.</p>
-      {/if}
+          <iframe 
+            title="PDF Preview"
+            class="preview-pdf" 
+            src="https://docs.google.com/gview?embedded=true&url={$previewFile.url}" 
+            frameborder="0"
+            on:load={() => loadingPreview.set(false)} 
+          ></iframe>
 
+        {:else}
+          <p>⚠️ File preview not available. <a href={$previewFile.url} target="_blank">Download it</a>.</p>
+        {/if}
+      {/if}
     </div>
   </div>
 {/if}
@@ -566,8 +593,8 @@ onDestroy(() => {
 }
 
 .preview-pdf {
-  width: 100%;
-  height: 500px;
+  width: 800px;
+  height: 800px;
 }
 
 .close-preview {
@@ -579,5 +606,20 @@ onDestroy(() => {
   border: none;
   padding: 5px 10px;
   cursor: pointer;
+}
+
+/* 🔄 Loading Spinner */
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px 20px;
+  border-radius: 6px;
+  z-index: 10;
 }
   </style>
