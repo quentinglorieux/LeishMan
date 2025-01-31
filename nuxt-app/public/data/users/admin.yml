@@ -6,7 +6,6 @@ admin_list:
     group:
       - Group1
       - Group2
-      - All
   - lastname: Cléa
     firstname: ''
     email: ''
