@@ -204,24 +204,49 @@ function downloadFile(filePath) {
 }
 
 
-function openPreview(filePath) {
+async function openPreview(filePath) {
   const fileType = filePath.split('.').pop().toLowerCase();
-  const previewableTypes = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'md', 'docx'];
+  const previewableTypes = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'md', 'docx','odt'];
 
   let previewUrl = `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/download?file=${encodeURIComponent(filePath)}`;
 
-  if (previewableTypes.includes(fileType)) {
-    if (fileType === "pdf") {
-      previewFile.set({ url: previewUrl, type: "application/pdf" });
-    } else if (["jpg", "jpeg", "png", "gif"].includes(fileType)) {
-      previewFile.set({ url: previewUrl, type: `image/${fileType}` });
-    } else if (fileType === "md") {
-      previewFile.set({ url: `https://nextcloud.rubidiumweb.fr/apps/files/?file=${encodeURIComponent(filePath)}`, type: "markdown" });
-    } else if (fileType === "docx") {
-      previewFile.set({ url: `https://nextcloud.rubidiumweb.fr/apps/onlyoffice/s/${encodeURIComponent(filePath)}`, type: "docx" });
-    }
+  if (!previewableTypes.includes(fileType)) {
+    alert("⚠️ Preview not supported for this file type.");
+    return;
+  }
+
+  loadingPreview.set(true); // ✅ Start loading animation
+
+  if (["jpg", "jpeg", "png", "gif"].includes(fileType)) {
+    // ✅ Show images inside the modal
+    previewFile.set({ url: previewUrl, type: `image/${fileType}` });
+    loadingPreview.set(false);
   } else {
-    alert("Preview not supported for this file type.");
+    // ✅ Fetch the Nextcloud Share Link for PDFs, Markdown, and DOCX
+    try {
+      const response = await fetch(
+        `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/share?file=${encodeURIComponent(filePath)}`
+      );
+      const data = await response.json();
+
+      if (data.url) {
+        if (fileType === "pdf" || fileType === "md" || fileType === "docx"  || fileType === "odt") {
+          let finalUrl = data.url;
+          if (fileType === "docx") {
+            // finalUrl = data.url.replace('/s/', '/apps/onlyoffice/s/');
+          }
+          // ✅ Open PDF, MD, DOCX in a new tab
+          window.open(finalUrl, "_blank");
+        }
+      } else {
+        alert("❌ Unable to fetch Nextcloud preview.");
+      }
+    } catch (err) {
+      console.error("❌ Error fetching share link:", err);
+      alert("❌ Failed to load preview.");
+    } finally {
+      loadingPreview.set(false);
+    }
   }
 }
 
@@ -315,32 +340,22 @@ onDestroy(() => {
   {#if $previewFile}
   <div class="preview-modal" class:visible={$previewFile}>
     <div class="preview-content">
-      <button class="close-preview" on:click={closePreview}>✖ Close</button>
+      <button class="close-preview" on:click={() => previewFile.set(null)}>✖ Close</button>
 
-      <!-- 🔄 Show Loading Spinner -->
-      {#if $loadingPreview}
-        <div class="loading-spinner">⏳ Loading...</div>
-      {/if}
-
-      {#if $previewFile && $previewFile.type}
-        {#if $previewFile.type.startsWith("image/")}
-          <img 
-            src={$previewFile.url} 
-            alt="Preview" 
-            class="preview-image" 
-            on:load={() => loadingPreview.set(false)} >
-        {:else if $previewFile.type === "application/pdf"}
-          <iframe 
-            title="PDF Preview"
-            class="preview-pdf" 
-            src="https://docs.google.com/gview?embedded=true&url={$previewFile.url}" 
-            frameborder="0"
-            on:load={() => loadingPreview.set(false)} 
-          ></iframe>
-
-        {:else}
-          <p>⚠️ File preview not available. <a href={$previewFile.url} target="_blank">Download it</a>.</p>
-        {/if}
+      {#if !loadingPreview}
+        <p class="loading-preview">⏳ Loading preview...</p>
+      {:else if $previewFile.type.startsWith("image/")}
+        <img src="{$previewFile.url}" alt="Preview" class="preview-image" />
+      {:else if $previewFile.type === "application/pdf"}
+        <iframe class="preview-pdf" src={$previewFile.url} frameborder="0"></iframe>
+      {:else if $previewFile.type === "markdown"}
+        <iframe class="preview-markdown" src={$previewFile.url} frameborder="0"></iframe>
+      {:else if $previewFile.type === "docx"}
+        <iframe class="preview-docx" src={$previewFile.url} frameborder="0"></iframe>
+        {:else if $previewFile.type === "odt"}
+        <iframe class="preview-docx" src={$previewFile.url} frameborder="0"></iframe>
+      {:else}
+        <p>⚠️ File preview not available. <a href={$previewFile.url} target="_blank">Download it</a>.</p>
       {/if}
     </div>
   </div>
@@ -593,6 +608,16 @@ onDestroy(() => {
 }
 
 .preview-pdf {
+  width: 800px;
+  height: 800px;
+}
+
+.preview-markdown {
+  width: 800px;
+  height: 800px;
+}
+
+.preview-docx {
   width: 800px;
   height: 800px;
 }
