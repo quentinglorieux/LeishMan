@@ -1,6 +1,8 @@
 # New features
+
 ## DOI Import Module
- Summary of Fetching DOI Publications in Svelte
+
+Summary of Fetching DOI Publications in Svelte
 
 We modularized the DOI import feature by separating concerns into distinct files:
 
@@ -10,30 +12,33 @@ We modularized the DOI import feature by separating concerns into distinct files
 💡 Purpose: Handles API calls to fetch publication metadata from CrossRef.
 
 Code:
+
 ```javascript
 export async function fetchPublicationFromDOI(doi) {
   if (!doi.trim()) {
-    return { error: 'DOI cannot be empty' };
+    return { error: "DOI cannot be empty" };
   }
 
   try {
-    const response = await fetch(`https://api.crossref.org/works/${encodeURIComponent(doi)}`);
+    const response = await fetch(
+      `https://api.crossref.org/works/${encodeURIComponent(doi)}`
+    );
     if (!response.ok) {
-      return { error: 'DOI not found' };
+      return { error: "DOI not found" };
     }
 
     const data = await response.json();
     return { data: data.message };
   } catch (error) {
-    return { error: 'Error fetching DOI metadata' };
+    return { error: "Error fetching DOI metadata" };
   }
 }
 ```
 
 🛠 What this does:
-	•	Checks if DOI is empty.
-	•	Fetches metadata from CrossRef API.
-	•	Returns either data (publication metadata) or an error message.
+• Checks if DOI is empty.
+• Fetches metadata from CrossRef API.
+• Returns either data (publication metadata) or an error message.
 
 2️⃣ New Component for DOI Import UI
 
@@ -41,6 +46,7 @@ export async function fetchPublicationFromDOI(doi) {
 💡 Purpose: Provides a UI dialog for entering DOI and displaying metadata.
 
 Code:
+
 ```javascript
 <script>
   import { Dialog, Button, TextInput, Spacer, Toast, Icon } from '@sveltia/ui';
@@ -130,15 +136,16 @@ Code:
 ```
 
 🛠 What this does:
-	•	Provides a dialog box for DOI input.
-	•	Calls fetchPublicationFromDOI(doi) and displays metadata.
-	•	Shows a toast message on successful import.
+• Provides a dialog box for DOI input.
+• Calls fetchPublicationFromDOI(doi) and displays metadata.
+• Shows a toast message on successful import.
 
 3️⃣ Minimal Change to Your Main File
 
 📍 Your Main File
 
 Code:
+
 ```javascript
 <script>
   import ImportPubliDialog from '$lib/components/contents/shared/import-publi-dialog.svelte';
@@ -160,10 +167,10 @@ Code:
 ```
 
 🛠 What this does:
-	•	Adds an “Import” button to open the modal.
-	•	Calls ImportPubliDialog, binding the state to showImportDialog.
+• Adds an “Import” button to open the modal.
+• Calls ImportPubliDialog, binding the state to showImportDialog.
 
- Final Benefits
+Final Benefits
 
 ✔ Clean architecture: Separate concerns for fetching data and UI.
 ✔ Minimal modifications: Your main file stays lightweight.
@@ -172,32 +179,28 @@ Code:
 
 🚀 Now your DOI Import is fully modular, maintainable, and reusable! Let me know if you need anything else. 😊
 
-
 ## Login
- Explanation of ORCID Login Flow for Sveltia CMS with Cloudflare Worker
+
+Explanation of ORCID Login Flow for Sveltia CMS with Cloudflare Worker
 
 🎯 Objective
 
-We implemented ORCID authentication for users to sign in and edit files in Sveltia CMS. The authentication allows only pre-approved ORCID users to obtain a GitHub token (used to edit the repository). The whole flow is managed via a Cloudflare Worker, which:
-	1.	Redirects users to ORCID for authentication.
-	2.	Verifies ORCID users against a YAML admin list.
-	3.	Issues a GitHub token for CMS access.
-	4.	Passes the authentication result back to the frontend.
+We implemented ORCID authentication for users to sign in and edit files in Sveltia CMS. The authentication allows only pre-approved ORCID users to obtain a GitHub token (used to edit the repository). The whole flow is managed via a Cloudflare Worker, which: 1. Redirects users to ORCID for authentication. 2. Verifies ORCID users against a YAML admin list. 3. Issues a GitHub token for CMS access. 4. Passes the authentication result back to the frontend.
 
 🚀 Step-by-Step Breakdown of the ORCID Login Flow
 
 1️⃣ User Clicks “Sign in with ORCID”
-	•	On the Sveltia CMS login page, a new login button was added:
+• On the Sveltia CMS login page, a new login button was added:
 
 ```html
-<Button
+<button
   variant="primary"
   label="Sign in with ORCID"
-  onclick={signInWithOrcid}
+  onclick="{signInWithOrcid}"
 />
 ```
 
-	•	When clicked, it opens a pop-up for ORCID authentication:
+    •	When clicked, it opens a pop-up for ORCID authentication:
 
 ```javascript
 function signInWithOrcid() {
@@ -215,7 +218,7 @@ function signInWithOrcid() {
 ```
 
 2️⃣ Redirect to ORCID Authentication
-	•	The Cloudflare Worker listens for "/auth/orcid" and redirects the user:
+• The Cloudflare Worker listens for "/auth/orcid" and redirects the user:
 
 ```javascript
 async function handleOrcidAuth(env) {
@@ -237,10 +240,11 @@ async function handleOrcidAuth(env) {
   });
 }
 ```
-	•	The user is redirected to ORCID’s login page.
+
+    •	The user is redirected to ORCID’s login page.
 
 3️⃣ ORCID Redirects Back to Cloudflare Worker
-	•	After login, ORCID sends a code to our callback:
+• After login, ORCID sends a code to our callback:
 
 ```javascript
 async function handleOrcidCallback(request, env) {
@@ -273,7 +277,7 @@ async function handleOrcidCallback(request, env) {
 ```
 
 4️⃣ Cloudflare Worker Verifies ORCID Against Admin List
-	•	The Cloudflare Worker checks if the ORCID ID exists in admin.yml, editor.yml, or viewer.yml:
+• The Cloudflare Worker checks if the ORCID ID exists in admin.yml, editor.yml, or viewer.yml:
 
 ```javascript
 async function getUserRole(orcidId) {
@@ -281,7 +285,9 @@ async function getUserRole(orcidId) {
   const baseUrl = "https://leishman.netlify.app/data/users/";
 
   for (const role of roles) {
-    const response = await fetch(`${baseUrl}${role}.yml`, { headers: { "Cache-Control": "no-cache" } });
+    const response = await fetch(`${baseUrl}${role}.yml`, {
+      headers: { "Cache-Control": "no-cache" },
+    });
 
     if (response.ok) {
       const yamlText = await response.text();
@@ -297,13 +303,14 @@ async function getUserRole(orcidId) {
 }
 ```
 
-	•	If the ORCID ID is not found, the user is denied access.
+    •	If the ORCID ID is not found, the user is denied access.
 
 5️⃣ If ORCID is Allowed, Send GitHub Token
-	•	If the user is in admin.yml, editor.yml, or viewer.yml, they get a GitHub token:
+• If the user is in admin.yml, editor.yml, or viewer.yml, they get a GitHub token:
 
 ```javascript
-return new Response(`
+return new Response(
+  `
   <script>
     window.opener.postMessage({
       backendName: "github",
@@ -312,15 +319,17 @@ return new Response(`
     }, "*");
     window.close();
   </script>
-`, {
-  headers: { "Content-Type": "text/html" }
-});
+`,
+  {
+    headers: { "Content-Type": "text/html" },
+  }
+);
 ```
 
-	•	This sends the GitHub token and user role to the frontend.
+    •	This sends the GitHub token and user role to the frontend.
 
 6️⃣ Frontend Receives Message & Stores Token
-	•	The main Sveltia CMS frontend listens for the postMessage event:
+• The main Sveltia CMS frontend listens for the postMessage event:
 
 ```javascript
 window.addEventListener("message", (event) => {
@@ -344,8 +353,8 @@ window.addEventListener("message", (event) => {
 ```
 
 7️⃣ Hide or Restrict Access Based on Role
-	•	In Sveltia CMS, the user’s role is now stored in localStorage.
-	•	We hide admin-only pages:
+• In Sveltia CMS, the user’s role is now stored in localStorage.
+• We hide admin-only pages:
 
 ```javascript
 {#if $userRole === "admin"}
@@ -353,10 +362,14 @@ window.addEventListener("message", (event) => {
 {/if}
 ```
 
-	•	We block navigation to restricted pages:
+    •	We block navigation to restricted pages:
 
 ```javascript
-if (pageName === "collections" && $selectedCollection?.is_admin && userRole !== "admin") {
+if (
+  pageName === "collections" &&
+  $selectedCollection?.is_admin &&
+  userRole !== "admin"
+) {
   window.location.replace("#/collections");
   alert("🚫 You do not have permission to access this collection.");
   return;
@@ -375,8 +388,7 @@ if (pageName === "collections" && $selectedCollection?.is_admin && userRole !== 
 🚀 Next Steps
 
 Also done
- Improve logout handling (Clear role on sign-out)
-
+Improve logout handling (Clear role on sign-out)
 
 ## NextCloud
 
@@ -389,42 +401,43 @@ The goal of this integration was to embed Nextcloud inside our Svelte app, allow
 2️⃣ Authentication & API Communication
 
 To interact with Nextcloud, we used a Cloudflare Worker as a proxy that:
-	•	Authenticates requests using Nextcloud credentials stored securely.
-	•	Handles CORS issues by allowing cross-origin requests.
-	•	Processes API calls from the Svelte frontend.
+• Authenticates requests using Nextcloud credentials stored securely.
+• Handles CORS issues by allowing cross-origin requests.
+• Processes API calls from the Svelte frontend.
 
 3️⃣ Folder & File Navigation
 
 The app provides a file explorer-style UI:
-	•	Folder Navigation: Users can open folders and navigate back to the parent directory.
-	•	Breadcrumb System: Displays the current path and allows going back.
-	•	Nextcloud WebDAV Requests: Uses the PROPFIND method to fetch files and folders dynamically.
+• Folder Navigation: Users can open folders and navigate back to the parent directory.
+• Breadcrumb System: Displays the current path and allows going back.
+• Nextcloud WebDAV Requests: Uses the PROPFIND method to fetch files and folders dynamically.
 
 4️⃣ File Operations
 
 The system enables:
-	•	 Downloading Files: Clicking on a file retrieves it from Nextcloud.
-	•	 Uploading Files: Users can upload new files into the selected folder.
-	•	 Deleting Files & Folders: Users can remove items with a confirmation step.
+• Downloading Files: Clicking on a file retrieves it from Nextcloud.
+• Uploading Files: Users can upload new files into the selected folder.
+• Deleting Files & Folders: Users can remove items with a confirmation step.
 
 5️⃣ UI Enhancements
-	•	Two-column layout: Folders on the left, files on the right.
-	•	Interactive buttons: Clickable file areas, hover effects, and smooth transitions.
-	•	Consistent design: Matching styles for uploads, deletions, and navigation.
+• Two-column layout: Folders on the left, files on the right.
+• Interactive buttons: Clickable file areas, hover effects, and smooth transitions.
+• Consistent design: Matching styles for uploads, deletions, and navigation.
 
 6️⃣ Challenges & Solutions
 
-Challenge	Solution
-CORS Issues	Cloudflare Worker Proxy
-Navigating Folders	Implemented a dynamic path tracking system
-Uploading in Subfolders	Properly formatted folder paths in requests
-Deleting Files & Folders	Implemented separate API endpoints for both
+Challenge Solution
+CORS Issues Cloudflare Worker Proxy
+Navigating Folders Implemented a dynamic path tracking system
+Uploading in Subfolders Properly formatted folder paths in requests
+Deleting Files & Folders Implemented separate API endpoints for both
 
-7️⃣ Future Improvements
-	•	🛠 Add file preview (images, PDFs, etc.).
-	•	🛠 User permissions 
-  •	🛠 Bulk file operations (downloads, deletions).
-  •	🛠 Search functionality for files and folders.
-  . edit files [jwt tokent for nextcloud]
-  . improve secret management for NextCloud API (block access to the worker)
+7️⃣ Future Improvements 
 
+- Add file preview (images, PDFs, etc.). 
+- Group permissions to access specific folders. 
+  - Upgrade ed to be not hardcoded (usiing a yml file)
+- Bulk file operations (downloads, deletions).
+- Search functionality for files and folders.
+- edit files [jwt tokent for nextcloud]
+- improve secret management for NextCloud API (block access to the worker)

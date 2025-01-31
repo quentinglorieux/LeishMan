@@ -1,6 +1,6 @@
 <script>
   import { writable } from "svelte/store";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   const files = writable([]);
   const folders = writable([]);
@@ -8,6 +8,7 @@
   const loading = writable(true);
   const error = writable(null);
   const newFolderName = writable(""); // Store new folder name
+  const previewFile = writable(null);
 
   async function fetchNextcloudFiles(folder = "") {
     loading.set(true);
@@ -199,6 +200,40 @@ function downloadFile(filePath) {
   
   window.open(downloadURL, "_blank");
 }
+
+
+
+function openPreview(filePath) {
+  const fileType = filePath.split('.').pop().toLowerCase();
+  const previewableTypes = ['jpg', 'jpeg', 'png', 'gif', 'pdf'];
+  
+  if (previewableTypes.includes(fileType)) {
+    previewFile.set({ url: `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/download?file=${encodeURIComponent(filePath)}`, type: fileType.includes('pdf') ? 'application/pdf' : `image/${fileType}` });
+  } else {
+    alert("Preview not supported for this file type.");
+  }
+}
+
+function closePreview() {
+  previewFile.set(null);
+}
+
+// ✅ Close preview when pressing Escape
+function handleKeydown(event) {
+  if (event.key === "Escape") {
+    closePreview();
+  }
+}
+
+// ✅ Add event listener when the component mounts
+onMount(() => {
+  window.addEventListener("keydown", handleKeydown);
+});
+
+// ✅ Remove event listener when the component is destroyed
+onDestroy(() => {
+  window.removeEventListener("keydown", handleKeydown);
+});
   onMount(() => fetchNextcloudFiles());
   </script>
 
@@ -252,7 +287,7 @@ function downloadFile(filePath) {
       <div class="file-list">
         {#each $files as file}
           <div class="file-item">
-            <div class="file-info" on:click={() => downloadFile(file.path)}>
+            <div class="file-info" on:click={() => openPreview(file.path)}>
               📄 <span class="file-name">{file.name}</span>
             </div>
             <button class="delete-file" on:click={() => deleteFile(file.path)}>🗑️</button>
@@ -261,6 +296,28 @@ function downloadFile(filePath) {
       </div>
     </div>
   </div>
+
+  <!-- File Preview Modal -->
+  {#if $previewFile}
+  <div class="preview-modal" class:visible={$previewFile}>
+    <div class="preview-content">
+      <button class="close-preview" on:click={() => previewFile.set(null)}>✖ Close</button>
+
+      {#if $previewFile && $previewFile.type}
+        {#if $previewFile.type.startsWith("image/")}
+          <img src="{$previewFile.url}" alt="Preview" class="preview-image" />
+        {:else if $previewFile.type === "application/pdf"}
+          <embed src="{$previewFile.url}" type="application/pdf" class="preview-pdf" />
+        {:else}
+          <p>⚠️ File preview not available. <a href="{$previewFile.url}" target="_blank">Download it</a>.</p>
+        {/if}
+      {:else}
+        <p>⚠️ No file selected for preview.</p>
+      {/if}
+
+    </div>
+  </div>
+{/if}
   
   <style>
   /* 🌟 Full-screen layout */
@@ -462,5 +519,65 @@ function downloadFile(filePath) {
 
 .breadcrumb-button:hover {
   background: #138d75;
+}
+
+.preview-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.preview-modal.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.preview-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  max-width: 80%;
+  max-height: 80vh; /* ✅ Limits height of modal */
+  overflow: hidden; /* ✅ Ensures content stays inside */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 70vh; /* ✅ Prevent image from exceeding the viewport height */
+  display: block;
+  margin: 0 auto;
+  object-fit: contain; /* ✅ Ensures the image is fully visible inside the preview box */
+}
+
+.preview-pdf {
+  width: 100%;
+  height: 500px;
+}
+
+.close-preview {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
 }
   </style>
