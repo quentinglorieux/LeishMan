@@ -12,7 +12,7 @@
         <div class="md:w-9/12 mx-auto">
           <UCarousel
             v-slot="{ item, index }"
-            :items="projectItems"
+            :items="projectsList"
             width="300"
             height="400"
             draggable="false"
@@ -40,14 +40,18 @@
 </template>
 
 <script setup>
-const projectItems = ref([]);
+
+const projectsList = await queryContent("projects").find();
+
+
+// const projectItems = ref([]);
 
 
 
-onMounted(async () => {
-  const response = await fetch("/data/events.json");
-  const data = await response.json();
-  projectItems.value = data.projects;
+// onMounted(async () => {
+//   const response = await fetch("/data/events.json");
+//   const data = await response.json();
+//   projectItems.value = data.projects;
 
-});
+// });
 </script>
