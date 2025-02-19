@@ -37,7 +37,7 @@
 
 
 const eventList = await queryContent("event").sort('date').find();
-
+console.log(eventList)
 const future=Array()
 const past= Array()
 const today = new Date()
