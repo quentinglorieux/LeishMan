@@ -17,8 +17,9 @@
       >
     </div>
     <div class="px-6 py-4">
+
       <nuxt-link
-        :to="`/event/${eventItem.id}`"
+        :to="`event/`+eventItem.date"
         class="bg-pasteur-blue text-white px-4 py-2 rounded hover:bg-pasteur-dark"
         >Learn More</nuxt-link
       >
@@ -34,9 +35,7 @@ defineProps({
   },
 });
 
-const formattedDate = computed(() => {
-  return new Date(eventItem.date).toLocaleDateString();
-});
+
 
 const placeholderImage = "placeholder.webp";
 </script>
