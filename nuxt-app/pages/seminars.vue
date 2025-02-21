@@ -32,7 +32,7 @@
         </p>
         <div class="px-6 py-4"></div>
         <nuxt-link
-          :to="`events/` + nextseminar.date"
+          :to="`events/` + nextseminar.title"
           class="bg-pasteur-blue text-white px-4 py-2 rounded hover:bg-pasteur-dark"
           >See the programm</nuxt-link
         >

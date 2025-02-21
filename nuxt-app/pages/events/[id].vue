@@ -10,9 +10,5 @@
 
 <script setup>
 const route = useRoute();
-
-// Reactive state to hold the dynamically fetched JSON data
-const programJson = ref([]);
-const date = route.params.id;
-const seminars = await queryContent("events").where({ date: date }).findOne();
+const seminars = await queryContent("events").where({ title: route.params.id }).findOne();
 </script>

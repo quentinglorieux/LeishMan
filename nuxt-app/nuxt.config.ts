@@ -17,9 +17,9 @@ export default defineNuxtConfig({
       cms: process.env.CMS || "sveltia",
     },
   },
-  nitro: {
-    prerender: {
-        ignore: ["/events"],
-    },
-  },
+  // nitro: {
+  //   prerender: {
+  //       ignore: ["/events"],
+  //   },
+  // },
 });
