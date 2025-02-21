@@ -7,9 +7,11 @@
     />
     <div class="px-6 py-4">
       <h3 class="font-bold text-xl mb-2">{{ eventItem.title }}</h3>
+      <p> {{eventItem.date}}</p>
       <p class="text-gray-700 dark:text-white text-base">
         {{ eventItem.description }}
       </p>
+      
     </div>
     <div class="px-6 py-4">
       <span class="block text-sm text-gray-600 dark:text-white"

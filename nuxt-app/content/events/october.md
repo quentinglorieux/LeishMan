@@ -2,7 +2,7 @@
 title: October Leishman Meeting
 location: Paris, France
 description: Our Monthly october meeting in Zoom
-date: October 24, 2024 12:00 AM
+date: 27/03/2025
 image: /assets/events/annual_conference.webp
 talk:
   - speaker: Pierre Buffet

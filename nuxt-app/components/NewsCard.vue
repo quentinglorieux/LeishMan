@@ -12,9 +12,7 @@
       </p>
     </div>
     <div class="px-6 py-4 flex justify-between items-center">
-      <span class="text-sm text-gray-600 dark:text-white">{{
-        formattedDate
-      }}</span>
+      <span class="text-sm text-gray-600 dark:text-white">{{newsItem.date}}</span>
       <nuxt-link
         :to="`/news/${newsItem.title}`"
         class="text-pasteur-blue hover:underline"
@@ -37,7 +35,5 @@ const props = defineProps({
 const placeholderImage = "placeholder.webp";
 
 // Computed property to format the date
-const formattedDate = computed(() => {
-  return new Date(props.newsItem.date).toLocaleDateString();
-});
+
 </script>
