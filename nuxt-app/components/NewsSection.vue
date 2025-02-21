@@ -3,7 +3,7 @@
     <div class="container mx-auto px-10">
       <h2 class="text-3xl font-bold mb-6">Latest News</h2>
       <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
-        <NewsCard v-for="news in newsList" :key="news.id" :newsItem="news" />
+        <NewsCard v-for="news in newsList.slice(0,3)" :key="news.id" :newsItem="news" />
       </div>
     </div>
   </section>

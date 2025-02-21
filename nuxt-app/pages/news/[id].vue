@@ -8,12 +8,8 @@
   
   <script setup>
   const route = useRoute()
-  const newsItem = ref({})
-  
-  onMounted(async () => {
-    const response = await fetch('/data/news.json')
-    const data = await response.json()
-    newsItem.value = data.news.find(item => item.id === parseInt(route.params.id))
-  })
+
+  const newsItem = await queryContent("news").where({title:route.params.id}).findOne();
+ 
   </script>
   

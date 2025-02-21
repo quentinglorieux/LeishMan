@@ -16,7 +16,7 @@
         formattedDate
       }}</span>
       <nuxt-link
-        :to="`/news/${newsItem.id}`"
+        :to="`/news/${newsItem.title}`"
         class="text-pasteur-blue hover:underline"
         >Read More</nuxt-link
       >
