@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-        ignore: ["/event"],
+        ignore: ["/events"],
     },
   },
 });

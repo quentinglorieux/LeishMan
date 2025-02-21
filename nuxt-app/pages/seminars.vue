@@ -32,7 +32,7 @@
         </p>
         <div class="px-6 py-4"></div>
         <nuxt-link
-          :to="`event/` + nextseminar.date"
+          :to="`events/` + nextseminar.date"
           class="bg-pasteur-blue text-white px-4 py-2 rounded hover:bg-pasteur-dark"
           >See the programm</nuxt-link
         >
@@ -46,14 +46,13 @@
     <p class="m-10"></p>
     <div class="flex flex-wrap sbt">
       <div class="col" v-for="(seminar, index) in seminars" :key="index">
-
         <CardL
           v-if="index % 2 == 1"
           :title="seminar.title"
           :location="seminar.location"
           :imageURL="seminar.image"
           :abstract="seminar.description"
-        />        
+        />
         <CardR
           v-else
           :title="seminar.title"
@@ -70,12 +69,10 @@
 const seminars = await queryContent("events").sort({ date: 1 }).find();
 const today = new Date();
 const futurseminar = seminars.filter((event) => new Date(event.date) > today);
-var nextseminar=false;
-if (futurseminar.length>0){
-  nextseminar=futurseminar[0]
+var nextseminar = false;
+if (futurseminar.length > 0) {
+  nextseminar = futurseminar[0];
 }
-
-
 </script>
 
 <style scoped>

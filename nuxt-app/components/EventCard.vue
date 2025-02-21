@@ -19,7 +19,7 @@
     <div class="px-6 py-4">
 
       <nuxt-link
-        :to="`event/`+eventItem.date"
+        :to="`events/`+eventItem.date"
         class="bg-pasteur-blue text-white px-4 py-2 rounded hover:bg-pasteur-dark"
         >Learn More</nuxt-link
       >
