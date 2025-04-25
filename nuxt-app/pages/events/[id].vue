@@ -3,6 +3,7 @@
     <h1 class="text-3xl font-bold text-center mb-8">
       {{seminars.date}}  
     </h1>
+    {{ seminars.description }}
    
   </div>
   <ProgDisplay :programData="seminars.talk" />

@@ -31,8 +31,10 @@ const future = Array();
 const past = Array();
 const today = new Date();
 eventList.forEach((event) => {
-  let dateevent = new Date(event.date);
-  if (dateevent > today) {
+  const [day, month, year] = event.date.split('/');
+const formattedDate = new Date(+year, +month - 1, +day); 
+ 
+  if (formattedDate > today) {
     future.push(event);
   } else {
     past.push(event);

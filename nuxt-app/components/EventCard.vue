@@ -23,7 +23,7 @@
       <nuxt-link
         :to="`events/`+eventItem.title"
         class="bg-pasteur-blue text-white px-4 py-2 rounded hover:bg-pasteur-dark"
-        >Learn More</nuxt-link
+        >See the program</nuxt-link
       >
     </div>
   </div>
