@@ -52,6 +52,10 @@
           :location="seminar.location"
           :imageURL="seminar.image"
           :abstract="seminar.description"
+  :seeMore="{
+    label: 'See the program',
+    link: `/seminars/${seminar?.title}`,
+  }"
         />
         <CardR
           v-else
@@ -59,6 +63,10 @@
           :location="seminar.location"
           :imageURL="seminar.image"
           :abstract="seminar.description"
+          :seeMore="{
+            label: 'See the program',
+            link: `/seminars/${seminar?.title}`,
+          }"
         />
       </div>
     </div>
