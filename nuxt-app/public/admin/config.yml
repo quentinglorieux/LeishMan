@@ -103,6 +103,28 @@ collections:
           widget: "image",
           required: false,
         }
+  - label: Protocols
+    name: protocols
+    icon: build
+    folder: nuxt-app/content/protocols
+    media_folder: /nuxt-app/public/assets/protocols
+    public_folder: /assets/protocols
+    create: true
+    identifier_field: title
+    fields:
+      - { label: "Titre", name: "title", widget: "string", required: true }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "markdown",
+          required: false,
+        }
+      - {
+          label: "Featured Image",
+          name: "image",
+          widget: "image",
+          required: false,
+        }
   - label: News
     name: news
     icon: brand_awareness

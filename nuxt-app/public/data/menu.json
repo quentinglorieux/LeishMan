@@ -9,6 +9,7 @@
         { "name": "Contact", "link": "/contact" },
         { "name": "Global Network", "link": "/reference-centers" },
         { "name": "Steering Committee", "link": "/steering" }
+
       ]
     },
     {
@@ -16,6 +17,8 @@
       "icon": "grommet-icons:workshop",
       "link": "",
       "submenu": [
+        {"name" : "News", "link":"/news"},
+        {"name" : "Events", "link":"/events"},
         { "name": "Seminar/meeting", "link": "/seminars" },
         { "name": "On-going Projects", "link": "/projects" },
         { "name": "Collaborations", "link": "/collaborations" }
