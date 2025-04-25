@@ -18,4 +18,3 @@ description: "- Centrifuge cultures at 1500g for 10 minutes at room temperature.
 image: /assets/news/placeholder.webp
 date: 21/03/2025
 ---
-
