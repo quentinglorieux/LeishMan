@@ -3,17 +3,19 @@
     <div
       class="block w-11/12 m-4 px-2 py-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     >
-      <div class="flex">
-        <h3
-          class="p-4 md:uppercase text-gray-800 font-bold text-xl dark:text-white"
-        >
-          {{ title }}
-        </h3>
-
-        <div class="sm:w-5/6 p-4 text-gray-800 dark:text-white">
+    <div class="flex flex-wrap items-center justify-between p-4">
+      <h3 class="text-gray-800 font-bold text-xl md:uppercase dark:text-white">
+        {{ title }}
+      </h3>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-800 dark:text-white">
+        <div v-if="date"class="sm:mr-10 pt-5 sm:p-0">
+          {{ date }}
+        </div>
+        <div v-if="location">
           {{ location }}
         </div>
       </div>
+    </div>
       <div class="sm:flex">
         <div class="md:w-5/6 p-4 text-gray-800 dark:text-white">
           {{ abstract }}

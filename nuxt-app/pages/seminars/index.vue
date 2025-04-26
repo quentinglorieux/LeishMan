@@ -5,10 +5,17 @@
     </div>
   </section>
   <!-- Next Meeting Section -->
-  <Titleheader v-if="nextseminar" class="p-10" title="Next Meeting"></Titleheader>
+  <Titleheader
+    v-if="nextseminar"
+    class="p-10"
+    title="Next Meeting"
+  ></Titleheader>
 
   <!-- Display the next event as a card (full width) -->
-  <div v-if="nextseminar" class="w-80 bg-white p-6 shadow-md rounded-lg mx-auto">
+  <div
+    v-if="nextseminar"
+    class="w-80 bg-white p-6 shadow-md rounded-lg mx-auto"
+  >
     <div class="flex flex-col md:flex-row">
       <div class="md:w-1/3">
         <img
@@ -43,7 +50,6 @@
   <!-- Seminars Section -->
   <div id="seminar" class="p-10 bg-slate-200 text-gray-800 dark:bg-slate-400">
     <Titleheader title="Seminars"></Titleheader>
-    <p class="m-10"></p>
     <div class="flex flex-wrap sbt">
       <div class="col" v-for="(seminar, index) in seminars" :key="index">
         <CardL
@@ -52,10 +58,11 @@
           :location="seminar.location"
           :imageURL="seminar.image"
           :abstract="seminar.description"
-  :seeMore="{
-    label: 'See the program',
-    link: `/seminars/${seminar?.title}`,
-  }"
+          :date="seminar.date"
+          :seeMore="{
+            label: 'See the program',
+            link: `/seminars/${seminar?.title}`,
+          }"
         />
         <CardR
           v-else
@@ -63,6 +70,7 @@
           :location="seminar.location"
           :imageURL="seminar.image"
           :abstract="seminar.description"
+          :date="seminar.date"
           :seeMore="{
             label: 'See the program',
             link: `/seminars/${seminar?.title}`,
