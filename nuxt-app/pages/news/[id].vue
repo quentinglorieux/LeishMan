@@ -13,7 +13,7 @@
 
 
   <script setup>
-  import MarkdownIt from 'markdown-it'
+import MarkdownIt from 'markdown-it'
 const route = useRoute()
 
 const newsItem = await queryContent("news").where({title:route.params.id}).findOne();

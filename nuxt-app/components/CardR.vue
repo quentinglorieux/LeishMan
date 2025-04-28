@@ -3,32 +3,32 @@
     <div
       class="block w-11/12 m-4 px-2 py-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     >
-    <div class="flex flex-wrap items-center justify-between p-4">
-      <h3 class="text-gray-800 font-bold text-xl md:uppercase dark:text-white">
-        {{ title }}
-      </h3>
-      <div class="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-800 dark:text-white">
-        <div v-if="date"class="sm:mr-10 pt-5 sm:p-0">
-          {{ date }}
-        </div>
-        <div v-if="location">
-          {{ location }}
+      <div class="flex flex-wrap items-center justify-between p-4">
+        <h3 class="text-gray-800 font-bold text-xl md:uppercase dark:text-white">
+          {{ title }}
+        </h3>
+        <div
+          class="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-800 dark:text-white"
+        >
+          <div v-if="date" class="sm:mr-10 pt-5 sm:p-0">
+            {{ date }}
+          </div>
+          <div v-if="location">
+            {{ location }}
+          </div>
         </div>
       </div>
-    </div>
       <div class="sm:flex">
         <div class="md:w-5/6 p-4 text-gray-800 dark:text-white">
           {{ abstract }}
           <div>
             <NuxtLink
-            v-if="seeMore?.link"
-            :to="seeMore.link"
-            class="inline-block bg-blue-400 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition
-                   dark:bg-blue-500 dark:hover:bg-blue-400"
-          >
-            {{ seeMore.label }}
-          </NuxtLink>
-
+              v-if="seeMore?.link"
+              :to="seeMore.link"
+              class="inline-block bg-blue-400 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition dark:bg-blue-500 dark:hover:bg-blue-400"
+            >
+              {{ seeMore.label }}
+            </NuxtLink>
           </div>
         </div>
 
@@ -48,7 +48,7 @@ defineProps({
   abstract: String,
   articleURL: String,
   date: String,
-  seeMore:Object,
+  seeMore: Object,
 });
 </script>
 
