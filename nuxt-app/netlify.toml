@@ -1,4 +1,8 @@
 [build]
-  base = "nuxt-app"
-  command = "nuxi generate"
+command = "npx nuxi build"
+publish = ".output/public"
 
+[[redirects]]
+from = "/*"
+to = "/.netlify/functions/server"
+status = 200
