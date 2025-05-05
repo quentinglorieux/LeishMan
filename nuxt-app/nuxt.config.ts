@@ -1,6 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: true, // Enable or Disable SSR
+  nitro: {
+    preset: 'netlify'
+  },
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
   components: true,
