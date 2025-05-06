@@ -7,6 +7,35 @@
     </section>
 
 
+    <div class="p-10">
+      <div class="flex flex-wrap sbt">
+        <div v-for="(news, index) in projectsList" class="col">
+          <CardL
+            v-if="index % 2 == 1"
+            :title="news.title"
+            :imageURL="news.image"
+            :abstract="news.description"
+            :date="news.date"
+            :seeMore="{
+              label: 'Read more',
+              link: `/projects/${news?.title}`,
+            }"
+          />
+          <CardR
+            v-else
+            :title="news.title"
+            :date="news.date"
+            :imageURL="news.image"
+            :abstract="news.description"
+            :seeMore="{
+              label: 'Read more',
+              link: `/projects/${news?.title}`,
+            }"
+          />
+        </div>
+      </div>
+    </div>
+<!-- 
     <div id="project" class="py-10 bg-white text-gray-800 dark:bg-slate-500">
       <div>
         <div class="md:w-9/12 mx-auto">
@@ -35,7 +64,7 @@
           </UCarousel>
         </div>
       </div>
-    </div>
+    </div> -->
 
 </template>
 
