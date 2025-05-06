@@ -28,6 +28,8 @@
 </template>
 
 <script setup>
+import MarkdownIt from "markdown-it";
+
 const collaborationsRaw = await queryContent("collaborations").find();
 
 const md = new MarkdownIt({
