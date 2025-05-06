@@ -11,28 +11,17 @@
   <div class="p-10">
     <div class="flex flex-wrap sbt">
       <div v-for="(news, index) in newsItems" class="col">
-        <CardL
-          v-if="index % 2 == 1"
-          :title="news.title"
-          :imageURL="news.image"
-          :abstract="news.shortdescription"
-          :date="news.date"
-          :seeMore="{
-            label: 'Read more',
-            link: `/news/${news?.title}`,
-          }"
-        />
-        <CardR
-          v-else
-          :title="news.title"
-          :date="news.date"
-          :imageURL="news.image"
-          :abstract="news.shortdescription"
-          :seeMore="{
-            label: 'Read more',
-            link: `/news/${news?.title}`,
-          }"
-        />
+        <CardLR
+        :leftright="index % 2 == 1"
+        :title="news.title"
+        :imageURL="news.image"
+        :abstract="news.shortdescription"
+        :date="news.date"
+        :seeMore="{
+          label: 'Read more',
+          link: `/news/${news?.title}`,
+        }"
+      />
       </div>
     </div>
   </div>

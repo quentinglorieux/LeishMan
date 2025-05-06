@@ -52,30 +52,17 @@
     <Titleheader title="Seminars"></Titleheader>
     <div class="flex flex-wrap sbt">
       <div class="col" v-for="(seminar, index) in seminars" :key="index">
-        <CardL
-          v-if="index % 2 == 1"
-          :title="seminar.title"
-          :location="seminar.location"
-          :imageURL="seminar.image"
-          :abstract="seminar.description"
-          :date="seminar.date"
-          :seeMore="{
-            label: 'See the program',
-            link: `/seminars/${seminar?.title}`,
-          }"
-        />
-        <CardR
-          v-else
-          :title="seminar.title"
-          :location="seminar.location"
-          :imageURL="seminar.image"
-          :abstract="seminar.description"
-          :date="seminar.date"
-          :seeMore="{
-            label: 'See the program',
-            link: `/seminars/${seminar?.title}`,
-          }"
-        />
+        <CardLR
+        :leftright="index % 2 == 1"
+        :title="seminar.title"
+        :imageURL="seminar.image"
+        :abstract="seminar.description"
+        :date="seminar.date"
+        :seeMore="{
+          label: 'Read more',
+          link: `/seminars/${seminar?.title}`,
+        }"
+      />
       </div>
     </div>
   </div>

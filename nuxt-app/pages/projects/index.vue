@@ -9,29 +9,18 @@
 
     <div class="p-10">
       <div class="flex flex-wrap sbt">
-        <div v-for="(news, index) in projectsList" class="col">
-          <CardL
-            v-if="index % 2 == 1"
-            :title="news.title"
-            :imageURL="news.image"
-            :abstract="news.description"
-            :date="news.date"
-            :seeMore="{
-              label: 'Read more',
-              link: `/projects/${news?.title}`,
-            }"
-          />
-          <CardR
-            v-else
-            :title="news.title"
-            :date="news.date"
-            :imageURL="news.image"
-            :abstract="news.description"
-            :seeMore="{
-              label: 'Read more',
-              link: `/projects/${news?.title}`,
-            }"
-          />
+        <div v-for="(project, index) in projectsList" class="col">
+          <CardLR
+          :leftright="index % 2 == 1"
+          :title="project.title"
+          :imageURL="project.image"
+          :abstract="project.description"
+          :date="project.date"
+          :seeMore="{
+            label: 'Read more',
+            link: `/projects/${project?.title}`,
+          }"
+        />
         </div>
       </div>
     </div>

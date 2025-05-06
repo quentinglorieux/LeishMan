@@ -15,7 +15,7 @@
   import MarkdownIt from 'markdown-it'
   const route = useRoute()
   
-  const newsItem = await queryContent("protocols").where({title:route.params.id}).findOne();
+  const newsItem = await queryContent("protocols").where({title:route.params.slug}).findOne();
   const md = new MarkdownIt()
   
   const renderedHtml = md.render(newsItem?.description , "")

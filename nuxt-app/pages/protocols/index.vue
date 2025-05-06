@@ -3,51 +3,27 @@
     <div class="container mx-auto text-center">
       <h1 class="text-4xl font-bold">Protocols</h1>
     </div>
-  </section>  
-  
-  
+  </section>
+
   <div class="p-10">
     <div class="flex flex-wrap sbt">
-      <div v-for="(news, index) in protocols" class="col">
-        <CardL
-          v-if="index % 2 == 1"
-          :title="news.title"
-          :imageURL="news.image"
-          :html="news.htmlDescription"
+      <div v-for="(protocol, index) in protocols" class="col">
+        <CardLR
+          :leftright="index % 2 == 1"
+          :title="protocol.title"
+          :imageURL="protocol.image"
+          :html="protocol.htmlDescription"
           :seeMore="{
             label: 'Read more',
-            link: `/protocols/${news?.title}`,
-          }"
-        />
-        <CardR
-          v-else
-          :title="news.title"
-          :imageURL="news.image"
-          :html="news.htmlDescription"
-          :seeMore="{
-            label: 'Read more',
-            link: `/protocols/${news?.title}`,
+            link: `/protocols/${protocol?.title}`,
           }"
         />
       </div>
     </div>
   </div>
-  
-  
-  
-  
-  
-  
-  
-  
-  <div
-    class="flex flex-wrap justify-around mx-auto "
-  >
-    <div
-      v-for="pr in protocols"
-      :key="pr._path"
-      class="shadow-lg rounded p-4"
-    >
+
+  <!-- <div class="flex flex-wrap justify-around mx-auto">
+    <div v-for="pr in protocols" :key="pr._path" class="shadow-lg rounded p-4">
       <h2 class="text-xl font-semibold mb-2">{{ pr.title }}</h2>
 
       <div class="prose dark:prose-invert mb-4" v-html="pr.htmlDescription" />
@@ -59,7 +35,7 @@
         class="w-full h-64 object-cover mb-4 rounded"
       />
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
