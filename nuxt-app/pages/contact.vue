@@ -6,19 +6,11 @@
   </section>
 
   <div v-for="(m, index) in contact">
-    <CardL
-      v-if="index % 2 == 0"
+    <CardLR
+      :leftright="index % 2 != 0"
       :title="m['firstname'] + ' ' + m['lastname']"
-      :location="m['mail']"
+      :mail="m['mail']"
       :imageURL="m.thumbnail"
-      :abstract="m['shortbio']"
-    />
-
-    <CardR
-      v-else
-      :title="m['firstname'] + ' ' + m['lastname']"
-      :location="m['mail']"
-      :imageURL="m['thumbnail']"
       :abstract="m['shortbio']"
     />
   </div>

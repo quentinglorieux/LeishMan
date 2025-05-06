@@ -18,6 +18,9 @@
           <div v-if="location">
             {{ location }}
           </div>
+          <div v-if="mail">
+            <a :href="'mailto:'+mail">{{mail}}</a>
+          </div>
         </div>
       </div>
 
@@ -87,6 +90,7 @@ defineProps({
   externalLink:Object,
   html: String,
   leftright: Boolean,
+  mail:String
 });
 </script>
 
