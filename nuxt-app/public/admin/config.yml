@@ -74,6 +74,12 @@ collections:
           widget: "string",
           required: true,
         }
+      - {
+          label: "Short Description",
+          name: "shortdescription",
+          widget: "markdown",
+          required: false,
+        }
       - { label: "Link", name: "lien", widget: "string", required: false }
       - {
           label: "Featured Image",
@@ -91,6 +97,12 @@ collections:
     identifier_field: title
     fields:
       - { label: "Titre", name: "title", widget: "string", required: true }
+      - {
+          label: "Short Description",
+          name: "shortdescription",
+          widget: "markdown",
+          required: false,
+        }
       - {
           label: "Description",
           name: "description",
@@ -113,6 +125,12 @@ collections:
     identifier_field: title
     fields:
       - { label: "Titre", name: "title", widget: "string", required: true }
+      - {
+          label: "Short Description",
+          name: "shortdescription",
+          widget: "markdown",
+          required: false,
+        }
       - {
           label: "Description",
           name: "description",
