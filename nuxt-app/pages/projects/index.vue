@@ -7,7 +7,7 @@
     </section>
 
 
-    <div class="p-10">
+    <div class="md:p-10">
       <div class="flex flex-wrap sbt">
         <div v-for="(project, index) in projectsList" class="col">
           <CardLR

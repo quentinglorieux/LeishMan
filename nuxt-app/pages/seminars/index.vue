@@ -16,7 +16,7 @@
     v-if="nextseminar"
     class="w-80 bg-white p-6 shadow-md rounded-lg mx-auto"
   >
-    <div class="flex flex-col md:flex-row">
+    <div class="flex flex-col md:flex-row md:p-10">
       <div class="md:w-1/3">
         <img
           :src="nextseminar.image"
@@ -48,21 +48,22 @@
   </div>
 
   <!-- Seminars Section -->
-  <div id="seminar" class="p-10 bg-slate-200 text-gray-800 dark:bg-slate-400">
-    <Titleheader title="Seminars"></Titleheader>
-    <div class="flex flex-wrap sbt">
-      <div class="col" v-for="(seminar, index) in seminars" :key="index">
-        <CardLR
-        :leftright="index % 2 == 1"
-        :title="seminar.title"
-        :imageURL="seminar.image"
-        :abstract="seminar.description"
-        :date="seminar.date"
-        :seeMore="{
-          label: 'Read more',
-          link: `/seminars/${seminar?.title}`,
-        }"
-      />
+  <div id="seminar" class=" bg-slate-200 text-gray-800 dark:bg-slate-400">
+    <div class="md:p-10">
+      <div class="flex flex-wrap sbt">
+        <div class="col" v-for="(seminar, index) in seminars" :key="index">
+          <CardLR
+            :leftright="index % 2 == 1"
+            :title="seminar.title"
+            :imageURL="seminar.image"
+            :abstract="seminar.description"
+            :date="seminar.date"
+            :seeMore="{
+              label: 'Read more',
+              link: `/seminars/${seminar?.title}`,
+            }"
+          />
+        </div>
       </div>
     </div>
   </div>

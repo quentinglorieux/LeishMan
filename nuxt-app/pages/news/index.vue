@@ -8,7 +8,7 @@
     <NewsCard v-for="news in newsItems" :key="news.id" :newsItem="news" />
   </div>
    -->
-  <div class="p-10">
+  <div class="md:p-10">
     <div class="flex flex-wrap sbt">
       <div v-for="(news, index) in newsItems" class="col">
         <CardLR

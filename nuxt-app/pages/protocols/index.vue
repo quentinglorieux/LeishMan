@@ -5,8 +5,8 @@
     </div>
   </section>
 
-  <div class="p-10">
-    <div class="flex flex-wrap sbt">
+  <div class="md:p-10">
+    <div class="flex flex-wrap sbt ">
       <div v-for="(protocol, index) in protocols" class="col">
         <CardLR
           :leftright="index % 2 == 1"
@@ -38,6 +38,6 @@ const protocolsRaw = await queryContent("protocols").find();
 // Convert markdown description to HTML
 const protocols = protocolsRaw.map((pr) => ({
   ...pr,
-  htmlDescription: md.render(pr.description || ""),
+  htmlDescription: md.render(pr.shortdescription || ""),
 }));
 </script>

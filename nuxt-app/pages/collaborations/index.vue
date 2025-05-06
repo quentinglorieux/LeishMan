@@ -6,7 +6,7 @@
   </section>
 
 
-  <div class="p-10">
+  <div class="md:p-10">
     <div class="flex flex-wrap sbt">
       <div v-for="(collab, index) in collaborations" class="col">
         
@@ -14,6 +14,7 @@
         :leftright="collab % 2 == 1"
         :title="collab.title"
         :imageURL="collab.image"
+        :html="collab.htmlDescription"
         :externalLink="{
           label: 'Go to the website',
           link: `${collab?.lien}`,
@@ -27,5 +28,18 @@
 </template>
 
 <script setup>
-const collaborations = await queryContent("collaborations").find();
+const collaborationsRaw = await queryContent("collaborations").find();
+
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+});
+
+
+// Convert markdown description to HTML
+const collaborations = collaborationsRaw.map((pr) => ({
+  ...pr,
+  htmlDescription: md.render(pr.shortdescription || ""),
+}));
 </script>

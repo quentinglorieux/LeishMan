@@ -80,6 +80,7 @@ collections:
           widget: "markdown",
           required: false,
         }
+      
       - { label: "Link", name: "lien", widget: "string", required: false }
       - {
           label: "Featured Image",
