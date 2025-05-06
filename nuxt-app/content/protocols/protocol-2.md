@@ -1,5 +1,10 @@
 ---
 title: Protocol 2
+shortdescription: |-
+  Centrifuge cultures at 1500g for 10 minutes at room temperature. - Resuspend pellet in appropriate buffer
+
+  - A bullet list
+  - A second item
 description: |-
   ### 5. **Harvest for Experiments**
 
