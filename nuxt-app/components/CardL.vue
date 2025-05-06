@@ -20,8 +20,27 @@
       <div class="sm:flex">
         <div class="align-baseline">
           <img :src="imageURL" class="fixed-size" />
+        </div>      
+
+
+        <div v-if="html" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
+          <div
+            class="prose dark:prose-invert mb-4 md:w-5/6 p-4 text-gray-800 dark:text-white"
+            v-html="html"
+          />
+
+          <div>
+            <NuxtLink
+              v-if="seeMore?.link"
+              :to="seeMore.link"
+              class="inline-block bg-blue-400 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition dark:bg-blue-500 dark:hover:bg-blue-400"
+            >
+              {{ seeMore.label }}
+            </NuxtLink>
+          </div>
         </div>
-        <div class="md:w-5/6 p-4 text-gray-800 dark:text-white">
+
+        <div v-if="abstract" class=" md:w-5/6 p-4 text-gray-800 dark:text-white">
           {{ abstract }}
           <div>
             <NuxtLink
@@ -47,6 +66,7 @@ defineProps({
   articleURL: String,
   date: String,
   seeMore: Object,
+  html: String
 });
 </script>
 

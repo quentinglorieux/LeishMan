@@ -6,6 +6,14 @@
         <NewsCard v-for="news in newsList.slice(0,2)" :key="news.id" :newsItem="news" />
       </div>
     </div>
+
+    <div class="mt-8 text-center">
+      <nuxt-link
+        to="/news"
+        class="bg-pasteur-blue text-white px-6 py-3 rounded hover:bg-pasteur-dark"
+        >View All News</nuxt-link
+      >
+    </div>
   </section>
 </template>
 
