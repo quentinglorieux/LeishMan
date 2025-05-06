@@ -19,61 +19,55 @@
             {{ location }}
           </div>
           <div v-if="mail">
-            <a :href="'mailto:'+mail">{{mail}}</a>
+            <a :href="'mailto:' + mail">{{ mail }}</a>
           </div>
         </div>
       </div>
 
       <div class="sm:flex">
-        <div v-if="!leftright" class="align-baseline">
+        <!-- Image on the left (if leftright is false) -->
+        <div v-if="!leftright" class="flex-shrink-0 mr-4">
           <img :src="imageURL" class="fixed-size" />
         </div>
-
-        <div v-if="html" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
-          <div
-            class="prose dark:prose-invert mb-4 md:w-5/6 p-4 text-gray-800 dark:text-white"
-            v-html="html"
-          />
-
-          <div>
+      
+        <!-- Textual content -->
+        <div class="flex-1">
+          <div v-if="html" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
+            <div
+              class="prose dark:prose-invert mb-4 md:w-5/6 p-4 text-gray-800 dark:text-white"
+              v-html="html"
+            />
+          </div>
+      
+          <div v-if="abstract" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
+            {{ abstract }}
+          </div>
+      
+          <div v-if="seeMore?.link" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
             <NuxtLink
-              v-if="seeMore?.link"
               :to="seeMore.link"
               class="inline-block bg-blue-400 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition dark:bg-blue-500 dark:hover:bg-blue-400"
             >
               {{ seeMore.label }}
             </NuxtLink>
           </div>
-        </div>
-
-        <div v-if="abstract" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
-          {{ abstract }}
-          <div>
+      
+          <div v-if="externalLink?.link" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
             <NuxtLink
-              v-if="seeMore?.link"
-              :to="seeMore.link"
-              class="inline-block bg-blue-400 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition dark:bg-blue-500 dark:hover:bg-blue-400"
-            >
-              {{ seeMore.label }}
-            </NuxtLink>
-          </div>
-        </div>
-        <div v-if="externalLink" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
-          
-            <NuxtLink
-              v-if="externalLink?.link"
               :to="externalLink.link"
               class="inline-block bg-blue-400 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition dark:bg-blue-500 dark:hover:bg-blue-400"
             >
               {{ externalLink.label }}
             </NuxtLink>
-          
+          </div>
         </div>
-
-        <div v-if="leftright" class="">
+      
+        <!-- Image on the right (if leftright is true) -->
+        <div v-if="leftright" class="flex-shrink-0 ml-4">
           <img :src="imageURL" class="fixed-size" />
         </div>
       </div>
+      
     </div>
   </div>
 </template>
@@ -87,10 +81,10 @@ defineProps({
   articleURL: String,
   date: String,
   seeMore: Object,
-  externalLink:Object,
+  externalLink: Object,
   html: String,
   leftright: Boolean,
-  mail:String
+  mail: String,
 });
 </script>
 
