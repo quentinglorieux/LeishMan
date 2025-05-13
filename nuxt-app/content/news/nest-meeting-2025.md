@@ -1,5 +1,5 @@
 ---
-title: Nest meeting 2025
+title: Next meeting 2025
 shortdescription: ''
 longdescription: ''
 image: ''
