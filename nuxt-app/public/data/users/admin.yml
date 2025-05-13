@@ -23,3 +23,11 @@ admin_list:
       - Group1
       - Group3
       - All
+  - lastname: Glorieux
+    firstname: Olivier
+    email: ''
+    orcid: 0009-0008-1780-0537
+    group:
+      - Group1
+      - Admin
+      - All
