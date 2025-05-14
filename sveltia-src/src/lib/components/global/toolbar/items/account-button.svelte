@@ -37,7 +37,7 @@
         <MenuItem
           label={isLocal
             ? $_('working_with_local_repo')
-            : $_('signed_in_as_x', { values: { name: $user?.login } })}
+            : `Signed in as ${$user.firstname} ${$user.lastname} (${ $user.orcid })`}
           disabled={isLocal}
           onclick={() => {
             window.open($user?.profileURL, '_blank');

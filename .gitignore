@@ -8,3 +8,4 @@ node_modules
 .output/
 nuxt-app/dist
 # sveltia-src/
+.info

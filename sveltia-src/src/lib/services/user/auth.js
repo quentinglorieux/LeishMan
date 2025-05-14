@@ -58,7 +58,7 @@ export const signInAutomatically = async () => {
     (await LocalStorage.get('netlify-cms-user'));
 
   let _user = isObject(userCache) && !!userCache.backendName ? userCache : undefined;
-  console.log("🔍 Cached User:", _user); //  Debug
+  // console.log("🔍 Cached User:", _user); //  Debug
 
   const _backendName =
     _user?.backendName?.replace('proxy', 'local') ?? get(siteConfig)?.backend?.name;
@@ -83,6 +83,12 @@ export const signInAutomatically = async () => {
   }
 
   user.set(_user);
+  user.set({
+    ..._user,
+    firstname: localStorage.getItem("sveltia-cms.firstname") || "",
+    lastname: localStorage.getItem("sveltia-cms.lastname") || "",
+    orcid: localStorage.getItem("sveltia-cms.orcid") || ""
+  });
 
   try {
     await _backend.fetchFiles();
