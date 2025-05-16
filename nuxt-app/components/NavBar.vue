@@ -152,25 +152,65 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 const menuItems = ref([]); // State to store the menu data
 const isOpen = ref(false);
+menuItems.value=[
+    {
+      "name": "The Network",
+      "link": "",
+      "icon": "zondicons:network",
+      "submenu": [
+        { "name": "About LeishMan", "link": "/about" },
+        { "name": "Contact", "link": "/contact" },
+        { "name": "Global Network", "link": "/reference-centers" },
+        { "name": "Steering Committee", "link": "/steering" }
+
+      ]
+    },
+    {
+      "name": "What We Do ?",
+      "icon": "grommet-icons:workshop",
+      "link": "",
+      "submenu": [
+        {"name" : "News", "link":"/news"},
+        { "name": "Seminar/meeting", "link": "/seminars" },
+        { "name": "On-going Projects", "link": "/projects" },
+        { "name": "Collaborations", "link": "/collaborations" }
+      ]
+    },
+    {
+      "name": "LeishMania",
+      "icon": "i-heroicons-light-bulb",
+      "link": "",
+      "submenu": [
+        { "name": "Gallery", "link": "/gallery" },
+        { "name": "protocols", "link": "/protocols" }
+      ]
+    },
+    {
+      "name": "Publications",
+      "icon": "i-heroicons-light-bulb",
+      "link": "/publications"
+    }
+  ]
+
 
 const toggleMenu = () => {
   isOpen.value = !isOpen.value;
 };
 
-onMounted(async () => {
-  try {
-    // Fetch the menu data from the JSON file
-    const response = await fetch("/data/menu.json");
-    const data = await response.json();
-    menuItems.value = data.menuItems;
-  } catch (error) {
-    console.error("Error fetching menu data:", error);
-  }
-});
+// onMounted(async () => {
+//   try {
+//     // Fetch the menu data from the JSON file
+//     const response = await fetch("/data/menu.json");
+//     const data = await response.json();
+//     menuItems.value = data.menuItems;
+//   } catch (error) {
+//     console.error("Error fetching menu data:", error);
+//   }
+// });
 </script>
 
 <style scoped>

@@ -306,7 +306,7 @@ collections:
     files:
       - label: "Home"
         name: "home"
-        file: "nuxt-app/public/data/pages/index.yml"
+        file: "nuxt-app/content/pages/index.yml"
         fields:
           - { label: "Title", name: "title", widget: "string", required: true }
           - {
