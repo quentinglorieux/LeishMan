@@ -40,6 +40,7 @@ admin_list:
       - Recommendations
       - Admin
   - lastname: Glorieux
+    lastname: Glorieux
     firstname: Olivier
     email: ''
     orcid: 0009-0008-1780-0537
