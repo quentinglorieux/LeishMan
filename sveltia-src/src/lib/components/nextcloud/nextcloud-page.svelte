@@ -9,7 +9,7 @@
   const error = writable(null);
   const newFolderName = writable(""); // Store new folder name
   const previewFile = writable(null);
-  const loadingPreview = writable(false); // ✅ Track loading state
+  const loadingPreview = writable(false); //  Track loading state
 
 
   async function fetchNextcloudFiles(folder = "") {
@@ -50,7 +50,7 @@
     folders.set(filteredFolders);
     currentFolder.set(cleanFolder);
   } catch (err) {
-    console.error("❌ Nextcloud Fetch Error:", err);
+    console.error("Nextcloud Fetch Error:", err);
     error.set(err.message);
   } finally {
     loading.set(false);
@@ -103,22 +103,22 @@ async function uploadFile(event) {
       }
     );
 
-    if (!response.ok) throw new Error("❌ Upload failed!");
+    if (!response.ok) throw new Error("Upload failed!");
 
     fetchNextcloudFiles($currentFolder); 
   } catch (err) {
-    console.error("❌ Upload Error:", err);
+    console.error("Upload Error:", err);
     error.set(err.message);
   } finally {
     loading.set(false);
   }
 }
 
-// ✅ Create Folder (Fix for Subfolders)
+//  Create Folder (Fix for Subfolders)
 async function createFolder() {
   if (!$newFolderName.trim()) return;
 
-  // ✅ Ensure correct path formatting
+  //  Ensure correct path formatting
   const targetFolder = $currentFolder
     ? `${$currentFolder}/${$newFolderName.trim()}`
     : $newFolderName.trim();
@@ -136,24 +136,24 @@ async function createFolder() {
       }
     );
 
-    if (!response.ok) throw new Error("❌ Failed to create folder!");
+    if (!response.ok) throw new Error("Failed to create folder!");
 
-    console.log(`✅ Folder Created: ${targetFolder}`);
-    fetchNextcloudFiles($currentFolder); // ✅ Refresh file list
-    newFolderName.set(""); // ✅ Reset input field
+    console.log(` Folder Created: ${targetFolder}`);
+    fetchNextcloudFiles($currentFolder); //  Refresh file list
+    newFolderName.set(""); //  Reset input field
   } catch (err) {
-    console.error("❌ Create Folder Error:", err);
+    console.error("Create Folder Error:", err);
     error.set(err.message);
   } finally {
     loading.set(false);
   }
 }
 
-  // ✅ Delete Folder
+  //  Delete Folder
 async function deleteFolder(folderPath) {
   if (!folderPath) return;
   
-  const confirmDelete = confirm(`⚠️ Are you sure you want to delete "${folderPath.split('/').pop()}"? This action cannot be undone!`);
+  const confirmDelete = confirm(`Are you sure you want to delete "${folderPath.split('/').pop()}"? This action cannot be undone!`);
   if (!confirmDelete) return;
   
   loading.set(true);
@@ -169,19 +169,19 @@ async function deleteFolder(folderPath) {
       }
     );
 
-    if (!response.ok) throw new Error("❌ Failed to delete folder!");
+    if (!response.ok) throw new Error("Failed to delete folder!");
 
-    console.log(`✅ Folder Deleted: ${folderPath}`);
-    fetchNextcloudFiles($currentFolder); // ✅ Refresh file list
+    console.log(` Folder Deleted: ${folderPath}`);
+    fetchNextcloudFiles($currentFolder); //  Refresh file list
   } catch (err) {
-    console.error("❌ Delete Folder Error:", err);
+    console.error("Delete Folder Error:", err);
     error.set(err.message);
   } finally {
     loading.set(false);
   }
 }
 
-// ✅ Delete File
+//  Delete File
 async function deleteFile(filePath) {
   if (!filePath) return;
   
@@ -195,17 +195,17 @@ async function deleteFile(filePath) {
       { method: "DELETE" }
     );
 
-    if (!response.ok) throw new Error("❌ File deletion failed!");
+    if (!response.ok) throw new Error("File deletion failed!");
 
-    console.log("✅ File Deleted:", filePath);
-    fetchNextcloudFiles($currentFolder); // ✅ Refresh file list
+    console.log(" File Deleted:", filePath);
+    fetchNextcloudFiles($currentFolder); //  Refresh file list
   } catch (err) {
-    console.error("❌ Delete File Error:", err);
+    console.error("Delete File Error:", err);
     error.set(err.message);
   }
 }
 
-  // ✅ Download File Function
+  //  Download File Function
 function downloadFile(filePath) {
   if (!filePath) return;
   console.log("⬇️ Downloading:", filePath);
@@ -223,27 +223,27 @@ async function openPreview(filePath) {
   let previewUrl = `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/download?file=${encodeURIComponent(filePath)}`;
 
   if (!previewableTypes.includes(fileType)) {
-    alert("⚠️ Preview not supported for this file type.");
+    alert("Preview not supported for this file type.");
     return;
   }
 
-  loadingPreview.set(true); // ✅ Start loading animation
+  loadingPreview.set(true); //  Start loading animation
 
   if (["jpg", "jpeg", "png", "gif"].includes(fileType)) {
-    // ✅ Show images inside the modal
+    //  Show images inside the modal
     previewFile.set({ url: previewUrl, type: `image/${fileType}` });
     loadingPreview.set(false);
   } else {
     const storedGroups = JSON.parse(localStorage.getItem("sveltia-cms.userGroups")) || [];
     console.log("🔹 Sending user groups for preview:", storedGroups);
-    // ✅ Fetch the Nextcloud Share Link for PDFs, Markdown, and DOCX
+    //  Fetch the Nextcloud Share Link for PDFs, Markdown, and DOCX
     try {
       const response = await fetch(
         `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/share?file=${encodeURIComponent(filePath)}`,
         {
           method: "GET",
           headers: {
-            "X-User-Groups": storedGroups.join(","), // ✅ Send user groups
+            "X-User-Groups": storedGroups.join(","), //  Send user groups
           },
         }
       );
@@ -255,15 +255,15 @@ async function openPreview(filePath) {
           if (fileType === "docx") {
             // finalUrl = data.url.replace('/s/', '/apps/onlyoffice/s/');
           }
-          // ✅ Open PDF, MD, DOCX in a new tab
+          //  Open PDF, MD, DOCX in a new tab
           window.open(finalUrl, "_blank");
         }
       } else {
-        alert("❌ Unable to fetch Nextcloud preview.");
+        alert("Unable to fetch Nextcloud preview.");
       }
     } catch (err) {
-      console.error("❌ Error fetching share link:", err);
-      alert("❌ Failed to load preview.");
+      console.error("Error fetching share link:", err);
+      alert("Failed to load preview.");
     } finally {
       loadingPreview.set(false);
     }
@@ -272,24 +272,24 @@ async function openPreview(filePath) {
 
   function closePreview() {
     previewFile.set(null);
-    loadingPreview.set(false); // ✅ Reset loading state
+    loadingPreview.set(false); //  Reset loading state
   }
 
 
 
-// ✅ Close preview when pressing Escape
+//  Close preview when pressing Escape
 function handleKeydown(event) {
   if (event.key === "Escape") {
     closePreview();
   }
 }
 
-// ✅ Add event listener when the component mounts
+//  Add event listener when the component mounts
 onMount(() => {
   window.addEventListener("keydown", handleKeydown);
 });
 
-// ✅ Remove event listener when the component is destroyed
+//  Remove event listener when the component is destroyed
 onDestroy(() => {
   window.removeEventListener("keydown", handleKeydown);
 });
@@ -375,7 +375,7 @@ onDestroy(() => {
         {:else if $previewFile.type === "odt"}
         <iframe class="preview-docx" src={$previewFile.url} frameborder="0"></iframe>
       {:else}
-        <p>⚠️ File preview not available. <a href={$previewFile.url} target="_blank">Download it</a>.</p>
+        <p>File preview not available. <a href={$previewFile.url} target="_blank">Download it</a>.</p>
       {/if}
     </div>
   </div>
@@ -436,7 +436,7 @@ onDestroy(() => {
     /* text-decoration: underline; */
   }
   
-  /* ❌ Delete Folder Button */
+  /* Delete Folder Button */
   .delete-folder {
     background: transparent;
     border: none;
@@ -540,7 +540,7 @@ onDestroy(() => {
   background: #f9f9f9;
 }
 
-/* ✅ File Name Clickable */
+/*  File Name Clickable */
 .file-info {
   flex-grow: 1;
   font-size: 16px;
@@ -548,7 +548,7 @@ onDestroy(() => {
   color: #333;
 }
 
-/* ✅ Delete File Button (Same Style as Folder) */
+/*  Delete File Button (Same Style as Folder) */
 .delete-file {
   background: transparent;
   border: none;
@@ -611,8 +611,8 @@ onDestroy(() => {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   position: relative;
   max-width: 80%;
-  max-height: 80vh; /* ✅ Limits height of modal */
-  overflow: hidden; /* ✅ Ensures content stays inside */
+  max-height: 80vh; /*  Limits height of modal */
+  overflow: hidden; /*  Ensures content stays inside */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -621,10 +621,10 @@ onDestroy(() => {
 
 .preview-image {
   max-width: 100%;
-  max-height: 70vh; /* ✅ Prevent image from exceeding the viewport height */
+  max-height: 70vh; /*  Prevent image from exceeding the viewport height */
   display: block;
   margin: 0 auto;
-  object-fit: contain; /* ✅ Ensures the image is fully visible inside the preview box */
+  object-fit: contain; /*  Ensures the image is fully visible inside the preview box */
 }
 
 .preview-pdf {
