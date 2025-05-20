@@ -38,8 +38,8 @@ admin_list:
       - Visceral
       - Recommendations
       - Admin
-  - firstname: Olivier
-    lastname: Glorieux
+  - lastname: Glorieux
+    firstname: Olivier
     email: ''
     orcid: 0009-0008-1780-0537
     group:
