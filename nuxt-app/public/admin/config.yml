@@ -449,7 +449,7 @@ collections:
               - { label: "Prénom", name: "firstname", widget: "string", required: false }
               - { label: "Email", name: "email", widget: "string", required: false }
               - { label: "ORCID", name: "orcid", widget: "string", required: true }
-              - { label: "Group membership", name: "group",   widget: "select", options: ["Biobanking", "Diagnostic", "Epidemiology", "LC ", "LV Treatment", "Visceral", "Recommendations", "Admin"],multiple: true }
+              - { label: "Group membership", name: "group",   widget: "select", options: ["Biobanking", "Diagnostic", "Epidemiology", "LC ", "LV", "Visceral", "Recommendations", "Admin"],multiple: true }
       - label: "Viewer"
         name: "viewer"
         file: "nuxt-app/public/data/users/viewer.yml"
