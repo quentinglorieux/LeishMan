@@ -449,20 +449,7 @@ collections:
               - { label: "Prénom", name: "firstname", widget: "string", required: false }
               - { label: "Email", name: "email", widget: "string", required: false }
               - { label: "ORCID", name: "orcid", widget: "string", required: true }
-              - { label: "Group membership", name: "group",   widget: "select", options: ["Group1", "Group2", "Group3", "Group4", "Admin", "All"],multiple: true }
-      - label: "Editor"
-        name: "editor"
-        file: "nuxt-app/public/data/users/editor.yml"
-        fields:
-          - label: "Editor"
-            name: "editor_list"
-            widget: "list"
-            fields:
-              - { label: "Nom", name: "lastname", widget: "string", required: true }
-              - { label: "Prénom", name: "firstname", widget: "string", required: false }
-              - { label: "Email", name: "email", widget: "string", required: false }
-              - { label: "ORCID", name: "orcid", widget: "string", required: true }
-              - { label: "Group membership", name: "group",   widget: "select", options: ["Group1", "Group2", "Group3", "Group4"],multiple: true }
+              - { label: "Group membership", name: "group",   widget: "select", options: ["Biobanking", "Diagnostic", "Epidemiology", "Treatment Optimization LC", "Treatment Optimization LV", "Visceral leishmaniasis", "Recommendations", "Admin"],multiple: true }
       - label: "Viewer"
         name: "viewer"
         file: "nuxt-app/public/data/users/viewer.yml"
@@ -475,4 +462,4 @@ collections:
               - { label: "Prénom", name: "firstname", widget: "string", required: false }
               - { label: "Email", name: "email", widget: "string", required: false }
               - { label: "ORCID", name: "orcid", widget: "string", required: true }
-              - { label: "Group membership", name: "group",   widget: "select", options: ["Group1", "Group2", "Group3", "Group4"],multiple: true }
+              - { label: "Group membership", name: "group",   widget: "select", options: ["Biobanking", "Diagnostic", "Epidemiology", "Treatment Optimization LC", "Treatment Optimization LV", "Visceral leishmaniasis", "Recommendations", "Admin"],multiple: true }
