@@ -4,25 +4,40 @@ admin_list:
     email: ''
     orcid: 0000-0003-0903-0233
     group:
-      - Group1
-      - Group2
-      - All
+      - Biobanking
+      - Diagnostic
+      - Epidemiology
+      - Treatment Optimization LC
+      - Treatment Optimization LV
+      - Visceral leishmaniasis
+      - Recommendations
       - Admin
   - lastname: Cléa
     firstname: ''
     email: ''
     orcid: 0000-0003-3159-1061
     group:
-      - Group2
-      - Group3
+      - Biobanking
+      - Diagnostic
+      - Epidemiology
+      - Treatment Optimization LC
+      - Treatment Optimization LV
+      - Visceral leishmaniasis
+      - Recommendations
+      - Admin
   - lastname: Neumayr
     firstname: Andreas
     email: ''
     orcid: 0000-0001-7358-2791
     group:
-      - Group1
-      - Group3
-      - All
+      - Biobanking
+      - Diagnostic
+      - Epidemiology
+      - Treatment Optimization LC
+      - Treatment Optimization LV
+      - Visceral leishmaniasis
+      - Recommendations
+      - Admin
   - lastname: Glorieux
     firstname: Olivier
     email: ''
