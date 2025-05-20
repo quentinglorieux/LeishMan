@@ -7,9 +7,9 @@ admin_list:
       - Biobanking
       - Diagnostic
       - Epidemiology
-      - Treatment Optimization LC
-      - Treatment Optimization LV
-      - Visceral leishmaniasis
+      - LC
+      - LV Treatment
+      - Visceral
       - Recommendations
       - Admin
   - lastname: Cléa
