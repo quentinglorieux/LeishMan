@@ -235,7 +235,7 @@ async function openPreview(filePath) {
     loadingPreview.set(false);
   } else {
     const storedGroups = JSON.parse(localStorage.getItem("sveltia-cms.userGroups")) || [];
-    console.log("🔹 Sending user groups for preview:", storedGroups);
+    // console.log("🔹 Sending user groups for preview:", storedGroups);
     //  Fetch the Nextcloud Share Link for PDFs, Markdown, and DOCX
     try {
       const response = await fetch(

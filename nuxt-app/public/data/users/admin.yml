@@ -20,9 +20,9 @@ admin_list:
       - Biobanking
       - Diagnostic
       - Epidemiology
-      - Treatment Optimization LC
-      - Treatment Optimization LV
-      - Visceral leishmaniasis
+      - LC
+      - LV
+      - Visceral
       - Recommendations
       - Admin
   - lastname: Neumayr
@@ -33,9 +33,9 @@ admin_list:
       - Biobanking
       - Diagnostic
       - Epidemiology
-      - Treatment Optimization LC
-      - Treatment Optimization LV
-      - Visceral leishmaniasis
+      - LC
+      - LV
+      - Visceral
       - Recommendations
       - Admin
   - lastname: Glorieux
