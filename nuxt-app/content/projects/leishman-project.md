@@ -1,5 +1,5 @@
 ---
-title: Leishman project
+title: Diagnostic procedure group
 shortdescription: Short description
 description: Best project ever
 image: /assets/projects/project3-1.webp
