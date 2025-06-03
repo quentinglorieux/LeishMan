@@ -5,17 +5,19 @@ shortdescription: |-
 
   - Andreas Neumayr (Group leader)
   - Clea Melenotte (Group leader)
-  - Claire Mason
+  - Claire Mason (Group leader)
+  - Pierre Buffet (Group leader)
+  - Lorenzo Zammachi (Group leader)
   - Owain Donnelly
-  - Pierre Buffet
-  - Lorenzo Zammachi
   - Emmanuel Bottieau
   - Valeria Gaspari
   - Bianca Granozzi
   - Steve Walker
   - Sarah Eisen
   - Pieter van Thiel
-  - Christoph Hatz
+  - Christoph Hat
+  - Hedvig Glans
+  - Sandra Chamorro
 description: XXX
 image: ''
 ---
