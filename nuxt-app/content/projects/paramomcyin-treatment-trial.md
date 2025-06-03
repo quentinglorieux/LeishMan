@@ -1,5 +1,5 @@
 ---
-title: Paramomcyin treatment trial
+title: Topical paramomcyin for CL treatment
 shortdescription: ''
 description: ''
 image: ''
