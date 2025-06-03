@@ -1,5 +1,5 @@
 ---
-title: Biobank group
+title: Biobanking group
 shortdescription: ''
 description: |-
   ## This is the main project
