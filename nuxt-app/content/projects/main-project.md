@@ -1,10 +1,14 @@
 ---
 title: Biobanking group
-shortdescription: ''
-description: |-
-  ## This is the main project
+shortdescription: |-
+  ### Group Members:
 
-  what a project !
+  - Sara Karlsson Söbirk (Group leader)
+  - Mark Bailey (Group leader)
+  - Rens Zonneveld
+  - Laura Nabarro
+  - Adriana Calderaro
+description: XXX
 image: /assets/projects/project1-1.webp
 ---
 
