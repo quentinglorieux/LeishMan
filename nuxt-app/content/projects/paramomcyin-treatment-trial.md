@@ -5,16 +5,18 @@ shortdescription: |-
 
   - Pierre Buffet (Group leader)
   - Valeria Gaspari (Group leader)
-  - Anna Barbiero
-  - Emmanuel Bottieau
+  - Anna Barbiero (Group leader)
+  - Emmanuel Bottieau (Group leader)
   - Rens Zonneveld
   - Lorenzo Zammarchi
   - Johan van Griensven
   - Andreas Neumayr
   - Frank Olav Petterson
   - Steve Walker
-  - Pieter van Thiel$
+  - Pieter van Thiel
   - Sami Alcedo
+  - Cléa Melenotte
+  - Andreas Neumayr
 description: XXX
 image: ''
 ---
