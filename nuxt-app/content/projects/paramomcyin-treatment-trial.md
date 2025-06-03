@@ -17,7 +17,7 @@ shortdescription: |-
   - Sami Alcedo
   - Cléa Melenotte
   - Andreas Neumayr
-description: XXX
+description: This group focuses on topical treatment of cutaneous leishmaniasis with paromomycin.
 image: ''
 ---
 
