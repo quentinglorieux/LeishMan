@@ -1,18 +1,19 @@
 ---
 title: Diagnostic procedure group
 shortdescription: |-
-  # Group leaders:
+  ### Group members:
 
-  - Rens Zonneveld
-  - Sofia Cortes
-
-  # Group members:
-
+  - Rens Zonneveld (Group leader)
+  - Stefania Varani (Group leader)
   - Sara Karlsson Söbirk
   - Jacoj Verweij
   - Adriana Calderaro
-  -
-description: Best project ever
+  - Anna Barbiero
+  - Jean-Pierre Gangneux
+  - Rogan Lee
+  - Georgina Isak
+  - Florence Robert-Gangneux
+description: XXX
 image: /assets/projects/project3-1.webp
 ---
 
