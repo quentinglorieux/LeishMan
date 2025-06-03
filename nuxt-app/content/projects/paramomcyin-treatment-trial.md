@@ -1,5 +1,5 @@
 ---
-title: Topical paramomcyin for CL treatment
+title: Topical paramomcyin for CL treatment group
 shortdescription: ''
 description: ''
 image: ''
