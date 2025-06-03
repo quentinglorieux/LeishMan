@@ -1,5 +1,5 @@
 ---
-title: Treatment procedure group
+title: Treatment recommendation group for CL
 shortdescription: ''
 description: ''
 image: ''
