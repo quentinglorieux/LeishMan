@@ -1,5 +1,5 @@
 ---
-title: Topical paramomcyin for CL treatment group
+title: Topical paromomycin for CL treatment group
 shortdescription: |-
   ### Group members:
 
