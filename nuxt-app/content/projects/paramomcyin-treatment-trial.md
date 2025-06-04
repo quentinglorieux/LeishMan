@@ -1,6 +1,7 @@
 ---
 title: Topical paromomycin for CL treatment group
-shortdescription: |-
+shortdescription: The Topical Paromomycin for CL Treatment Group is focussing on the development and implementation of a planned prospective study to evaluate topical paromomycin treatment for cutaneous leishmaniasis within the network.
+description: |-
   ##### Group members:
 
   - Pierre Buffet (Group leader)
@@ -17,7 +18,6 @@ shortdescription: |-
   - Sami Alcedo
   - Cléa Melenotte
   - Andreas Neumayr
-description: This group focuses on topical treatment of cutaneous leishmaniasis with paromomycin.
 image: ''
 ---
 
