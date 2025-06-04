@@ -1,7 +1,7 @@
 ---
 title: Topical paromomycin for CL treatment group
 shortdescription: |-
-  ### Group members:
+  ##### Group members:
 
   - Pierre Buffet (Group leader)
   - Valeria Gaspari (Group leader)
