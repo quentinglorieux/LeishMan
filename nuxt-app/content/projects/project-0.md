@@ -1,7 +1,7 @@
 ---
 title: VL treatment in immunocompromized group
 shortdescription: |-
-  ### Group members:
+  ##### Group members:
 
   - Cléa Melenotte (Group leader)
   - Lorenzo Zammarchi (Group leader)
