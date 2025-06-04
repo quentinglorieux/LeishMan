@@ -1,7 +1,7 @@
 ---
 title: Treatment recommendation for CL group
 shortdescription: |-
-  ### Group members:
+  ##### Group members:
 
   - Andreas Neumayr (Group leader)
   - Clea Melenotte (Group leader)
@@ -18,7 +18,7 @@ shortdescription: |-
   - Christoph Hat
   - Hedvig Glans
   - Sandra Chamorro
-description: XXX
+description: This group focuses on the compilation of evidence-based, species-specific treatment recommendations for cutaneous leishmaniasis.
 image: ''
 ---
 
