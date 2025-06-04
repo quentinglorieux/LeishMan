@@ -1,5 +1,5 @@
 ---
-title: VL Treatment in Immunocompromized Group
+title: VL treatment in immunocompromized group
 shortdescription: |-
   ##### Group members:
 
