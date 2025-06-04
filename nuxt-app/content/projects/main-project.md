@@ -1,7 +1,7 @@
 ---
 title: Biobanking group
 shortdescription: |-
-  ###### Group members:
+  ##### Group members:
 
   - Sara Karlsson Söbirk (Group leader)
   - Mark Bailey (Group leader)
