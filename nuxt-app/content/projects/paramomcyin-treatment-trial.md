@@ -1,6 +1,6 @@
 ---
 title: Topical paromomycin for CL treatment group
-shortdescription: The Topical Paromomycin for CL Treatment Group is focussing on the development and implementation of a planned prospective study to evaluate topical paromomycin treatment for cutaneous leishmaniasis within the network.
+shortdescription: The topical paromomycin for CL treatment group focuses on the development and implementation of a planned prospective study to evaluate topical paromomycin treatment for cutaneous leishmaniasis within the network.
 description: |-
   ##### Group members:
 
