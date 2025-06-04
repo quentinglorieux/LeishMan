@@ -1,6 +1,7 @@
 ---
 title: Diagnostic procedure group
-shortdescription: |-
+shortdescription: The Diagnostic Procedure Group evaluates and validates diagnostic methods with the aim to harmonize diagnostic procedures and methods across the network.
+description: |-
   ##### Group members:
 
   - Rens Zonneveld (Group leader)
@@ -23,7 +24,6 @@ shortdescription: |-
   - Yusuf Ozbel
   - Trentina Di Adriana Calderaro Muccio
   - Adriana Calderaro
-description: XXX
 image: /assets/projects/project3-1.webp
 ---
 
