@@ -1,6 +1,6 @@
 ---
 title: Biobanking group
-shortdescription: The Biobanking Group takes care of collecting, storing, and managing biological samples for research purposes within the network.
+shortdescription: The biobanking group takes care of collecting, storing, and managing biological samples for research purposes within the network.
 description: |-
   ##### Group members:
 
