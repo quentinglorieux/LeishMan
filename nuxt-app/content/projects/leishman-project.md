@@ -1,7 +1,7 @@
 ---
 title: Diagnostic procedure group
 shortdescription: |-
-  ### Group members:
+  ##### Group members:
 
   - Rens Zonneveld (Group leader)
   - Stefania Varani (Group leader)
