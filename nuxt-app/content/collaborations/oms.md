@@ -2,6 +2,6 @@
 institution: OMS
 shortdescription: ''
 lien: ''
-image: /assets/collaborations/avcr8gbx4.webp
+image: /assets/collaborations/WHO.jpg
 ---
 
