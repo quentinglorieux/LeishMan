@@ -88,7 +88,7 @@ collections:
           widget: "image",
           required: false,
         }
-  - label: On-going Projects
+  - label: Working group
     name: projects
     icon: build
     folder: nuxt-app/content/projects
