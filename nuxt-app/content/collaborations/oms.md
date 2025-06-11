@@ -1,5 +1,7 @@
 ---
 institution: OMS
-lien: ""
-image: /assets/collaborations/oms.webp
+shortdescription: ''
+lien: ''
+image: /assets/collaborations/avcr8gbx4.webp
 ---
+
