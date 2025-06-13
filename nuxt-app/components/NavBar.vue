@@ -184,7 +184,7 @@ menuItems.value=[
 {
   "name": "Log-in",
   "icon": "i-heroicons-arrow-right-on-rectangle",
-  "link": "/admin"
+  "link": "/admin/"
 },
     {
       "name": "Publications",
