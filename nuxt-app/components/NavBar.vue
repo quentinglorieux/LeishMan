@@ -177,18 +177,15 @@ menuItems.value=[
         // {"name" : "News", "link":"/news"},
         { "name": "Seminar/meeting", "link": "/seminars" },
         { "name": "Working group", "link": "/projects" },
-        { "name": "Collaborations", "link": "/collaborations" }
+        { "name": "Collaborations", "link": "/collaborations" },
+        {"name": "Protocols", "link": "/protocols" },
       ]
     },
-    // {
-    //   "name": "LeishMania",
-    //   "icon": "i-heroicons-light-bulb",
-    //   "link": "",
-    //   "submenu": [
-    //     { "name": "Gallery", "link": "/gallery" },
-    //     { "name": "protocols", "link": "/protocols" }
-    //   ]
-    // },
+{
+  "name": "Log-in",
+  "icon": "i-heroicons-arrow-right-on-rectangle",
+  "link": "/admin"
+},
     {
       "name": "Publications",
       "icon": "i-heroicons-light-bulb",
