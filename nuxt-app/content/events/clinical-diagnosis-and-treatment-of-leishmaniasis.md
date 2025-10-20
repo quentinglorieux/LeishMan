@@ -3,7 +3,7 @@ title: LeishMan Meeting Program on 28th of May 2024
 location: Online
 description: Focused on the clinical presentation and diagnosis of leishmaniasis, this seminar will cover modern diagnostic techniques and the latest advances in treatment options, including drug therapies and challenges in managing drug resistance.
 date: 27/04/2025
-image: ''
+image: /assets/events/Présentation2.jpg
 talk:
   - speaker: ''
     talktitle: ''
