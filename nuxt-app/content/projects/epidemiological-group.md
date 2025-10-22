@@ -19,6 +19,6 @@ description: |-
   - Christoph Hat
   - Hedvig Glans
   - Sandra Chamorro
-image: ''
+image: /assets/projects/Leishman Tx Group logo.jpg
 ---
 
