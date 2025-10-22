@@ -1,7 +1,8 @@
 ---
 title: VL treatment in immunocompromized group
-shortdescription: |-
-  ##### Group members:
+shortdescription: The VL treatment in immunocompromized group focuses on the treatment of visceral leishmaniasis in immunocompromised patients, analyzing the practices proposed throughout Europe, particularly in the event of relapse, and also concerning secondary prophylaxis.
+description: |-
+  Group members:
 
   - Cléa Melenotte (Group leader)
   - Lorenzo Zammarchi (Group leader)
@@ -15,7 +16,6 @@ shortdescription: |-
   - Eugenia Carrillo
   - Begoña Monge-Maillo
   - Pieter van Thiel
-description: The VL treatment in immunocompromized group focuses on the treatment of visceral leishmaniasis in immunocompromised patients, analyzing the practices proposed throughout Europe, particularly in the event of relapse, and also concerning secondary prophylaxis.
 image: /assets/projects/project2-1.webp
 ---
 
