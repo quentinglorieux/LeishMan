@@ -18,6 +18,6 @@ description: |-
   - Sami Alcedo
   - Cléa Melenotte
   - Andreas Neumayr
-image: ''
+image: /assets/projects/Leishman Paromomycin.png
 ---
 
