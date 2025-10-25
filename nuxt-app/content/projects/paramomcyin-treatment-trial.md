@@ -18,6 +18,6 @@ description: |-
   - Sami Alcedo
   - Cléa Melenotte
   - Andreas Neumayr
-image: /assets/projects/Leishman Diag.png
+image: ''
 ---
 
