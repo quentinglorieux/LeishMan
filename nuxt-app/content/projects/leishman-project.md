@@ -24,6 +24,6 @@ description: |-
   - Yusuf Ozbel
   - Trentina Di Adriana Calderaro Muccio
   - Adriana Calderaro
-image: /assets/projects/project3-1.webp
+image: /assets/projects/Leishman Diag-1.png
 ---
 
