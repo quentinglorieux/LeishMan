@@ -9,6 +9,6 @@ description: |-
   - Rens Zonneveld
   - Laura Nabarro
   - Adriana Calderaro
-image: /assets/projects/LeishMan_Biobanking.jpg
+image: /assets/projects/LeishMan_Biobanking.png
 ---
 
