@@ -16,6 +16,6 @@ description: |-
   - Eugenia Carrillo
   - Begoña Monge-Maillo
   - Pieter van Thiel
-image: /assets/projects/project2-1.webp
+image: /assets/projects/LeishMan_VL.png
 ---
 
