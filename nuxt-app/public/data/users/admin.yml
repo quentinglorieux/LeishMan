@@ -42,8 +42,8 @@ admin_list:
     group:
       - Biobanking
       - LC-treatment
-  - lastname: Glorieux
-    firstname: Olivier
+  - lastname: Rubidium
+    firstname: Web
     email: ''
     orcid: 0009-0008-7485-7070
     group:
