@@ -1,0 +1,7 @@
+viewer_list:
+  - lastname: rear
+    firstname: ''
+    email: ''
+    orcid: '1'
+    group:
+      - Biobanking
