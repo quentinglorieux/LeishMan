@@ -178,7 +178,6 @@ menuItems.value=[
         { "name": "Seminar/meeting", "link": "/seminars" },
         { "name": "Working group", "link": "/projects" },
         { "name": "Collaborations", "link": "/collaborations" },
-        {"name": "Protocols", "link": "/protocols" },
       ]
     },
 {
