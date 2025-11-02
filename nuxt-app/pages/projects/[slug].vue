@@ -19,6 +19,13 @@
       <aside class="lg:col-span-1">
         <div class="sticky top-8">
           <h2 class="text-2xl font-semibold mb-4 pt-10">Documents</h2>
+          <div v-if="authPending" class="text-sm text-gray-500">
+            Checking access…
+          </div>
+          <div v-else-if="!isAuthorized" class="text-sm text-red-600">
+            You don’t have access to “{{ targetFolderName }}”. Required group
+            not found.
+          </div>
 
           <!-- Breadcrumb 
           <nav v-if="crumbs.length" class="text-sm mb-3 flex flex-wrap gap-x-1">
@@ -34,13 +41,22 @@
           </nav>-->
 
           <div v-if="pending" class="text-sm text-gray-500">Loading…</div>
-          <div v-else-if="error" class="text-sm text-red-500">Failed to load documents.</div>
+          <div v-else-if="error" class="text-sm text-red-500">
+            Failed to load documents.
+          </div>
 
           <div v-else class="space-y-4">
             <!-- Folders -->
             <ul v-if="folders.length" class="space-y-2">
-              <li v-for="dir in folders" :key="dir.path" class="flex items-center justify-between">
-                <button class="text-blue-600 hover:underline break-words" @click="openDir(dir.path)">
+              <li
+                v-for="dir in folders"
+                :key="dir.path"
+                class="flex items-center justify-between"
+              >
+                <button
+                  class="text-blue-600 hover:underline break-words"
+                  @click="openDir(dir.path)"
+                >
                   📁 {{ dir.name }}
                 </button>
               </li>
@@ -48,20 +64,40 @@
 
             <!-- Files -->
             <ul v-if="files.length" class="space-y-2">
-              <li v-for="f in files" :key="f.path" class="flex items-center justify-between">
-                <button class="text-left text-blue-600 hover:underline break-words" @click="previewOrDownload(f)">
+              <li
+                v-for="f in files"
+                :key="f.path"
+                class="flex items-center justify-between"
+              >
+                <button
+                  class="text-left text-blue-600 hover:underline break-words"
+                  @click="previewOrDownload(f)"
+                >
                   {{ iconFor(f) }} {{ f.name }}
                 </button>
-                <button class="text-xs text-gray-500 hover:underline" @click="download(f.path)">Download</button>
+                <button
+                  class="text-xs text-gray-500 hover:underline"
+                  @click="download(f.path)"
+                >
+                  Download
+                </button>
               </li>
             </ul>
 
-            <div v-if="!folders.length && !files.length" class="text-sm text-gray-500">
+            <div
+              v-if="!folders.length && !files.length"
+              class="text-sm text-gray-500"
+            >
               No documents here yet.
             </div>
 
             <div v-if="canGoUp" class="pt-2">
-              <button class="text-blue-600 hover:underline text-sm" @click="goUp">⤴︎ Up</button>
+              <button
+                class="text-blue-600 hover:underline text-sm"
+                @click="goUp"
+              >
+                ⤴︎ Up
+              </button>
             </div>
           </div>
         </div>
@@ -77,137 +113,176 @@ import MarkdownIt from 'markdown-it'
 const route = useRoute()
 const { public: { workerBase } } = useRuntimeConfig()
 
-// ---- Main content (reads front-matter, including `slug`) ----
+/* ---------- Main content ---------- */
 const newsItem = await queryContent('project').where({ title: route.params.slug }).findOne()
 const md = new MarkdownIt()
 const renderedHtml = md.render(newsItem?.description || '')
 
-// Folder segment comes from front-matter `slug`
-// e.g. front-matter has: slug: Recommandations
-const folderSegment = String(newsItem?.slug || '').trim()
+/* ---------- Groups & mapping ---------- */
+const GROUP_TO_FOLDERS = {
+  'biobanking': ['Biobanking'],
+  'diagnostic': ['Diagnostic-procedure'],
+  'diagnostic-procedure': ['Diagnostic-procedure'],
+  'epidemiology': ['Epidemiology'],
+  'lc': ['LC-treatment'],
+  'lc-treatment': ['LC-treatment'],
+  'lv': ['VL-treatment','LV-treatment'],
+  'visceral': ['VL-treatment','LV-treatment'],
+  'recommendations': ['Recommendations','Recommandations'],
+  'admin': ['Admin-Files']
+}
+function normalize(s){return String(s||'').normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase().trim()}
+function mapSlugToFolderName(slug){
+  const n=normalize(slug)
+  if(n==='recommandations') return 'Recommendations'
+  return slug||''
+}
 
-// Abort early if missing; fall back to safe default
-const projectRoot = folderSegment ? `${folderSegment}` : '/project'
+/* ---------- WebDAV constants ---------- */
+const WEBDAV_ROOT = '/remote.php/dav/files/quentin'   // absolute prefix
+const userRootAbs = WEBDAV_ROOT                       // alias
 
-// ---- Sidebar state ----
-const currentFolder = ref(projectRoot)
-const folders = ref([])
-const files = ref([])
-const groups = ref([])   // from localStorage
-const pending = ref(false)
-const error = ref(null)
+// helpers to convert between absolute and relative (no leading slash for rel)
+function toRel(abs){
+  return decodeURIComponent(String(abs||''))
+    .replace(/\/{2,}/g,'/')
+    .replace(new RegExp('^'+userRootAbs.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'/'), '')
+    .replace(/^\/+/,'')
+}
+function toAbs(rel){
+  const r = String(rel||'').replace(/^\/+/,'')
+  return `${userRootAbs}/${r}`.replace(/\/{2,}/g,'/')
+}
 
-// UI helpers
-
-const canGoUp = computed(() => currentFolder.value !== projectRoot)
-
-// Load groups array from localStorage (handles JSON-in-string)
-function loadGroups() {
-
-  try {
-    if (!process.client) return
+/* ---------- Authorization ---------- */
+const groups = ref([])
+function loadGroups(){
+  try{
+    if(!process.client) return
     const raw = localStorage.getItem('sveltia-cms.userGroups')
     let parsed = raw ? JSON.parse(raw) : []
-    if (typeof parsed === 'string') parsed = JSON.parse(parsed)
+    if(typeof parsed === 'string') parsed = JSON.parse(parsed)
     groups.value = Array.isArray(parsed) ? parsed : []
-  
-  } catch { groups.value = [] }
+  }catch{ groups.value=[] }
+}
+function computeAllowedTopFolders(userGroups){
+  const out=new Set()
+  for(const g of userGroups){
+    const k=normalize(g)
+    const mapped=GROUP_TO_FOLDERS[k]
+    if(mapped) for(const name of mapped) out.add(name)
+  }
+  return out
 }
 
+const targetFolderName = mapSlugToFolderName(newsItem?.slug || '')
+const authPending = ref(true)
+const isAuthorized = ref(false)
 
-function openDir(path) {
-  currentFolder.value = path
+/* ---------- Browsing state (RELATIVE for listing) ---------- */
+const relRoot = ref('')        // e.g. "Recommendations"
+const relCurrent = ref('')     // e.g. "Recommendations/Documents"
+const folders = ref([])        // as returned by Worker
+const files   = ref([])
+const pending = ref(false)
+const error   = ref(null)
+
+const crumbs = computed(() =>
+  relCurrent.value && relRoot.value
+    ? relCurrent.value.replace(new RegExp('^'+relRoot.value+'/'), '')
+        .split('/').filter(Boolean)
+    : []
+)
+const canGoUp = computed(() => relCurrent.value && relCurrent.value !== relRoot.value)
+
+/* ---------- Navigation ---------- */
+function goRoot(){
+  relCurrent.value = relRoot.value
   fetchList()
 }
-function goUp() {
-  if (!canGoUp.value) return
-  const seg = currentFolder.value.split('/').filter(Boolean); seg.pop()
-  let up = '/' + seg.join('/')
-  if (!up.startsWith(projectRoot)) up = projectRoot
-  currentFolder.value = up
+function goTo(index){
+  const sub = crumbs.value.slice(0,index+1).join('/')
+  relCurrent.value = sub ? `${relRoot.value}/${sub}` : relRoot.value
+  fetchList()
+}
+function openDir(absPath){
+  // Worker returned absolute `path`; convert to relative for state & next query
+  const rel = toRel(absPath)
+  relCurrent.value = rel
+  fetchList()
+}
+function goUp(){
+  if(!canGoUp.value) return
+  const parts = relCurrent.value.split('/').filter(Boolean)
+  parts.pop()
+  const up = parts.join('/')
+  relCurrent.value = up || relRoot.value
+  if(!relCurrent.value.startsWith(relRoot.value)) relCurrent.value = relRoot.value
   fetchList()
 }
 
-function iconFor(f) {
-  const m = f.mime || ''
-  if (m.startsWith('image/')) return '🖼️'
-  if (m.includes('pdf')) return '📄'
+/* ---------- File actions ---------- */
+function iconFor(f){
+  const m=f.mime||''
+  if(m.startsWith('image/')) return '🖼️'
+  if(m.includes('pdf')) return '📄'
   return '📎'
 }
-
-function download(path) {
+function download(absPath){
   const u = new URL('/api/nextcloud/download', workerBase)
-  u.searchParams.set('file', path)
+  u.searchParams.set('file', absPath) // download expects ABSOLUTE path
   window.open(u.toString(), '_blank')
 }
-
-async function previewOrDownload(file) {
+async function previewOrDownload(file){
   const ext = file.path.split('.').pop()?.toLowerCase() || ''
   const previewable = ['jpg','jpeg','png','gif','pdf','md','docx','odt']
-  if (!previewable.includes(ext)) { download(file.path); return }
-  try {
+  if(!previewable.includes(ext)){ download(file.path); return }
+  try{
     const u = new URL('/api/nextcloud/share', workerBase)
-    u.searchParams.set('file', file.path)
-    const res = await fetch(u.toString(), {
-      method: 'GET',
-      headers: { 'X-User-Groups': groups.value.join(',') } // let Worker enforce ACL
-      // no credentials — compatible with ACAO: *
-    })
-    const data = await res.json()
-    if (data?.url) window.open(data.url, '_blank'); else download(file.path)
-  } catch { download(file.path) }
+    u.searchParams.set('file', file.path) // ABSOLUTE for share
+    const r = await fetch(u.toString(), { headers: { 'X-User-Groups': groups.value.join(',') } })
+    const data = await r.json()
+    if(data?.url) window.open(data.url,'_blank'); else download(file.path)
+  }catch{ download(file.path) }
 }
 
-function pathHasAnyGroup(p) {
-  const dec = decodeURIComponent(p)
-  return groups.value.some(g => dec.includes(`/${g}/`) || dec.endsWith(`/${g}`))
-}
-
-// List current folder from Worker
-async function fetchList() {
+/* ---------- List (RELATIVE for Worker) ---------- */
+async function fetchList(){
   pending.value = true
   error.value = null
-  try {
-    // If your Worker expects a *relative* path from user root, strip WebDAV prefix if present
-    const rel = currentFolder.value
-      .replace(/^\/?remote\.php\/dav\/files\/quentin\//, '')
-      .replace(/^\/+/, '')
-
+  try{
     const url = new URL('/api/nextcloud/files', workerBase)
-    if (rel) url.searchParams.set('folder', rel)
+    if(relCurrent.value) url.searchParams.set('folder', relCurrent.value) // RELATIVE path only
 
     const res = await fetch(url.toString(), {
-      method: 'GET',
-      headers: { 'X-User-Groups': groups.value.join(',') }
-      // no credentials
+      method:'GET',
+      headers:{ 'X-User-Groups': groups.value.join(',') } // optional ACL header
     })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    if(!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = await res.json()
 
-    // Defensive client-side filtering by groups
-    const fds = Array.isArray(data.folders) ? data.folders : []
-    const fls = Array.isArray(data.files) ? data.files : []
-
-    const allowedFolders = fds.filter(fd => pathHasAnyGroup(fd.path))
-    const allowedFiles = fls.filter(fl => {
-      const dec = decodeURIComponent(fl.path)
-      return allowedFolders.some(fd => dec.startsWith(decodeURIComponent(fd.path)))
-    })
-
-    folders.value = allowedFolders
-    files.value = allowedFiles
-  } catch (e) {
+    folders.value = Array.isArray(data.folders) ? data.folders : []
+    files.value   = Array.isArray(data.files)   ? data.files   : []
+  }catch(e){
     error.value = e
-    folders.value = []
-    files.value = []
-  } finally {
+    folders.value=[]
+    files.value=[]
+  }finally{
     pending.value = false
   }
 }
 
-onMounted(() => {
+/* ---------- Bootstrap ---------- */
+onMounted(async ()=>{
   loadGroups()
-  currentFolder.value = projectRoot
-  fetchList()
+  const allowed = computeAllowedTopFolders(groups.value)
+  isAuthorized.value = allowed.has(targetFolderName) || allowed.has(mapSlugToFolderName(targetFolderName))
+  authPending.value = false
+  if(!isAuthorized.value) return
+
+  // Set RELATIVE roots
+  relRoot.value = targetFolderName
+  relCurrent.value = relRoot.value
+  await fetchList()
 })
 </script>
