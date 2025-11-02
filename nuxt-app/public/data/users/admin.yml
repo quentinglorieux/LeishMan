@@ -41,4 +41,11 @@ admin_list:
     orcid: 0009-0008-1780-0537
     group:
       - Biobanking
-      - Treatment Optimization LC
+      - LC-treatment
+  - lastname: Glorieux
+    firstname: Olivier
+    email: ''
+    orcid: 0009-0008-7485-7070
+    group:
+      - Biobanking
+      - LC-treatment

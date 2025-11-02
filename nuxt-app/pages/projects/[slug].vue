@@ -1,7 +1,29 @@
 <template>
   <div class="w-4/5 mx-auto">
-    <h1 class="text-4xl font-bold my-8">{{ newsItem?.title }}</h1>
+    <!-- Title row with back button -->
+    <div class="flex items-center justify-between my-8 gap-4">
+      <h1 class="text-4xl font-bold m-0 dark:text-white">
+        {{ newsItem?.title }}
+      </h1>
+
+      <NuxtLink
+        to="/projects"
+        class="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 transition"
+        aria-label="All Working Groups"
+      >
+        <!-- left arrow icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M10 19l-7-7m0 0l7-7m-7 7h20"/>
+        </svg>
+        <span class="hidden sm:inline">All Working Groups</span>
+        <span class="sm:hidden">Back</span>
+      </NuxtLink>
+    </div>
+
     <p>{{ newsItem?.date }}</p>
+
     <img
       v-if="newsItem?.image"
       :src="newsItem?.image"
@@ -19,44 +41,19 @@
       <aside class="lg:col-span-1">
         <div class="sticky top-8">
           <h2 class="text-2xl font-semibold mb-4 pt-10">Documents</h2>
-          <div v-if="authPending" class="text-sm text-gray-500">
-            Checking access…
-          </div>
+          <div v-if="authPending" class="text-sm text-gray-500">Checking access…</div>
           <div v-else-if="!isAuthorized" class="text-sm text-red-600">
-            You don’t have access to “{{ targetFolderName }}”. Required group
-            not found.
+            You don’t have access to “{{ targetFolderName }}”.
           </div>
-
-          <!-- Breadcrumb 
-          <nav v-if="crumbs.length" class="text-sm mb-3 flex flex-wrap gap-x-1">
-            <button class="text-blue-600 hover:underline" @click="goRoot()">
-              {{ slug }}
-            </button>
-            <template v-for="(c, i) in crumbs" :key="i">
-              <span>/</span>
-              <button class="text-blue-600 hover:underline" @click="goTo(i)">
-                {{ c }}
-              </button>
-            </template>
-          </nav>-->
 
           <div v-if="pending" class="text-sm text-gray-500">Loading…</div>
-          <div v-else-if="error" class="text-sm text-red-500">
-            Failed to load documents.
-          </div>
+          <div v-else-if="error" class="text-sm text-red-500">Failed to load documents.</div>
 
           <div v-else class="space-y-4">
             <!-- Folders -->
             <ul v-if="folders.length" class="space-y-2">
-              <li
-                v-for="dir in folders"
-                :key="dir.path"
-                class="flex items-center justify-between"
-              >
-                <button
-                  class="text-blue-600 hover:underline break-words"
-                  @click="openDir(dir.path)"
-                >
+              <li v-for="dir in folders" :key="dir.path" class="flex items-center justify-between">
+                <button class="text-blue-600 hover:underline break-words" @click="openDir(dir.path)">
                   📁 {{ dir.name }}
                 </button>
               </li>
@@ -64,40 +61,20 @@
 
             <!-- Files -->
             <ul v-if="files.length" class="space-y-2">
-              <li
-                v-for="f in files"
-                :key="f.path"
-                class="flex items-center justify-between"
-              >
-                <button
-                  class="text-left text-blue-600 hover:underline break-words"
-                  @click="previewOrDownload(f)"
-                >
+              <li v-for="f in files" :key="f.path" class="flex items-center justify-between">
+                <button class="text-left text-blue-600 hover:underline break-words" @click="previewOrDownload(f)">
                   {{ iconFor(f) }} {{ f.name }}
                 </button>
-                <button
-                  class="text-xs text-gray-500 hover:underline"
-                  @click="download(f.path)"
-                >
-                  Download
-                </button>
+                <button class="text-xs text-gray-500 hover:underline" @click="download(f.path)">Download</button>
               </li>
             </ul>
 
-            <div
-              v-if="!folders.length && !files.length"
-              class="text-sm text-gray-500"
-            >
+            <div v-if="!folders.length && !files.length" class="text-sm text-gray-500">
               No documents here yet.
             </div>
 
             <div v-if="canGoUp" class="pt-2">
-              <button
-                class="text-blue-600 hover:underline text-sm"
-                @click="goUp"
-              >
-                ⤴︎ Up
-              </button>
+              <button class="text-blue-600 hover:underline text-sm" @click="goUp">⤴︎ Up</button>
             </div>
           </div>
         </div>

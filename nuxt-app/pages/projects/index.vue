@@ -1,7 +1,7 @@
 <template>
   <section class="bg-pasteur-blue text-white py-16">
     <div class="container mx-auto text-center">
-      <h1 class="text-4xl font-bold">Projects</h1>
+      <h1 class="text-4xl font-bold">Working Groups</h1>
     </div>
   </section>
 

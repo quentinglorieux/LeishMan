@@ -25,7 +25,7 @@
     </div>
     <div id="project" class="py-10 bg-white text-gray-800 dark:bg-slate-500">
       <div>
-        <Titleheader id="project" title="Projects"> </Titleheader>
+        <Titleheader id="project" title="Working Groups"> </Titleheader>
         <div class="md:w-9/12 mx-auto">
           <UCarousel
             v-slot="{ item, index }"
