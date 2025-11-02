@@ -41,11 +41,11 @@
           <p class="text-gray-700 leading-loose dark:text-white mb-4">
             {{ data.description4 }}
           </p>
-
           <h2 class="text-3xl font-bold my-4">Consortium Agreement</h2>
-           <a href="/assets/documents/CA.pdf"
+          <a :href="data.manual_pdf"
         class="mt-6 bg-pasteur-blue hover:bg-pasteur-dark text-white px-6 py-3 rounded-full"
       >
+
         Download here
         </a>
         </div>
