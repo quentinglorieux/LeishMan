@@ -2,7 +2,7 @@
 title: Treatment recommendation for CL group
 shortdescription: The treatment recommendation for CL group focuses on compiling and updating best evidence-based, species-specific treatment recommendations for cutaneous leishmaniasis.
 description: |-
-  ##### Group members:
+  ### Group members:
 
   - Andreas Neumayr (Group leader)
   - Clea Melenotte (Group leader)
