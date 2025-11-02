@@ -1,7 +1,79 @@
-viewer_list:
-  - lastname: rear
-    firstname: ''
+  - lastname: Rubidium
+    firstname: Web
     email: ''
-    orcid: '1'
+    orcid: 0009-0008-7485-7070
     group:
       - Biobanking
+      - LC-treatment
+  - lastname: van Griensven
+    firstname: Johan
+    email: 'jvangriensven@itg.be'
+    orcid: 0000-0001-6581-2964
+    group:
+      - LC-treatment
+  - lastname: Gangneux
+    firstname: Jean-Pierre
+    email: 'jean-pierre.gangneux@univ-rennes.fr'
+    orcid: 0000-0002-4974-5607
+    group:
+      - LC-treatment
+  - lastname: Checkley
+    firstname: Anna
+    email: 'anna.checkley@nhs.net'
+    orcid: 0000-0001-6931-4057
+    group:
+      - LC-treatment
+  - lastname: Varani
+    firstname: Stefania
+    email: 'stefania.varani@unibo.it'
+    orcid: 0000-0003-0862-4937
+    group:
+      - LC-treatment
+  - lastname: Carrillo Gallego
+    firstname: Eugenia
+    email: 'ecarrillo@isciii.es'
+    orcid: 0000-0002-9948-2665
+    group:
+      - LC-treatment
+  - lastname: Moreno
+    firstname: Javier
+    email: 'javier.moreno@isciii.es'
+    orcid: 0000-0002-7637-9542
+    group:
+      - LC-treatment
+  - lastname: Barbiero
+    firstname: Anna
+    email: 'anna.barbiero@unifi.it'
+    orcid: 0009-0004-4152-9346
+    group:
+      - LC-treatment
+  - lastname: Zammarchi
+    firstname: Lorenzo
+    email: 'lorenzo.zammarchi@unifi.it'
+    orcid: 0000-0003-0892-8404
+    group:
+      - LC-treatment
+  - lastname: Monge-Maillo
+    firstname: Begoña
+    email: 'begomongem@gmail.com'
+    orcid: 0000-0003-0960-1630
+    group:
+      - LC-treatment
+  - lastname: Berens-Riha
+    firstname: Nicole
+    email: 'nberens@itg.be'
+    orcid: 0000-0003-4533-0081
+    group:
+      - LC-treatment
+  - lastname: Granozzi
+    firstname: Bianca
+    email: 'bianca.granozzi@gmail.com'
+    orcid: ''
+    group:
+      - LC-treatment
+  - lastname: van Thiel
+    firstname: Pieter
+    email: 'p.p.vanthiel@amsterdamumc.nl'
+    orcid: ''
+    group:
+      - LC-treatment
