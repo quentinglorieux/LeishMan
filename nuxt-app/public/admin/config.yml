@@ -218,6 +218,12 @@ collections:
           required: false,
         }
       - {
+          label: "Program PDF",
+          name: "program_pdf",
+          widget: "file",
+          required: false,
+        }
+      - {
           label: "date",
           name: "date",
           widget: "datetime",
