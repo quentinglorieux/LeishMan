@@ -103,12 +103,14 @@ const canGoUp = computed(() => currentFolder.value !== projectRoot)
 
 // Load groups array from localStorage (handles JSON-in-string)
 function loadGroups() {
+
   try {
     if (!process.client) return
     const raw = localStorage.getItem('sveltia-cms.userGroups')
     let parsed = raw ? JSON.parse(raw) : []
     if (typeof parsed === 'string') parsed = JSON.parse(parsed)
     groups.value = Array.isArray(parsed) ? parsed : []
+  
   } catch { groups.value = [] }
 }
 
@@ -205,7 +207,6 @@ async function fetchList() {
 
 onMounted(() => {
   loadGroups()
-  console.log('projectRoot', projectRoot)
   currentFolder.value = projectRoot
   fetchList()
 })
