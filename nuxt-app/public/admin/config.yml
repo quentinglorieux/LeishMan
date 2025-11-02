@@ -373,6 +373,11 @@ collections:
               widget: "markdown",
               required: false,
             }
+          - {
+              label: "Consortium Agreement",
+              name: "manual_pdf",
+              widget: "file",
+            }
       - label: "Contact"
         name: "contact"
         file: "nuxt-app/public/data/pages/contact.yml"
