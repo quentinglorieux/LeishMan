@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   ssr: true, // Enable or Disable SSR
   nitro: {
-    preset: 'netlify'
+    preset: "netlify",
   },
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
@@ -18,6 +18,7 @@ export default defineNuxtConfig({
     public: {
       publicApiKey: process.env.GOOGLE_MAPS_API_KEY || "public",
       cms: process.env.CMS || "sveltia",
+      workerBase: "https://nextcloud-leishman.quentin-glorieux.workers.dev",
     },
   },
   // nitro: {

@@ -1,5 +1,6 @@
 ---
 title: Treatment recommendation for CL group
+slug: Recommendations
 shortdescription: The treatment recommendation for CL group focuses on compiling and updating best evidence-based, species-specific treatment recommendations for cutaneous leishmaniasis.
 description: |-
   ### Group members:
