@@ -20,7 +20,7 @@
         <div class="sticky top-8">
           <h2 class="text-2xl font-semibold mb-4 pt-10">Documents</h2>
 
-          <!-- Breadcrumb -->
+          <!-- Breadcrumb 
           <nav v-if="crumbs.length" class="text-sm mb-3 flex flex-wrap gap-x-1">
             <button class="text-blue-600 hover:underline" @click="goRoot()">
               {{ slug }}
@@ -31,7 +31,7 @@
                 {{ c }}
               </button>
             </template>
-          </nav>
+          </nav>-->
 
           <div v-if="pending" class="text-sm text-gray-500">Loading…</div>
           <div v-else-if="error" class="text-sm text-red-500">Failed to load documents.</div>

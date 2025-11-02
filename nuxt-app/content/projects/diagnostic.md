@@ -3,7 +3,7 @@ title: Diagnostic procedure group
 slug: Diagnostic-procedure
 shortdescription: The Diagnostic Procedure Group evaluates and validates diagnostic methods with the aim to harmonize diagnostic procedures and methods across the network.
 description: |-
-  ##### Group members:
+  ### Group members:
 
   - Rens Zonneveld (Group leader)
   - Stefania Varani (Group leader)
