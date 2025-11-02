@@ -228,14 +228,29 @@ const menuItems = computed(() => [
   },
   // MEMBER AREA entry: depends on auth state
   isLoggedIn.value
-    ? {
-        name: 'ADMIN ' ,
-        icon: 'i-heroicons-user-circle',
-        submenu: [
-          { name: 'Admin Interface', link: '/admin/' },
-          { name: 'LOGOUT ' + localStorage.getItem('sveltia-cms.firstname').toUpperCase(), action: 'logout' }
-        ]
-      }
+    ? (localStorage.getItem('sveltia-cms.userRole') === 'admin'
+        ? {
+            name: 'ADMIN',
+            icon: 'i-heroicons-user-circle',
+            submenu: [
+              { name: 'Admin Interface', link: '/admin/' },
+              {
+                name: 'LOGOUT ' + (localStorage.getItem('sveltia-cms.firstname') || '').toUpperCase(),
+                action: 'logout'
+              }
+            ]
+          }
+        : {
+            name: 'MEMBER AREA',
+            icon: 'i-heroicons-identification',
+            submenu: [
+              {
+                name: 'LOGOUT ' + (localStorage.getItem('sveltia-cms.firstname') || '').toUpperCase(),
+                action: 'logout'
+              }
+            ]
+          }
+      )
     : {
         name: 'MEMBER AREA',
         icon: 'i-heroicons-identification',
