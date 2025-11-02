@@ -98,9 +98,7 @@ const pending = ref(false)
 const error = ref(null)
 
 // UI helpers
-const crumbs = computed(() =>
-  currentFolder.value.replace(projectRoot, '').split('/').filter(Boolean)
-)
+
 const canGoUp = computed(() => currentFolder.value !== projectRoot)
 
 // Load groups array from localStorage (handles JSON-in-string)
@@ -114,15 +112,7 @@ function loadGroups() {
   } catch { groups.value = [] }
 }
 
-function goRoot() {
-  currentFolder.value = projectRoot
-  fetchList()
-}
-function goTo(index) {
-  const sub = crumbs.value.slice(0, index + 1).join('/')
-  currentFolder.value = (sub ? `${projectRoot}/${sub}` : projectRoot).replace(/\/{2,}/g, '/')
-  fetchList()
-}
+
 function openDir(path) {
   currentFolder.value = path
   fetchList()
@@ -215,6 +205,7 @@ async function fetchList() {
 
 onMounted(() => {
   loadGroups()
+  console.log('projectRoot', projectRoot)
   currentFolder.value = projectRoot
   fetchList()
 })
