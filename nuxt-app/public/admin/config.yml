@@ -22,7 +22,7 @@ collections:
   - label: Members
     name: members
     icon: group
-    is_admin: false
+    is_admin: true
     folder: nuxt-app/content/members
     media_folder: /nuxt-app/public/assets/members
     public_folder: /assets/members
@@ -60,6 +60,7 @@ collections:
     summary: "{{lastname}} {{firstname}}"
     sortable_fields: [lastname]
   - label: Collaborations
+    is_admin: true
     name: collaborations
     icon: diversity_3
     folder: nuxt-app/content/collaborations
@@ -89,6 +90,7 @@ collections:
           required: false,
         }
   - label: Working group
+    is_admin: true
     name: projects
     icon: build
     folder: nuxt-app/content/projects
@@ -152,6 +154,7 @@ collections:
     public_folder: /assets/news
     create: true
     identifier_field: title
+    is_admin: true
     fields:
       - { label: "Titre", name: "title", widget: "string", required: true }
       - {
@@ -186,6 +189,7 @@ collections:
     icon: library_books
     folder: nuxt-app/content/publications
     create: true
+    is_admin: true
     identifier_field: title
     fields:
       - { label: "Title", name: "title", widget: "string", required: true }
@@ -202,6 +206,7 @@ collections:
     media_folder: /nuxt-app/public/assets/events
     public_folder: /assets/events    
     create: true
+    is_admin: true
     identifier_field: title
     fields:
       - { label: "Title", name: "title", widget: "string", required: true }
@@ -275,6 +280,7 @@ collections:
     icon: hub
     folder: nuxt-app/content/laboratories
     create: true
+    is_admin: true
     identifier_field: name
     fields:
       - { label: "Institution", name: "name", widget: "string", required: true }
@@ -406,6 +412,7 @@ collections:
     icon: image
     media_folder: /nuxt-app/public/assets/gallery 
     public_folder: /assets/gallery
+    is_admin: true
     files:
       - label: "Gallery"
         name: "gallery"

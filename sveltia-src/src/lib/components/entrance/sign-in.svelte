@@ -52,7 +52,7 @@
     if (event.data.role) {
       localStorage.setItem("sveltia-cms.userRole", event.data.role);
       localStorage.setItem("sveltia-cms.firstname", event.data.firstname);
-      localStorage.setItem("sveltia-cms.lastname", event.data.lastname);
+      localStorage.setItem("sveltia-cms.lastname", "");
       localStorage.setItem("sveltia-cms.orcid", event.data.orcid);
     }
 
