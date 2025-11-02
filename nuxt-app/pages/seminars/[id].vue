@@ -1,9 +1,10 @@
 <template>
   <div class="container mx-auto py-8">
     <h1 class="text-3xl font-bold text-center mb-8">
-      {{ seminars.date }}
-    </h1>
+      {{ seminars.date }}<br>
     {{ seminars.description }}
+    </h1>
+    
 
     <div v-if="seminars.program_pdf" class="my-6 mx-auto text-center">
     Download Link: <a
@@ -15,7 +16,7 @@
     </div>
   </div>
 
-  <ProgDisplay v-if="!seminars.program_pdf" :programData="seminars.talk" />
+  <ProgDisplay :programData="seminars.talk" />
 </template>
 
 <script setup>

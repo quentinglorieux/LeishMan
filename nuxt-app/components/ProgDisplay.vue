@@ -24,7 +24,7 @@
       </div>
     </div>
     <div v-else>
-      <p>No program available at the moment.</p>
+      <p></p>
     </div>
   </div>
 </template>
