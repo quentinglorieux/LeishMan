@@ -104,7 +104,6 @@ const GROUP_TO_FOLDERS = {
   'lc': ['LC-treatment'],
   'lc-treatment': ['LC-treatment'],
   'lv': ['VL-treatment','LV-treatment'],
-  'visceral': ['VL-treatment','LV-treatment'],
   'recommendations': ['Recommendations','Recommandations'],
   'admin': ['Admin-Files']
 }
