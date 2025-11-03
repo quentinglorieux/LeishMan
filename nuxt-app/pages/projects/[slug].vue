@@ -103,7 +103,10 @@ const GROUP_TO_FOLDERS = {
   'epidemiology': ['Epidemiology'],
   'lc': ['LC-treatment'],
   'lc-treatment': ['LC-treatment'],
-  'lv': ['VL-treatment','LV-treatment'],
+  'lv': ['VL-treatment', 'LV-treatment'],
+  'lv-treatment': ['VL-treatment', 'LV-treatment'],
+  'vl': ['VL-treatment', 'LV-treatment'],
+  'vl-treatment': ['VL-treatment', 'LV-treatment'],
   'recommendations': ['Recommendations','Recommandations'],
   'admin': ['Admin-Files']
 }
@@ -148,6 +151,7 @@ function computeAllowedTopFolders(userGroups){
     const mapped=GROUP_TO_FOLDERS[k]
     if(mapped) for(const name of mapped) out.add(name)
   }
+console.log('Allowed folders for groups',userGroups,'→',Array.from(out))
   return out
 }
 
