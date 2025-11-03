@@ -253,39 +253,44 @@
       previewFile.set({ url: previewUrl, type: `image/${fileType}` });
       loadingPreview.set(false);
     } else {
+      window.open(previewUrl, "_blank");
+      loadingPreview.set(false);
       const storedGroups =
         JSON.parse(localStorage.getItem("sveltia-cms.userGroups")) || [];
       // console.log("🔹 Sending user groups for preview:", storedGroups);
       //  Fetch the Nextcloud Share Link for PDFs, Markdown, and DOCX
       try {
-        const response = await fetch(
-          `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/share?file=${encodePathOnce(filePath)}`,
-          {
-            method: "GET",
-            headers: {
-              "X-User-Groups": storedGroups.join(","), //  Send user groups
-            },
-          }
-        );
-        const data = await response.json();
 
-        if (data.url) {
-          if (
-            fileType === "pdf" ||
-            fileType === "md" ||
-            fileType === "docx" ||
-            fileType === "odt"
-          ) {
-            let finalUrl = data.url;
-            if (fileType === "docx") {
-              // finalUrl = data.url.replace('/s/', '/apps/onlyoffice/s/');
-            }
-            //  Open PDF, MD, DOCX in a new tab
-            window.open(finalUrl, "_blank");
-          }
-        } else {
-          alert("Unable to fetch Nextcloud preview.");
-        }
+
+        // const response = await fetch(
+        //   `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/share?file=${encodePathOnce(filePath)}`,
+        //   {
+        //     method: "GET",
+        //     headers: {
+        //       "X-User-Groups": storedGroups.join(","), //  Send user groups
+        //     },
+        //   }
+        // );
+        // const data = await response.json();
+
+        // if (data.url) {
+        //   if (
+        //     fileType === "pdf" ||
+        //     fileType === "md" ||
+        //     fileType === "docx" ||
+        //     fileType === "odt"
+        //   ) {
+        //     let finalUrl = data.url;
+        //     if (fileType === "docx") {
+        //       // finalUrl = data.url.replace('/s/', '/apps/onlyoffice/s/');
+        //     }
+        //     //  Open PDF, MD, DOCX in a new tab
+        //     window.open(finalUrl, "_blank");
+        //   }
+        // } else {
+          
+        //  alert("Unable to fetch Nextcloud preview.");
+        // }
       } catch (err) {
         console.error("Error fetching share link:", err);
         alert("Failed to load preview.");
