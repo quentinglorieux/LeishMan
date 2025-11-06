@@ -1,6 +1,9 @@
 ---
 title: Epidemiology group
-shortdescription: The epidemiology group takes care of collecting and compiling epidemiological data on leishmaniasis within the network.
+shortdescription: |-
+  The epidemiology group takes care of collecting and compiling epidemiological data on leishmaniasis within the network.
+
+  The group is reachable under the email: [Epidemiology_LeishMan@live.unibo.it](mailto:Epidemiology_LeishMan@live.unibo.it)
 description: |-
   ### Group members:
 
