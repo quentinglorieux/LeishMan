@@ -1,6 +1,6 @@
 ---
 title: Epidemiology group
-shortdescription: ''
+shortdescription: The epidemiology group takes care of collecting and compiling epidemiological data on leishmaniasis within the network.
 description: |-
   ### Group members:
 
