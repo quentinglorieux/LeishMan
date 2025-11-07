@@ -1,6 +1,5 @@
 ---
 title: Treatment recommendation for CL group
-slug: Recommendations
 shortdescription: The treatment recommendation for CL group focuses on compiling and updating best evidence-based, species-specific treatment recommendations for cutaneous leishmaniasis.
 description: |-
   ### Group members:
@@ -17,9 +16,10 @@ description: |-
   - Steve Walker
   - Sarah Eisen
   - Pieter van Thiel
-  - Christoph Hat
+  - Christoph Hatz
   - Hedvig Glans
   - Sandra Chamorro
 image: /assets/projects/Leishman Tx Group logo.jpg
+slug: Recommendations
 ---
 
