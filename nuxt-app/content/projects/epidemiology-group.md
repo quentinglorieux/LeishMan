@@ -1,7 +1,7 @@
 ---
 title: Epidemiology group
 shortdescription: |-
-  The epidemiology group takes care of collecting and compiling epidemiological data on leishmaniasis within the network.
+  This multidisciplinary group evaluates leishmaniasis trends in Europe by employing a One Health approach to monitor incidence patterns, circulating strains, emerging hotspots, and shifts in transmission dynamics.
 
   The group is reachable under the email: [Epidemiology_LeishMan@live.unibo.it](mailto:Epidemiology_LeishMan@live.unibo.it)
 description: |-
