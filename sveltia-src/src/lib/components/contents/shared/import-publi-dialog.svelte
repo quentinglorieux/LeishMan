@@ -2,13 +2,13 @@
   import { Dialog, Button, TextInput } from "@sveltia/ui";
   import { fetchPublicationFromDOI } from "$lib/services/utils/doiService";
   import { entryDraft } from "$lib/services/contents/draft";
-  import { _ } from "svelte-i18n";
+  import { _, locale as appLocale } from "svelte-i18n";
 
-  export let open = false;
+  let { open = $bindable(false) } = $props();
 
-  let doi = "";
-  let errorMessage = "";
-  let fetchedData = null;
+  let doi = $state("");
+  let errorMessage = $state("");
+  let fetchedData = $state(null);
 
   async function handleFetchDOI() {
     if (!doi.trim()) {
@@ -51,8 +51,9 @@
         draft.currentValues = {};
       }
 
-      if (!draft.currentValues._default) {
-        draft.currentValues._default = {};
+      const localeKey = $appLocale || "_default";
+      if (!draft.currentValues[localeKey]) {
+        draft.currentValues[localeKey] = {};
       }
 
       const formattedAuthors = Array.isArray(data.author)
@@ -67,15 +68,15 @@
             .join(", ")
         : "";
 
-      draft.currentValues._default.title = data.title?.[0] || "Template";
-      draft.currentValues._default.authors = formattedAuthors;
-      draft.currentValues._default.journal = data["container-title"]?.[0] || "";
-      draft.currentValues._default.year = data.issued?.["date-parts"]?.[0]?.[0]
+      draft.currentValues[localeKey].title = data.title?.[0] || "Template";
+      draft.currentValues[localeKey].authors = formattedAuthors;
+      draft.currentValues[localeKey].journal = data["container-title"]?.[0] || "";
+      draft.currentValues[localeKey].year = data.issued?.["date-parts"]?.[0]?.[0]
         ? String(data.issued["date-parts"][0][0])
         : "";
-      draft.currentValues._default.volume = data.volume || "";
-      draft.currentValues._default.DOI = data.DOI || "";
-      draft.currentValues._default.pmid = data.pmid || "";
+      draft.currentValues[localeKey].volume = data.volume || "";
+      draft.currentValues[localeKey].DOI = data.DOI || "";
+      draft.currentValues[localeKey].pmid = data.pmid || "";
 
       return draft;
     });

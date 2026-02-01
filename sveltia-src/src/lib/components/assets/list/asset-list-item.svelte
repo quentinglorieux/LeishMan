@@ -1,14 +1,21 @@
 <script>
-  import { Checkbox, GridCell, GridRow } from '@sveltia/ui';
+  import { Checkbox, GridCell, GridRow, TruncatedText } from '@sveltia/ui';
+
   import AssetPreview from '$lib/components/assets/shared/asset-preview.svelte';
   import { goto } from '$lib/services/app/navigation';
-  import { canPreviewAsset, focusedAsset, selectedAssets } from '$lib/services/assets';
+  import { focusedAsset, selectedAssets } from '$lib/services/assets';
+  import { canPreviewAsset } from '$lib/services/assets/kinds';
   import { listedAssets } from '$lib/services/assets/view';
+  import { isMediumScreen, isSmallScreen } from '$lib/services/user/env';
+
+  /**
+   * @import { Asset, ViewType } from '$lib/types/private';
+   */
 
   /**
    * @typedef {object} Props
-   * @property {Asset} asset - Asset.
-   * @property {ViewType} viewType - View type.
+   * @property {Asset} asset Asset.
+   * @property {ViewType} viewType View type.
    */
 
   /** @type {Props} */
@@ -23,7 +30,7 @@
 
   /**
    * Update the asset selection.
-   * @param {boolean} selected - Whether the current asset item is selected.
+   * @param {boolean} selected Whether the current asset item is selected.
    */
   const updateSelection = (selected) => {
     selectedAssets.update((assets) => {
@@ -47,36 +54,56 @@
 <GridRow
   aria-rowindex={$listedAssets.indexOf(asset)}
   onChange={(event) => {
-    updateSelection(/** @type {CustomEvent} */ (event).detail.selected);
+    updateSelection(event.detail.selected);
   }}
   onfocus={() => {
     $focusedAsset = asset;
   }}
+  onclick={() => {
+    if (($isSmallScreen || $isMediumScreen) && $focusedAsset && canPreviewAsset($focusedAsset)) {
+      goto(`/assets/${$focusedAsset.path}`, { transitionType: 'forwards' });
+    }
+  }}
   ondblclick={() => {
     if ($focusedAsset && canPreviewAsset($focusedAsset)) {
-      goto(`/assets/${$focusedAsset.path}`);
+      goto(`/assets/${$focusedAsset.path}`, { transitionType: 'forwards' });
     }
   }}
 >
-  <GridCell class="checkbox">
-    <Checkbox
-      role="none"
-      tabindex="-1"
-      checked={$selectedAssets.includes(asset)}
-      onChange={({ detail: { checked } }) => {
-        updateSelection(checked);
-      }}
-    />
-  </GridCell>
+  {#if !($isSmallScreen || $isMediumScreen)}
+    <GridCell class="checkbox">
+      <Checkbox
+        role="none"
+        tabindex="-1"
+        checked={$selectedAssets.includes(asset)}
+        onChange={({ detail: { checked } }) => {
+          updateSelection(checked);
+        }}
+      />
+    </GridCell>
+  {/if}
   <GridCell class="image">
     <AssetPreview
       {kind}
       {asset}
       variant={viewType === 'list' ? 'icon' : 'tile'}
+      cover={$isSmallScreen}
       checkerboard={kind === 'image'}
     />
   </GridCell>
-  <GridCell class="title">
-    <span role="none">{name}</span>
-  </GridCell>
+  {#if !$isSmallScreen || viewType === 'list'}
+    <GridCell class="title">
+      <div role="none" class="label">
+        <TruncatedText lines={2}>
+          {name}
+        </TruncatedText>
+      </div>
+    </GridCell>
+  {/if}
 </GridRow>
+
+<style lang="scss">
+  .label {
+    word-break: break-all;
+  }
+</style>

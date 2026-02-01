@@ -1,7 +1,7 @@
 <script setup>
 import { GoogleMap, Marker, InfoWindow } from "vue3-google-map";
 
-const laboratories = await queryContent("laboratories").find();
+const laboratories = await queryCollection("laboratories").all();
 const filterLab = ref([]);
 onMounted(async () => {
   try {
@@ -34,24 +34,26 @@ const api_key = config.public.publicApiKey;
 </script>
 
 <template>
-  <GoogleMap
-    :api-key="api_key"
-    style="width: 100%; height: 500px"
-    :center="center0"
-    :zoom="4"
-  >
-    <Marker
-      v-for="(location, i) in filterLab"
-      :key="i"
-      :options="{ position: { lat: location['lat'], lng: location['lng'] } }"
-      clickable="true"
+  <div class="overflow-hidden rounded-[22px] border border-white/70 bg-white/80 shadow-lg">
+    <GoogleMap
+      :api-key="api_key"
+      style="width: 100%; height: 500px"
+      :center="center0"
+      :zoom="4"
     >
-      <InfoWindow :options="{ position: location }">
-        <div>
-          <h3 class="font-bold text-md">{{ location["info"] }}</h3>
-          <p>{{ location["city"] }}, {{ location["country"] }}</p>
-        </div>
-      </InfoWindow>
-    </Marker>
-  </GoogleMap>
+      <Marker
+        v-for="(location, i) in filterLab"
+        :key="i"
+        :options="{ position: { lat: location['lat'], lng: location['lng'] } }"
+        clickable="true"
+      >
+        <InfoWindow :options="{ position: location }">
+          <div>
+            <h3 class="font-bold text-md">{{ location["info"] }}</h3>
+            <p>{{ location["city"] }}, {{ location["country"] }}</p>
+          </div>
+        </InfoWindow>
+      </Marker>
+    </GoogleMap>
+  </div>
 </template>

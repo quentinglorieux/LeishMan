@@ -1,5 +1,13 @@
+// DeepL integration is disabled for now due to its CORS policy
+// @see https://github.com/sveltia/sveltia-cms/issues/437
+
+/**
+ * @import { LanguagePair, TranslationOptions, TranslationService } from '$lib/types/private';
+ */
+
 const serviceId = 'deepl';
 const serviceLabel = 'DeepL';
+const apiLabel = 'DeepL API';
 const developerURL = 'https://www.deepl.com/pro-api';
 const apiKeyURL = 'https://www.deepl.com/account/summary';
 const apiKeyPattern = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?::fx)?/;
@@ -8,7 +16,7 @@ const apiKeyPattern = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
  * Supported source languages listed in the DeepL API document.
  * @see https://developers.deepl.com/docs/resources/supported-languages
  */
-const sourceLanguages = [
+const SOURCE_LANGUAGES = [
   'AR',
   'BG',
   'CS',
@@ -45,7 +53,7 @@ const sourceLanguages = [
  * Supported target languages listed in the DeepL API document.
  * @see https://developers.deepl.com/docs/resources/supported-languages
  */
-const targetLanguages = [
+const TARGET_LANGUAGES = [
   'AR',
   'BG',
   'CS',
@@ -86,13 +94,14 @@ const targetLanguages = [
 
 /**
  * Get a supported source language that matches the given locale code.
- * @param {string} locale - Locale code.
+ * @internal
+ * @param {string} locale Locale code.
  * @returns {string | undefined} Supported language.
  */
-const getSourceLanguage = (locale) => {
+export const getSourceLanguage = (locale) => {
   const [language] = locale.toUpperCase().split('-');
 
-  if (sourceLanguages.includes(language)) {
+  if (SOURCE_LANGUAGES.includes(language)) {
     return language;
   }
 
@@ -101,13 +110,14 @@ const getSourceLanguage = (locale) => {
 
 /**
  * Get a supported target language that matches the given locale code.
- * @param {string} locale - Locale code.
+ * @internal
+ * @param {string} locale Locale code.
  * @returns {string | undefined} Supported language.
  */
-const getTargetLanguage = (locale) => {
+export const getTargetLanguage = (locale) => {
   let language = locale.toUpperCase();
 
-  if (targetLanguages.includes(language)) {
+  if (TARGET_LANGUAGES.includes(language)) {
     return language;
   }
 
@@ -123,7 +133,7 @@ const getTargetLanguage = (locale) => {
 
   [language] = language.split('-');
 
-  if (targetLanguages.includes(language)) {
+  if (TARGET_LANGUAGES.includes(language)) {
     return language;
   }
 
@@ -131,13 +141,18 @@ const getTargetLanguage = (locale) => {
 };
 
 /**
+ * Check whether the given source and target languages are supported.
+ * @param {LanguagePair} languages Language pair.
+ * @returns {Promise<boolean>} True if both source and target languages are supported.
+ */
+export const availability = async ({ sourceLanguage, targetLanguage }) =>
+  !!getSourceLanguage(sourceLanguage) && !!getTargetLanguage(targetLanguage);
+
+/**
  * Translate the given text with DeepL API. Note that the API request uses the GET method, because
  * POST doesn’t work due to a CORS issue. Too long URL params may lead to an HTTP error.
- * @param {string[]} texts - Array of original texts.
- * @param {object} options - Options.
- * @param {string} options.sourceLocale - Source language.
- * @param {string} options.targetLocale - Target language.
- * @param {string} options.apiKey - API authentication key.
+ * @param {string[]} texts Array of original texts.
+ * @param {TranslationOptions} options Options.
  * @returns {Promise<string[]>} Translated strings in the original order.
  * @throws {Error} When the source or target locale is not supported.
  * @see https://developers.deepl.com/docs/api-reference/translate
@@ -145,9 +160,9 @@ const getTargetLanguage = (locale) => {
  * @todo Implement an error handling.
  * @todo Send multiple requests if there are too many texts.
  */
-const translate = async (texts, { sourceLocale, targetLocale, apiKey }) => {
-  const sourceLanguage = getSourceLanguage(sourceLocale);
-  const targetLanguage = getTargetLanguage(targetLocale);
+const translate = async (texts, { sourceLanguage, targetLanguage, apiKey }) => {
+  sourceLanguage = getSourceLanguage(sourceLanguage) ?? '';
+  targetLanguage = getTargetLanguage(targetLanguage) ?? '';
 
   if (!sourceLanguage) {
     throw new Error('Source locale is not supported.');
@@ -167,7 +182,7 @@ const translate = async (texts, { sourceLocale, targetLocale, apiKey }) => {
   ]);
 
   const hostname = apiKey.endsWith(':fx') ? 'api-free.deepl.com' : 'api.deepl.com';
-  const url = `https://${hostname}/v2/translate?${params.toString()}`;
+  const url = `https://${hostname}/v2/translate?${params}`;
 
   const { translations } = /** @type {{ translations: { text: string }[] }} */ (
     await fetch(url).then((r) => r.json())
@@ -182,10 +197,11 @@ const translate = async (texts, { sourceLocale, targetLocale, apiKey }) => {
 export default {
   serviceId,
   serviceLabel,
+  apiLabel,
   developerURL,
   apiKeyURL,
   apiKeyPattern,
-  getSourceLanguage,
-  getTargetLanguage,
+  markdownSupported: false,
+  availability,
   translate,
 };

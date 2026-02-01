@@ -1,84 +1,105 @@
 <script>
-  import { Alert, Group, Toast } from '@sveltia/ui';
-  import { onMount, tick } from 'svelte';
+  import { Alert, Button, EmptyState, Group, Toast } from '@sveltia/ui';
+  import { onMount, tick, untrack } from 'svelte';
   import { _ } from 'svelte-i18n';
+
   import BackupFeedback from '$lib/components/contents/details/backup-feedback.svelte';
   import PaneBody from '$lib/components/contents/details/pane-body.svelte';
   import PaneHeader from '$lib/components/contents/details/pane-header.svelte';
   import Toolbar from '$lib/components/contents/details/toolbar.svelte';
-  import { siteConfig } from '$lib/services/config';
+  import { goto } from '$lib/services/app/navigation';
+  import { canCreateEntry } from '$lib/services/contents/collection/entries';
   import { entryDraft } from '$lib/services/contents/draft';
   import {
     resetBackupToastState,
     showBackupToastIfNeeded,
   } from '$lib/services/contents/draft/backup';
   import {
-    editorLeftPane,
-    editorRightPane,
-    entryEditorSettings,
+    editorFirstPane,
+    editorSecondPane,
     showContentOverlay,
     showDuplicateToast,
-  } from '$lib/services/contents/draft/editor';
-  import { defaultI18nConfig, getLocaleLabel } from '$lib/services/contents/i18n';
+  } from '$lib/services/contents/editor';
+  import { entryEditorSettings } from '$lib/services/contents/editor/settings';
+  import { getLocaleLabel } from '$lib/services/contents/i18n';
+  import { DEFAULT_I18N_CONFIG } from '$lib/services/contents/i18n/config';
+  import { isMediumScreen, isSmallScreen } from '$lib/services/user/env';
 
   /**
-   * A reference to the group element.
-   * @type {HTMLElement | undefined}
+   * @typedef {object} Props
+   * @property {string | undefined} [editorLocale] The locale to open the editor in.
    */
-  let group = undefined;
+
+  /** @type {Props} */
+  let {
+    /* eslint-disable prefer-const */
+    editorLocale = undefined,
+    /* eslint-enable prefer-const */
+  } = $props();
+
   let restoring = false;
 
-  let hiding = $state(false);
   let hidden = $state(true);
   /** @type {HTMLElement | undefined} */
   let wrapper = $state();
   /** @type {HTMLElement | undefined} */
-  let leftPaneContentArea = $state();
+  let firstPaneContentArea = $state();
   /** @type {HTMLElement | undefined} */
-  let rightPaneContentArea = $state();
+  let secondPaneContentArea = $state();
 
-  const showPreviewPane = $derived($siteConfig?.editor?.preview ?? true);
+  const notFound = $derived($entryDraft === undefined);
+  const isNew = $derived($entryDraft?.isNew ?? true);
   const collection = $derived($entryDraft?.collection);
+  const entryCollection = $derived(collection?._type === 'entry' ? collection : undefined);
   const collectionFile = $derived($entryDraft?.collectionFile);
-  const originalEntry = $derived($entryDraft?.originalEntry);
-  const entryId = $derived(
-    originalEntry?.id ?? [collection?.name ?? '-', collectionFile?.name ?? '-'].join('/'),
-  );
   const { showPreview } = $derived($entryEditorSettings ?? {});
-  const { i18nEnabled, locales, defaultLocale } = $derived(
-    (collectionFile ?? collection)?._i18n ?? defaultI18nConfig,
+  const { i18nEnabled, allLocales, defaultLocale } = $derived(
+    (collectionFile ?? collection)?._i18n ?? DEFAULT_I18N_CONFIG,
   );
-  const canPreview = $derived((collectionFile ?? collection)?.editor?.preview ?? showPreviewPane);
+  const canPreview = $derived($entryDraft?.canPreview ?? true);
   const paneStateKey = $derived(
     collectionFile?.name ? [collection?.name, collectionFile.name].join('|') : collection?.name,
   );
+  const canCreate = $derived(entryCollection?.create ?? false);
+  const limit = $derived(entryCollection?.limit ?? Infinity);
+  const createDisabled = $derived(!canCreateEntry(collection));
 
   /**
    * Restore the pane state from IndexedDB.
    * @returns {Promise<boolean>} Whether the panes are restored.
    */
   const restorePanes = async () => {
-    const [_editorLeftPane, _editorRightPane] =
+    let [_editorFirstPane, _editorSecondPane] =
       $entryEditorSettings?.paneStates?.[paneStateKey ?? ''] ?? [];
+
+    // Override the locale if specified
+    if (editorLocale) {
+      _editorFirstPane = { mode: 'edit', locale: editorLocale };
+      _editorSecondPane = { mode: 'preview', locale: editorLocale };
+    }
 
     if (
       restoring ||
-      !_editorLeftPane ||
-      !_editorRightPane ||
-      (!!_editorLeftPane.locale && !locales.includes(_editorLeftPane.locale)) ||
-      (!!_editorRightPane.locale && !locales.includes(_editorRightPane.locale)) ||
+      !_editorFirstPane ||
+      !_editorSecondPane ||
+      (!!_editorFirstPane.locale && !allLocales.includes(_editorFirstPane.locale)) ||
+      (!!_editorSecondPane.locale && !allLocales.includes(_editorSecondPane.locale)) ||
       ((!showPreview || !canPreview) &&
-        (_editorLeftPane.mode === 'preview' || _editorRightPane.mode === 'preview'))
+        (_editorFirstPane.mode === 'preview' || _editorSecondPane.mode === 'preview'))
     ) {
       return false;
     }
 
     restoring = true;
     await tick();
-    $editorLeftPane = _editorLeftPane;
-    $editorRightPane = _editorRightPane;
+    $editorFirstPane = _editorFirstPane;
+    $editorSecondPane = _editorSecondPane;
     await tick();
     restoring = false;
+
+    if ($isSmallScreen || $isMediumScreen) {
+      $editorSecondPane = null;
+    }
 
     return true;
   };
@@ -95,14 +116,18 @@
       return;
     }
 
-    $editorLeftPane = { mode: 'edit', locale: $editorLeftPane?.locale ?? defaultLocale };
+    $editorFirstPane = { mode: 'edit', locale: $editorFirstPane?.locale ?? defaultLocale };
 
-    if (!showPreview || !canPreview) {
-      const otherLocales = i18nEnabled ? locales.filter((l) => l !== $editorLeftPane?.locale) : [];
+    if ($isSmallScreen || $isMediumScreen) {
+      $editorSecondPane = null;
+    } else if (!showPreview || !canPreview) {
+      const otherLocales = i18nEnabled
+        ? allLocales.filter((l) => l !== $editorFirstPane?.locale)
+        : [];
 
-      $editorRightPane = otherLocales.length ? { mode: 'edit', locale: otherLocales[0] } : null;
+      $editorSecondPane = otherLocales.length ? { mode: 'edit', locale: otherLocales[0] } : null;
     } else {
-      $editorRightPane = { mode: 'preview', locale: $editorLeftPane.locale };
+      $editorSecondPane = { mode: 'preview', locale: $editorFirstPane.locale };
     }
   };
 
@@ -110,15 +135,15 @@
    * Save the pane state to IndexedDB.
    */
   const savePanes = () => {
-    if (!collection || restoring || !$editorLeftPane || !$editorRightPane || !paneStateKey) {
+    if (!collection || restoring || !$editorFirstPane || !$editorSecondPane || !paneStateKey) {
       return;
     }
 
     entryEditorSettings.update((view = {}) => ({
       ...view,
       paneStates: {
-        ...(view.paneStates ?? {}),
-        [paneStateKey]: [$editorLeftPane, $editorRightPane],
+        ...view.paneStates,
+        [paneStateKey]: [$editorFirstPane, $editorSecondPane],
       },
     }));
   };
@@ -130,18 +155,15 @@
     // Wait until `inert` is updated
     await tick();
 
-    if (group) {
-      group.tabIndex = 0;
-      group.focus();
+    if (wrapper) {
+      wrapper.tabIndex = 0;
+      wrapper.focus();
     }
   };
 
   onMount(() => {
-    group = /** @type {HTMLElement} */ (wrapper?.querySelector('[role="group"]'));
-
-    group.addEventListener('transitionend', () => {
+    wrapper?.addEventListener('transitionend', () => {
       if (!$showContentOverlay) {
-        hiding = false;
         hidden = true;
         $entryDraft = null;
       }
@@ -151,30 +173,29 @@
   $effect(() => {
     if (paneStateKey) {
       // Reset the editor panes
-      $editorLeftPane = null;
-      $editorRightPane = null;
+      $editorFirstPane = null;
+      $editorSecondPane = null;
     }
   });
 
   $effect(() => {
-    void showPreview;
-    void canPreview;
-    switchPanes();
+    void [showPreview, canPreview, $isSmallScreen, $isMediumScreen];
+
+    untrack(() => {
+      switchPanes();
+    });
   });
 
   $effect(() => {
-    void $editorLeftPane;
-    void $editorRightPane;
+    void [$editorFirstPane, $editorSecondPane];
     savePanes();
   });
 
   $effect(() => {
     if (wrapper) {
       if (!$showContentOverlay) {
-        hiding = true;
         showBackupToastIfNeeded();
       } else if (hidden) {
-        hiding = false;
         hidden = false;
         switchPanes();
         moveFocus();
@@ -185,67 +206,96 @@
 </script>
 
 <div
-  role="none"
-  class="wrapper"
-  class:hiding
+  role="group"
+  class="wrapper content-editor"
   {hidden}
   inert={!$showContentOverlay}
+  aria-label={$_('content_editor')}
   bind:this={wrapper}
 >
-  <Group class="content-editor" aria-label={$_('content_editor')}>
-    {#key entryId}
-      <Toolbar />
+  {#key $entryDraft?.id}
+    <Toolbar disabled={isNew && createDisabled} />
+    {#if $entryDraft === null}
+      <!-- Hide the content after saving a draft -->
+    {:else if notFound || (isNew && createDisabled)}
+      <EmptyState>
+        <div role="none">
+          {#if notFound}
+            {$_('entry_not_found')}
+          {:else if !canCreate}
+            {$_('creating_entries_disabled_by_admin')}
+          {:else}
+            {$_('creating_entries_disabled_by_limit', { values: { limit } })}
+          {/if}
+        </div>
+        <div role="none">
+          <Button
+            variant="primary"
+            onclick={() => {
+              goto(`/collection/${collection?.name}`, {
+                replaceState: true,
+                transitionType: 'backwards',
+              });
+            }}
+          >
+            {$_('back_to_collection')}
+          </Button>
+        </div>
+      </EmptyState>
+    {:else}
       <div role="none" class="cols">
         {#if collection}
-          {#if $editorLeftPane}
-            {@const { locale, mode } = $editorLeftPane}
+          {#if $editorFirstPane}
+            <!-- Somehow we need a fallback object or we’ll get a property destructuring error -->
+            {@const { locale, mode } = $editorFirstPane ?? {}}
             <Group
               class="pane"
               aria-label={$_(mode === 'edit' ? 'edit_x_locale' : 'preview_x_locale', {
-                values: { locale: getLocaleLabel(locale) },
+                values: { locale: getLocaleLabel(locale) ?? locale },
               })}
               data-locale={locale}
               data-mode={mode}
             >
               <PaneHeader
-                id="left-pane-header"
-                thisPane={editorLeftPane}
-                thatPane={editorRightPane}
+                id="first-pane-header"
+                thisPane={editorFirstPane}
+                thatPane={editorSecondPane}
               />
               <PaneBody
-                id="left-pane-body"
-                thisPane={editorLeftPane}
-                bind:thisPaneContentArea={leftPaneContentArea}
-                thatPaneContentArea={rightPaneContentArea}
+                id="first-pane-body"
+                thisPane={editorFirstPane}
+                bind:thisPaneContentArea={firstPaneContentArea}
+                bind:thatPaneContentArea={secondPaneContentArea}
               />
             </Group>
           {/if}
-          {#if $editorRightPane}
-            {@const { locale, mode } = $editorRightPane}
+          {#if $editorSecondPane}
+            <!-- Ditto -->
+            {@const { locale, mode } = $editorSecondPane ?? {}}
             <Group
               aria-label={$_(mode === 'edit' ? 'edit_x_locale' : 'preview_x_locale', {
-                values: { locale: getLocaleLabel(locale) },
+                values: { locale: getLocaleLabel(locale) ?? locale },
               })}
               data-locale={locale}
               data-mode={mode}
             >
               <PaneHeader
-                id="right-pane-header"
-                thisPane={editorRightPane}
-                thatPane={editorLeftPane}
+                id="second-pane-header"
+                thisPane={editorSecondPane}
+                thatPane={editorFirstPane}
               />
               <PaneBody
-                id="right-pane-body"
-                thisPane={editorRightPane}
-                bind:thisPaneContentArea={rightPaneContentArea}
-                thatPaneContentArea={leftPaneContentArea}
+                id="second-pane-body"
+                thisPane={editorSecondPane}
+                bind:thisPaneContentArea={secondPaneContentArea}
+                bind:thatPaneContentArea={firstPaneContentArea}
               />
             </Group>
           {/if}
         {/if}
       </div>
-    {/key}
-  </Group>
+    {/if}
+  {/key}
 </div>
 
 <BackupFeedback />
@@ -258,23 +308,19 @@
 
 <style lang="scss">
   .wrapper {
-    display: contents;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--sui-secondary-background-color);
+    transition: filter 250ms;
 
     &[hidden] {
       display: none;
     }
 
-    & > :global(.sui.group) {
-      position: absolute;
-      inset: 0;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      background-color: var(--sui-primary-background-color);
-      transition: filter 250ms;
-    }
-
-    &[inert] > :global(.sui.group) {
+    &[inert] {
       filter: opacity(0);
     }
 
@@ -282,25 +328,29 @@
       flex: auto;
       overflow: hidden;
       display: flex;
+      gap: 4px;
+      background-color: var(--sui-secondary-background-color); // same as toolbar
 
-      & > :global(div) {
-        display: flex;
-        flex-direction: column;
-        min-width: 480px;
-        transition: all 500ms;
-      }
+      :global {
+        & > div {
+          display: flex;
+          flex-direction: column;
+          min-width: 480px;
+          background-color: var(--sui-primary-background-color);
+          transition: all 500ms;
 
-      & > :global(div:first-child:not(:last-child)) {
-        border-width: 0 1px 0 0;
-        border-color: var(--sui-primary-border-color);
-      }
+          &[data-mode='edit'] {
+            flex: 1 1;
+          }
 
-      & > :global([data-mode='edit']) {
-        flex: 1 1;
-      }
+          &[data-mode='preview'] {
+            flex: 2 1;
+          }
 
-      & > :global([data-mode='preview']) {
-        flex: 2 1;
+          @media (width < 768px) {
+            min-width: auto;
+          }
+        }
       }
     }
   }

@@ -1,10 +1,12 @@
 <template>
   <div>
     <!-- Hero Section -->
-    <section class="bg-pasteur-blue text-white py-16">
-      <div class="container mx-auto text-center">
-        <h1 class="text-4xl font-bold">About Us</h1>
-        <p class="mt-4 text-lg max-w-2xl mx-auto">
+    <section class="relative overflow-hidden rounded-[28px] border border-white/70 bg-white/70 px-8 py-10 shadow-lg">
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-600/15 via-cyan-500/10 to-transparent"></div>
+      <div class="relative">
+        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">About</p>
+        <h1 class="font-display text-3xl sm:text-4xl">About Us</h1>
+        <p class="mt-3 max-w-2xl text-sm text-slate-600">
           Learn more about our mission, vision, and the amazing team behind the
           LeishMan Network.
         </p>
@@ -12,42 +14,52 @@
     </section>
 
     <!-- About Content Section -->
-    <section class="py-16">
-      <div class="container mx-auto grid md:grid-cols-2 gap-8 px-10">
+    <section class="py-12">
+      <div class="grid gap-10 md:grid-cols-2 items-start">
         <!-- Text Content -->
-        <div>
-          <h2 class="text-3xl font-bold mb-4">{{ data.title1 }}</h2>
-          <p class="text-gray-700 dark:text-white leading-loose mb-6">
+        <div class="space-y-8">
+          <div>
+            <h2 class="font-display text-3xl text-slate-900 mb-3">{{ data.title1 }}</h2>
+            <p class="text-slate-600 leading-relaxed">
             {{ data.description1 }}
-          </p>
+            </p>
+          </div>
 
-          <h2 class="text-3xl font-bold mb-4">{{ data.title2 }}</h2>
-          <p class="text-gray-700 dark:text-white leading-loose mb-6">
+          <div>
+            <h2 class="font-display text-3xl text-slate-900 mb-3">{{ data.title2 }}</h2>
+            <p class="text-slate-600 leading-relaxed">
             {{ data.description2 }}
-          </p>
+            </p>
+          </div>
 
-          <h2 class="text-3xl font-bold mb-4">{{ data.title3 }}</h2>
-          <VueShowdown :markdown="data.description3" flavor="original" />
+          <div>
+            <h2 class="font-display text-3xl text-slate-900 mb-3">{{ data.title3 }}</h2>
+            <VueShowdown :markdown="data.description3" flavor="original" class="prose max-w-none text-slate-700" />
+          </div>
         </div>
 
         <!-- Image or Milestone Section -->
-        <div>
+        <div class="space-y-6">
           <img
             src="/assets/general/logo.webp"
             alt="About Us"
-            class="rounded-lg shadow-lg mb-6"
+            class="w-full rounded-2xl border border-white/70 bg-white/80 p-4 shadow-lg"
           />
-          <h2 class="text-3xl font-bold mb-4">{{ data.title4 }}</h2>
-          <p class="text-gray-700 leading-loose dark:text-white mb-4">
+          <div>
+            <h2 class="font-display text-3xl text-slate-900 mb-3">{{ data.title4 }}</h2>
+            <p class="text-slate-600 leading-relaxed">
             {{ data.description4 }}
-          </p>
-          <h2 class="text-3xl font-bold my-4">Consortium Agreement</h2>
-          <a :href="data.manual_pdf"
-        class="mt-6 bg-pasteur-blue hover:bg-pasteur-dark text-white px-6 py-3 rounded-full"
-      >
-
-        Download here
-        </a>
+            </p>
+          </div>
+          <div>
+            <h2 class="font-display text-3xl text-slate-900 mb-3">Consortium Agreement</h2>
+            <a
+              :href="data.manual_pdf"
+              class="inline-flex items-center rounded-full bg-slate-900 px-5 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-slate-800"
+            >
+              Download here
+            </a>
+          </div>
         </div>
       </div>
     </section>

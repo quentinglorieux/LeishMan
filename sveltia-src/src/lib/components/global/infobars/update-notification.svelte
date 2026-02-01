@@ -1,7 +1,8 @@
 <script>
-  import { Button } from '@sveltia/ui';
+  import { Button, Infobar } from '@sveltia/ui';
   import { onMount } from 'svelte';
   import { _ } from 'svelte-i18n';
+
   import { version as userVersion } from '$lib/services/app';
 
   const checkInterval = 60 * 60 * 1000; // 1 hour
@@ -44,7 +45,7 @@
       import.meta.env.DEV ||
       !document.querySelector('script[src^="https://unpkg.com/@sveltia/cms"]')
     ) {
-      return void 0;
+      return undefined;
     }
 
     checkForUpdates();
@@ -62,7 +63,7 @@
 </script>
 
 {#if updateAvailable}
-  <div role="alert" class="wrapper">
+  <Infobar --sui-infobar-message-justify-content="center">
     {$_('update_available')}
     <Button
       variant="link"
@@ -71,25 +72,5 @@
         window.location.reload();
       }}
     />
-  </div>
+  </Infobar>
 {/if}
-
-<style lang="scss">
-  .wrapper {
-    flex: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    height: 32px;
-    text-align: center;
-    border-bottom: 1px solid var(--sui-info-border-color);
-    color: var(--sui-info-foreground-color);
-    background-color: var(--sui-info-background-color);
-    font-size: var(--sui-font-size-small);
-
-    :global(button) {
-      font-size: inherit !important;
-    }
-  }
-</style>

@@ -1,19 +1,29 @@
+/**
+ * IMPORTANT: These strings are not ready for localization. DO NOT TRANSLATE THIS FILE.
+ * @see https://github.com/sveltia/sveltia-cms/blob/main/src/lib/locales/README.md
+ */
 export const strings = {
   // Pages & Navigation
   collections: 'コレクション',
   contents: 'コンテンツ',
   entries: 'エントリー',
+  files: 'ファイル',
   assets: 'アセット',
   media: 'メディア',
   workflow: 'ワークフロー',
   editorial_workflow: '編集ワークフロー',
+  menu: 'メニュー',
 
   // Account
   user_name: 'ユーザー名',
   password: 'パスワード',
   sign_in: 'ログイン',
+  sign_in_with_mobile: 'モバイルでログイン',
+  sign_in_with_mobile_instruction:
+    '以下の QR コードを携帯電話かタブレットでスキャンすると、パスワードなしでログインできます。ユーザー設定は自動的にコピーされます。',
   signed_in_as_x: '{name} としてログイン中',
   working_with_local_repo: 'ローカルレポジトリで作業中',
+  working_with_test_repo: 'テストレポジトリで作業中',
   sign_out: 'ログアウト',
 
   // Common terms
@@ -28,6 +38,7 @@ export const strings = {
   save: '保存',
   saving: '保存中…',
   rename: '名前を変更',
+  update: '更新',
   replace: '差し替え',
   add: '追加',
   remove: '削除',
@@ -41,6 +52,7 @@ export const strings = {
   restore: '復元',
   discard: '破棄',
   searching: '検索中…',
+  no_results: '結果が見つかりませんでした。',
   global: 'グローバル',
   primary: 'プライマリー',
   secondary: 'セカンダリー',
@@ -48,28 +60,42 @@ export const strings = {
   folder: 'フォルダー',
   api_key: 'API キー',
   details: '詳細',
+  back: '戻る',
+  loading: '読み込み中…',
+  later: '後で',
+  slug: 'スラッグ',
+  singleton: 'シングルトン',
+  singletons: 'シングルトン',
 
   // Common errors
   clipboard_error: 'データのコピー中に問題が発生しました。',
 
   // Entrance
   welcome_to_sveltia_cms: 'Sveltia CMS へようこそ',
-  loading_site_config: 'サイト設定を読み込んでいます…',
+  loading_cms_config: 'CMS 設定を読み込んでいます…',
   loading_site_data: 'サイトデータを読み込んでいます…',
   loading_site_data_error: 'サイトデータの読み込み中にエラーが発生しました。',
   sign_in_with_x: '{service} でログイン',
+  sign_in_with_x_using_token: '{service} でトークンを使用してログイン',
+  sign_in_using_pat_title: '個人用アクセストークンでログイン',
+  sign_in_using_pat_description:
+    '以下にトークンを入力してください。レポジトリコンテンツへの読み取り・書き込みアクセスが必要です。',
+  sign_in_using_pat_link: '<a>{service} ユーザー設定ページ</a> でトークンを生成できます。',
+  personal_access_token: '個人用アクセストークン',
   authorizing: '認証中…',
   signing_in: 'ログイン中…',
   work_with_local_repo: 'ローカルレポジトリで作業',
   work_with_local_repo_description:
-    'ボタンをクリックして「{repo}」レポジトリのルートディレクトリを選択してください。',
+    'ダイアログが表示されたら、「{repo}」レポジトリのルートディレクトリを選択してください。',
   work_with_local_repo_description_no_repo:
-    'ボタンをクリックして Git レポジトリのルートディレクトリを選択してください。',
+    'ダイアログが表示されたら、Git レポジトリのルートディレクトリを選択してください。',
+  work_with_test_repo: 'テストレポジトリで作業',
   sign_in_error: {
     not_project_root:
       '選択されたフォルダーはレポジトリのルートディレクトリではありません。再度お試しください。',
     picker_dismissed: 'レポジトリのルートディレクトリを選択できませんでした。再度お試しください。',
     authentication_aborted: '認証が中断されました。再度お試しください。',
+    invalid_token: '入力されたトークンが無効です。確認して再度お試しください。',
     // Errors defined in Sveltia CMS Authenticator
     // https://github.com/sveltia/sveltia-cms-auth/blob/main/src/index.js
     UNSUPPORTED_BACKEND: 'この認証アプリはお使いの Git バックエンドに対応していません。',
@@ -78,8 +104,11 @@ export const strings = {
     AUTH_CODE_REQUEST_FAILED: '認証コードを取得できませんでした。後で再度お試しください。',
     CSRF_DETECTED: 'CSRF 攻撃の可能性が検出されたため、認証フローは中断されました。',
     TOKEN_REQUEST_FAILED: 'アクセストークンを要求できませんでした。後で再度お試しください。',
+    TOKEN_REFRESH_FAILED: 'アクセストークンの更新に失敗しました。後で再度お試しください。',
     MALFORMED_RESPONSE: 'サーバーから不正なデータが返されました。後で再度お試しください。',
   },
+  backend_unsupported_version:
+    '{name} バックエンドには {name} {version} 以降のバージョンが必要です。',
   repository_no_access: 'あなたには「{repo}」レポジトリへのアクセス権がありません。',
   repository_not_found: '「{repo}」レポジトリは存在しません。',
   repository_empty: '「{repo}」レポジトリにはブランチがありません。',
@@ -95,7 +124,9 @@ export const strings = {
   // Global toolbar
   visit_live_site: '管理対象サイトを開く',
   switch_page: 'ページを切り替え',
-  search_placeholder: 'エントリーとアセットを検索…',
+  search_placeholder_entries: 'エントリーを検索…',
+  search_placeholder_assets: 'アセットを検索…',
+  search_placeholder_all: 'エントリーとアセットを検索…',
   create_entry_or_assets: 'エントリーまたはアセットを作成',
   publish_changes: '変更を公開',
   publishing_changes: '変更を公開しています…',
@@ -107,21 +138,34 @@ export const strings = {
   live_site: '管理対象サイト',
   git_repository: 'Git レポジトリ',
   settings: '設定',
-  site_config: 'サイト設定',
+  cms_config: 'CMS 設定',
   show_help_menu: 'ヘルプメニューを表示',
   help: 'ヘルプ',
   keyboard_shortcuts: 'キーボードショートカット',
   documentation: 'ドキュメンテーション',
   release_notes: 'リリースノート',
+  announcements: 'お知らせ',
   version_x: 'バージョン {version}',
   report_issue: '問題を報告',
   share_feedback: 'フィードバックを共有',
   get_help: 'サポート',
   join_discord: 'Discord チャンネルに参加',
+  bluesky: 'Bluesky でフォロー',
+
+  // Onboarding
+  mobile_promo_title: 'Sveltia CMS がモバイルに対応しました！',
+  mobile_promo_button: '試してみる',
 
   // Update notification
   update_available: 'Sveltia CMS の最新版が利用可能です。',
   update_now: '今すぐ更新',
+
+  // Custom features
+  import: 'Import from DOI',
+  import_entries: 'Import entries',
+  doi_empty: 'DOI cannot be empty.',
+  doi_fetch_error: 'Error fetching DOI metadata.',
+  nextcloud: 'Nextcloud',
 
   // Backend status indicator
   backend_status: {
@@ -134,13 +178,19 @@ export const strings = {
   // Library
   content_library: 'コンテンツライブラリ',
   asset_library: 'アセットライブラリ',
+  asset_location: {
+    repository: 'あなたのサイト',
+    external: '外部の場所',
+    stock_photos: 'ストックフォト',
+  },
   collection_assets: 'コレクションアセット',
-  entry_assets: 'エントリーアセット',
   entry_list: 'エントリーリスト',
   file_list: 'ファイルリスト',
   asset_list: 'アセットリスト',
   x_collection: '「{collection}」コレクション',
   x_asset_folder: '「{folder}」アセットフォルダー',
+  viewing_collection_list: 'コレクションリストを表示しています。',
+  viewing_asset_folder_list: 'アセットフォルダーリストを表示しています。',
   viewing_x_collection_many_entries:
     '「{collection}」コレクションを表示しています。ここには {count} 個のエントリーがあります。',
   viewing_x_collection_one_entry:
@@ -153,17 +203,21 @@ export const strings = {
     '「{folder}」アセットフォルダーを表示しています。ここにはひとつのアセットがあります。',
   viewing_x_asset_folder_no_assets:
     '「{folder}」アセットフォルダーを表示しています。ここにはまだアセットがありません。',
+  singleton_selected_announcement: '「{file}」ファイルを編集するには Enter キーを押してください。',
   collection_not_found: 'コレクションが見つかりませんでした',
   file_not_found: 'ファイルが見つかりませんでした',
   x_of_x_selected: '{total} 個のうち {selected} 個を選択中',
   switch_view: 'ビューを切り替え',
   list_view: 'リストビュー',
   grid_view: 'グリッドビュー',
+  switch_to_list_view: 'リストビューに切り替え',
+  switch_to_grid_view: 'グリッドビューに切り替え',
   sort: '並び替え',
   sorting_options: '並べ替えオプション',
   sort_keys: {
     none: 'なし',
     name: '名前',
+    slug: 'スラッグ',
     commit_author: '更新者',
     commit_date: '更新日時',
   },
@@ -186,12 +240,24 @@ export const strings = {
   hide_assets: 'アセットを隠す',
   show_info: '情報を表示',
   hide_info: '情報を隠す',
-  asset_folders: 'アセットフォルダー',
   all_assets: 'すべてのアセット',
-  uncategorized: '未分類',
+  global_assets: 'グローバルアセット',
+  entry_not_found: 'エントリーが見つかりませんでした。',
+  creating_entries_disabled_by_admin:
+    'このコレクションへの新しいエントリーの作成は、管理者によって無効化されています。',
+  creating_entries_disabled_by_limit:
+    'このコレクションは最大の {limit} エントリーに達したため、新しいエントリーを作成することはできません。',
+  back_to_collection: 'コレクションへ戻る',
+  collection_list: 'コレクションリスト',
+  back_to_collection_list: 'コレクションリストへ戻る',
+  asset_folder_list: 'アセットフォルダーリスト',
+  back_to_asset_folder_list: 'アセットフォルダーリストへ戻る',
+  search_results: '検索結果',
   search_results_for_x: '「{terms}」の検索結果',
-  viewing_search_results:
-    '「{terms}」の検索結果を表示しています。{entries} と {assets} が見つかりました。',
+  viewing_entry_search_results:
+    '「{terms}」の検索結果を表示しています。{entries} が見つかりました。',
+  viewing_asset_search_results:
+    '「{terms}」の検索結果を表示しています。{assets} が見つかりました。',
   many_entries: '{count} 個のエントリー',
   one_entry: '1 個のエントリー',
   no_entries: '0 個のエントリー',
@@ -220,15 +286,19 @@ export const strings = {
   },
   replace_asset: 'アセットを差し替え',
   replace_x: '{name} を差し替え',
-  browse_file: 'クリックして参照',
-  drop_or_browse_file: 'ここにファイルをドロップするかクリックして参照',
-  drop_or_browse_files: 'ここにファイルをドロップするかクリックして参照',
-  drop_or_browse_image_file: 'ここに画像ファイルをドロップするかクリックして参照',
-  drop_or_browse_image_files: 'ここに画像ファイルをドロップするかクリックして参照',
+  click_to_browse: 'クリックして参照…',
+  tap_to_browse: 'タップして参照…',
+  drop_file_or_click_to_browse: 'ここにファイルをドロップするかクリックして参照…',
+  drop_files_or_click_to_browse: 'ここにファイルをドロップするかクリックして参照…',
+  drop_image_file_or_click_to_browse: 'ここに画像ファイルをドロップするかクリックして参照…',
+  drop_image_files_or_click_to_browse: 'ここに画像ファイルをドロップするかクリックして参照…',
   drop_file_here: 'ここにファイルをドロップ',
   drop_files_here: 'ここにファイルをドロップ',
-  drop_files_type_mismatch:
-    'ドロップされたファイルは「{type}」形式ではありません。再度お試しください。',
+  unsupported_file_type: '非対応ファイル形式',
+  dropped_file_type_mismatch:
+    'ドロップされたファイルは {type} 形式ではありません。再度お試しください。',
+  dropped_image_type_mismatch:
+    'ドロップされたファイルはサポートされていません。AVIF、GIF、JPEG、PNG、WebP または SVG 形式の画像のみが受け入れられます。再度お試しください。',
   choose_file: 'ファイルを選択',
   choose_files: 'ファイルを選択',
   delete_asset: 'アセットを削除',
@@ -256,12 +326,28 @@ export const strings = {
   confirm_deleting_all_entries: 'すべてのエントリーを削除してもよろしいですか？',
   confirm_deleting_all_entries_with_assets:
     'すべてのエントリーと関連アセットを削除してもよろしいですか？',
+  processing_file: 'ファイルを処理しています。これには時間がかかる場合があります。',
+  processing_files: 'ファイルを処理しています。これには時間がかかる場合があります。',
+  uploading_files: 'アップロード対象ファイル',
   confirm_replacing_file: '「{name}」を以下のファイルと差し替えてもよろしいですか？',
   confirm_uploading_file: '以下のファイルを「{folder}」フォルダーに保存してもよろしいですか？',
   confirm_uploading_files:
     '以下の {count} 個のファイルを「{folder}」フォルダーに保存してもよろしいですか？',
+  oversized_files: 'サイズ超過ファイル',
+  warning_oversized_file:
+    'このファイルは最大サイズ {size} を超えているため、アップロードできません。サイズを縮小するか、他のファイルを選んでください。',
+  warning_oversized_files:
+    'これらのファイルは最大サイズ {size} を超えているため、アップロードできません。サイズを縮小するか、他のファイルを選んでください',
+  uploading_files_progress: 'ファイルをアップロード中…',
+  uploading_file_progress: 'ファイルをアップロード中…',
+  uploading_files_failed: 'ファイルをアップロードできませんでした',
+  uploading_file_failed: 'ファイルをアップロードできませんでした',
+  file_meta: '{type} · {size}',
+  file_meta_converted_from_x: '({type} から変換)',
   no_entries_created: 'このコレクションにはまだエントリーがありません。',
   create_new_entry: '新しいエントリーを作成',
+  entry: 'エントリー',
+  index_file: 'インデックスファイル',
   no_files_in_collection: 'このコレクションにはファイルがありません。',
   asset_info: 'アセット情報',
   select_asset_show_info: 'アセットを選択すると情報が表示されます。',
@@ -302,12 +388,12 @@ export const strings = {
   draft_backup_restored: '下書きのバックアップが復元されました。',
   draft_backup_deleted: '下書きのバックアップが削除されました。',
   cancel_editing: '編集をキャンセル',
-  creating_x: '{name} を作成',
-  creating_x_collection_entry: '「{collection}」コレクションの新しいエントリーを作成しています。',
-  editing_x_in_x: '{collection} › {entry} を編集',
-  editing_x_collection_entry:
-    '「{collection}」コレクションの「{entry}」エントリーを編集しています。',
-  editing_x_collection_file: '「{collection}」コレクションの「{file}」ファイルを編集しています。',
+  create_entry_title: '{name} を作成',
+  create_entry_announcement: '「{collection}」コレクションの新しいエントリーを作成しています。',
+  edit_entry_title: '{collection} › {entry}',
+  edit_entry_announcement: '「{collection}」コレクションの「{entry}」エントリーを編集しています。',
+  edit_file_announcement: '「{collection}」コレクションの「{file}」ファイルを編集しています。',
+  edit_singleton_announcement: '「{file}」ファイルを編集しています。',
   save_and_publish: '保存して公開',
   save_without_publishing: '公開せずに保存',
   show_editor_options: 'エディターオプションを表示',
@@ -315,7 +401,8 @@ export const strings = {
   show_preview: 'プレビューを表示',
   sync_scrolling: 'スクロールを同期',
   switch_locale: 'ロケールを切り替え',
-  locale_content_errors: 'このロケールコンテンツのひとつか複数のフィールドにエラーがあります。',
+  locale_content_disabled_short: '(無効)',
+  locale_content_error_short: '(エラー)',
   edit: '編集',
   preview: 'プレビュー',
   edit_x_locale: '{locale} コンテンツを編集',
@@ -326,7 +413,7 @@ export const strings = {
   x_field: '「{field}」フィールド',
   show_field_options: 'フィールドオプションを表示',
   field_options: 'フィールドオプション',
-  unsupported_widget_x: '非対応ウィジェット: {name}',
+  unsupported_field_type_x: '非対応フィールドタイプ: {name}',
   enable_x_locale: '{locale} を有効化',
   reenable_x_locale: '{locale} を再度有効化',
   disable_x_locale: '{locale} を無効化',
@@ -346,6 +433,13 @@ export const strings = {
   translate_from_x: '{locale} から翻訳',
   revert_changes: '変更を取り消す',
   revert_all_changes: 'すべての変更を取り消す',
+  edit_slug: 'スラッグを編集',
+  edit_slug_warning:
+    'スラッグを変更すると、エントリーへの内部・外部リンクが壊れる可能性があります。現在のところ、Sveltia CMS は Relation フィールドで作成された参照を更新しないため、そのような参照は他のリンクとともに手動で更新する必要があります。',
+  edit_slug_error: {
+    empty: 'スラッグは空白にはできません。',
+    duplicate: 'このスラッグは他のエントリーに使われています。',
+  },
   required: '必須',
   editor: {
     translation: {
@@ -398,6 +492,11 @@ export const strings = {
       description: 'エントリーを保存中に問題が発生しました。後で再度お試しください。',
     },
   },
+  find_place: '場所を検索',
+  use_your_location: '現在地を使用',
+  geolocation_error_title: '位置情報エラー',
+  geolocation_error_body: 'あなたの現在地を取得できませんでした。',
+  geolocation_unsupported: 'お使いのブラウザーは位置情報 API をサポートしていません。',
 
   // Media details
   viewing_x_asset_details: '「{name}」アセットの詳細を表示しています。',
@@ -413,8 +512,11 @@ export const strings = {
   dimensions: '大きさ',
   duration: '再生時間',
   used_in: '使われているエントリー',
+  created_date: '作成日時',
+  location: '場所',
+  map_lat_lng: '緯度 {latitude}、経度 {longitude} の地図',
 
-  // Widgets
+  // Fields
   select_file: 'ファイルを選択',
   select_image: '画像を選択',
   replace_file: 'ファイルを差し替え',
@@ -425,6 +527,8 @@ export const strings = {
   move_up: '上へ移動',
   move_down: '下へ移動',
   add_x: '{name} を追加',
+  add_item_above: '上にアイテムを追加',
+  add_item_below: '下にアイテムを追加',
   select_list_type: 'リストタイプを選択',
   opacity: '透明度',
   unselected_option: '(なし)',
@@ -436,11 +540,12 @@ export const strings = {
     search_for_file: 'ファイルを検索',
     search_for_image: '画像を検索',
     locations: '場所',
-    location: {
-      local: 'お使いのコンピューター',
-      repository: 'このレポジトリ',
-      external_locations: '外部の場所',
-      stock_photos: 'ストックフォト',
+    folder: {
+      field: 'フィールドアセット',
+      entry: 'エントリーアセット',
+      file: 'ファイルアセット',
+      collection: 'コレクションアセット',
+      global: 'グローバルアセット',
     },
     error: {
       invalid_key: 'あなたの API キーは正しくないか期限切れです。確認の上、再度お試しください。',
@@ -454,12 +559,12 @@ export const strings = {
     enter_image_url: '画像の URL を入力:',
     large_file: {
       title: '大きなファイル',
-      description: 'このファイルは最大サイズ {size} を超えています。他のファイルを選んでください。',
     },
     photo_credit: {
       title: '写真クレジット',
       description: '可能であれば以下のクレジットを使ってください:',
     },
+    unsaved: '未保存',
   },
   character_counter: {
     min_max: {
@@ -503,34 +608,149 @@ export const strings = {
   cloud_storage: {
     invalid: 'このサービスは正しく設定されていません。',
     auth: {
-      initial: '{service} へログインすると、ストレージ上のメディアをエントリー項目へ挿入できます。',
-      requested: 'ログイン中…',
-      error: 'ユーザー名またはパスワードが間違っています。確認の上、再度お試しください。',
+      api_key: {
+        initial: '{service} の API キーを入力してください。',
+        requested: 'API キーを検証中…',
+        error: '入力された API キーが無効です。確認の上、再度お試しください。',
+      },
+      password: {
+        initial: '{service} のパスワードを入力してください。',
+        requested: 'ログイン中…',
+        error: 'ユーザー名またはパスワードが間違っています。確認の上、再度お試しください。',
+      },
+    },
+    cloudinary: {
+      iframe_title: 'Cloudinary メディアライブラリ',
+      activate: {
+        button_label: 'Cloudinary を有効化',
+        description: 'ログイン後、再度 Sign In ボタンをクリックして続行してください。', // Don’t translate "Sign In" here
+      },
+      auth: {
+        initial: 'Cloudinary の API Secret を入力してください。', // Not "API Key"
+        requested: 'API Secret を検証中…',
+        error: '入力された API Secret が無効です。確認の上、再度お試しください。',
+      },
+    },
+    uploadcare: {
+      auth: {
+        initial: 'Uploadcare の API Secret Key を入力してください。',
+        requested: 'API Secret Key を検証中…',
+        error: '入力された Secret Key が無効です。確認の上、再度お試しください。',
+      },
     },
   },
 
   // Configuration
   config: {
+    one_error: 'CMS 設定に問題が見つかりました。問題を解決してから再度お試しください。',
+    many_errors: 'CMS 設定に問題が見つかりました。問題を解決してから再度お試しください。',
+    error_locator: {
+      collection: '{collection} コレクション',
+      file: '{file} ファイル',
+      field: '`{field}` フィールド',
+    },
     error: {
       no_secure_context: 'Sveltia CMS は HTTPS またはローカルホスト URL でのみ動作します。',
       fetch_failed: '設定ファイルを読み込めませんでした。',
       fetch_failed_not_ok: 'HTTP レスポンスがステータス {status} で返されました。',
       parse_failed: '設定ファイルを解析できませんでした。',
       parse_failed_invalid_object: '設定ファイルが有効な JavaScript オブジェクトではありません。',
-      no_collection: '設定ファイル内でコレクションが定義されていません。',
-      no_backend: '設定ファイル内でバックエンドが定義されていません。',
-      unsupported_backend: '設定されている「{name}」バックエンドは非対応です。',
-      no_repository: '設定ファイル内でレポジトリが定義されていません。',
-      oauth_implicit_flow: '設定されている認証方式 (暗黙的フロー) は非対応です。',
-      oauth_no_app_id: '設定ファイル内で OAuth アプリケーション ID が定義されていません。',
-      no_media_folder: '設定ファイル内でメディアフォルダーが定義されていません。',
-      unexpected: '設定ファイルを検証中に予期せぬ問題が発生しました。',
-      try_again: '問題を解決してから再度お試しください。',
+      parse_failed_unsupported_type:
+        '設定ファイルが有効なファイル形式ではありません。サポートされているのは YAML、TOML と JSON のみです。',
+      no_collection: 'コレクションが定義されていません。',
+      missing_backend: 'バックエンドが定義されていません。',
+      missing_backend_name: 'バックエンド名が定義されていません。',
+      unsupported_known_backend:
+        '{name} バックエンドは Sveltia CMS では [非対応です](https://sveltiacms.app/en/docs/migration/netlify-decap-cms#compatibility)。',
+      unsupported_custom_backend:
+        'カスタムバックエンドは Sveltia CMS では [非対応です](https://sveltiacms.app/en/docs/migration/netlify-decap-cms#compatibility)。',
+      unsupported_backend_suggestion:
+        '[サポートされているバックエンド](https://sveltiacms.app/en/docs/backends#supported-backends) のいずれかを使用してください。',
+      missing_repository: 'レポジトリが定義されていません。',
+      invalid_repository:
+        '設定されているレポジトリが正しくありません。この設定は「owner/repo」形式でなければなりません。',
+      oauth_implicit_flow:
+        '設定されている認証方式 (暗黙的フロー) は Sveltia CMS では非対応です。代わりに PKCE 認証を使用してください。',
+      oauth_no_app_id: ' OAuth アプリケーション ID が定義されていません。',
+      missing_media_folder: 'メディアフォルダーが定義されていません。',
+      invalid_media_folder:
+        '設定されているメディアフォルダーが正しくありません。この設定は文字列でなければなりません。',
+      invalid_public_folder:
+        '設定されているパブリックフォルダーが正しくありません。この設定は文字列でなければなりません。',
+      public_folder_relative_path:
+        '設定されているパブリックフォルダーが正しくありません。この設定は「/」で始まる絶対パスでなければなりません。',
+      public_folder_absolute_url:
+        'パブリックフォルダーオプションの絶対 URL は Sveltia CMS では非対応です。',
+      invalid_collection_no_options:
+        'コレクションは `folder`、`files`、`divider` オプションのいずれかを定義する必要があります。',
+      invalid_collection_multiple_options:
+        'コレクションは `folder`、`files`、`divider` オプションを同時に持つことはできません。',
+      file_format_mismatch: '拡張子 `{extension}` は `{format}` 形式と一致しません。',
+      invalid_slug_slash:
+        'スラッグテンプレート `{slug}` は無効です。スラッシュを含めることはできません。エントリーをサブフォルダーに整理するには、`slug` の代わりに `path` オプションを使用してください。',
+      missing_collection_name:
+        'コレクション {count} には `name` オプションを空でない文字列として定義する必要があります。',
+      invalid_collection_name:
+        'コレクション名 `{name}` は無効です。特殊文字を含めることはできません。',
+      duplicate_collection_name:
+        'コレクション名は一意でなければなりませんが、`{name}` が複数回使用されています。',
+      missing_collection_file_name:
+        'コレクションファイル {count} には `name` オプションを空でない文字列として定義する必要があります。',
+      invalid_collection_file_name:
+        'コレクションファイル名 `{name}` は無効です。特殊文字を含めることはできません。',
+      duplicate_collection_file_name:
+        'コレクションファイル名は一意でなければなりませんが、`{name}` が複数回使用されています。',
+      missing_field_name:
+        'フィールド {count} には `name` オプションを空でない文字列として定義する必要があります。',
+      invalid_field_name: 'フィールド名 `{name}` は無効です。特殊文字を含めることはできません。',
+      duplicate_field_name:
+        'フィールド名は一意でなければなりませんが、`{name}` が複数回使用されています。',
+      missing_variable_type:
+        '変数タイプ {count} には `name` オプションを空でない文字列として定義する必要があります。',
+      invalid_variable_type: '変数タイプ名 `{name}` は無効です。特殊文字を含めることはできません。',
+      duplicate_variable_type:
+        '変数タイプ名は一意でなければなりませんが、`{name}` が複数回使用されています。',
+      date_field_type:
+        'Sveltia CMS では非推奨の Date フィールドタイプはサポートされていません。代わりに `time_format:false` オプション付きの DateTime フィールドタイプを使用してください。',
+      unsupported_deprecated_option:
+        'Sveltia CMS では非推奨の `{prop}` オプションはサポートされていません。代わりに `{newProp}` オプションを使用してください。',
+      allow_multiple:
+        'Sveltia CMS では `allow_multiple` オプションはサポートされていません。代わりにデフォルトで `false` の `multiple` オプションを使用してください。',
+      invalid_list_field:
+        'List フィールドは `field`、`fields`、`types` オプションを同時に持つことはできません。',
+      invalid_list_variable_type:
+        'List フィールドの変数タイプが無効です。`widget` オプションは `{widget}` に設定されていますが、`object` でなければなりません。',
+      invalid_object_field:
+        'Object フィールドは `fields` と `types` オプションを同時に持つことはできません。',
+      object_field_missing_fields:
+        'Object フィールドは `fields` または `types` オプションのいずれかを定義する必要があります。',
+      relation_field_invalid_collection:
+        '参照されている `{collection}` コレクションは無効であるか定義されていません。',
+      relation_field_invalid_collection_file:
+        '参照されている `{file}` ファイルは無効であるか定義されていません。',
+      relation_field_missing_file_name:
+        'ファイルコレクションへの参照には `file` オプションを定義する必要があります。',
+      relation_field_invalid_value_field:
+        '参照されている値フィールド `{field}` は無効であるか定義されていません。',
+      unexpected: '予期せぬ問題',
     },
+    warning: {
+      editorial_workflow_unsupported:
+        'Sveltia CMS ではまだエディトリアルワークフローはサポートされていません。',
+      open_authoring_unsupported:
+        'Sveltia CMS ではまだオープンオーサリングはサポートされていません。',
+      nested_collections_unsupported:
+        'Sveltia CMS ではネストされたコレクションはまだサポートされていません。',
+      unsupported_ignored_option:
+        '`{prop}` オプションは Sveltia CMS ではサポートされていません。このオプションは無視されます。',
+    },
+    compatibility_link:
+      '詳しくは互換性情報をご覧ください: https://sveltiacms.app/en/docs/migration/netlify-decap-cms#compatibility',
   },
 
   // Backends
   local_backend: {
+    indicator: 'ローカル',
     unsupported_browser:
       'お使いのブラウザーはローカル開発に対応していません。代わりに Chrome か Edge を使ってください。',
     disabled:
@@ -565,37 +785,64 @@ export const strings = {
       dark: 'ダーク',
       light: 'ライト',
     },
-    languages: {
+    language: {
       title: '言語',
       ui_language: {
         title: 'ユーザーインターフェース言語',
         select_language: '言語を選択',
-      },
-      translator: {
-        title: '{service} 翻訳',
-        field_label: '{service} API 認証キー',
-        description:
-          '<a {homeHref}>{service} API</a> にユーザー登録して、<a {apiKeyHref}>発行された認証キー</a> をここに入力すると、テキストエントリー項目の素早い翻訳が可能となります。',
       },
     },
     contents: {
       title: 'コンテンツ',
       editor: {
         title: 'エディター',
+        use_draft_backup: {
+          switch_label: 'エントリーの下書きを自動的にバックアップする',
+        },
         close_on_save: {
           switch_label: '下書き保存後にエディターを閉じる',
         },
+        close_with_escape: {
+          switch_label: 'Escape キーでエディターを閉じる',
+        },
+      },
+    },
+    i18n: {
+      title: '国際化',
+      translators: {
+        default: {
+          title: 'デフォルト翻訳サービス',
+          select_service: 'サービスを選択',
+        },
+        api_keys: {
+          title: '翻訳サービス API キー',
+          description: '<a>翻訳サービス</a> の API キーを管理します。',
+        },
+        field_label: '{service} キー',
+        description:
+          '<a {homeHref}>{service}</a> にユーザー登録して、<a {apiKeyHref}>発行されたキー</a> をここに入力すると、テキストエントリー項目の素早い翻訳が可能となります。',
       },
     },
     media: {
       title: 'メディア',
       stock_photos: {
-        title: '{service} 無料画像素材',
+        api_keys: {
+          title: '無料画像素材サービス API キー',
+          description: '<a>無料画像素材サービス</a> の API キーを管理します。',
+        },
         field_label: '{service} API キー',
         description:
           '<a {homeHref}>{service} API</a> にユーザー登録して、<a {apiKeyHref}>発行された API キー</a> をここに入力すると、画像エントリー項目に無料のストックフォトを挿入できます。',
         credit: '写真提供: {service}',
       },
+      cloud_storage: {
+        api_keys: {
+          title: 'クラウドストレージサービス API キー',
+          description: '<a>クラウドストレージサービス</a> の API キーを管理します。',
+        },
+        field_label: '{service} API キー',
+      },
+      libraries_disabled: '外部メディアライブラリは管理者によって無効化されています。',
     },
     accessibility: {
       title: 'アクセシビリティ',
@@ -608,19 +855,32 @@ export const strings = {
     },
     advanced: {
       title: '詳細',
-      deploy_hook: {
-        title: 'デプロイフック',
+      beta: {
+        title: 'ベータ機能',
         description:
-          '「変更を公開」を選択して手動でデプロイを実行する際に呼び出すウェブフック URL を入力してください。GitHub Actions を使用する場合は空欄のままで構いません。',
-        field_label: 'デプロイフック URL',
-        url_saved: 'ウェブフック URL が保存されました。',
-        url_removed: 'ウェブフック URL が削除されました。',
+          '不安定あるいは未ローカライズの可能性がある、いくつかのベータ機能を有効化します。',
+        switch_label: 'ベータプログラムに参加する',
       },
       developer_mode: {
         title: '開発者モード',
         description:
-          '詳細なコンソールログやネイティブコンテキストメニューなど、いくつかの機能を有効化します。',
+          '詳細なコンソールログやネイティブコンテキストメニューなど、いくつかの開発者向け機能を有効化します。',
         switch_label: '開発者モードを有効にする',
+      },
+      deploy_hook: {
+        title: 'デプロイフック',
+        description:
+          '「変更を公開」を選択して手動でデプロイを実行する際に呼び出すウェブフック URL を入力してください。GitHub Actions を使用する場合は空欄のままで構いません。',
+        url: {
+          field_label: 'フック URL',
+          saved: 'フック URL が保存されました。',
+          removed: 'フック URL が削除されました。',
+        },
+        auth: {
+          field_label: '認証ヘッダー (例: Bearer <token>) (オプション)',
+          saved: '認証ヘッダーが保存されました。',
+          removed: '認証ヘッダーが削除されました。',
+        },
       },
     },
   },
@@ -649,9 +909,13 @@ export const strings = {
     tiff: 'TIFF 画像',
     webp: 'WebP 画像',
     avi: 'AVI 動画',
+    m4v: 'MP4 動画',
+    mov: 'QuickTime 動画',
     mp4: 'MP4 動画',
     mpeg: 'MPEG 動画',
-    ogv: 'OGG 動画',
+    mpg: 'MPEG 動画',
+    ogg: 'Ogg 動画',
+    ogv: 'Ogg 動画',
     ts: 'MPEG 動画',
     webm: 'WebM 動画',
     '3gp': '3GPP 動画',
@@ -659,7 +923,9 @@ export const strings = {
     aac: 'AAC 音声',
     mid: 'MIDI',
     midi: 'MIDI',
+    m4a: 'MP4 音声',
     mp3: 'MP3 音声',
+    oga: 'Ogg 音声',
     opus: 'OPUS 音声',
     wav: 'WAV 音声',
     weba: 'WebM 音声',

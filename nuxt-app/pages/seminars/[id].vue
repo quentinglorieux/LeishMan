@@ -1,19 +1,24 @@
 <template>
-  <div class="container mx-auto py-8">
-    <h1 class="text-3xl font-bold text-center mb-8">
-      {{ seminars.date }}<br>
-    {{ seminars.description }}
-    </h1>
+  <div class="py-6 space-y-6">
+    <div class="text-center">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Seminar</p>
+      <h1 class="font-display text-3xl sm:text-4xl text-slate-900 mt-2">
+        {{ seminars.date }}
+      </h1>
+      <p class="mt-3 text-sm text-slate-600">
+        {{ seminars.description }}
+      </p>
+    </div>
     
 
-    <div v-if="seminars.program_pdf" class="my-6 mx-auto text-center">
-    Download Link: <a
+  <div v-if="seminars.program_pdf" class="text-center">
+    <a
       :href="seminars.program_pdf"
-      class="mt-6 bg-pasteur-blue hover:bg-pasteur-dark text-white px-6 py-3 rounded-full"
+      class="inline-flex items-center rounded-full bg-slate-900 px-5 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-slate-800"
     >
       Program in PDF
     </a>
-    </div>
+  </div>
   </div>
 
   <ProgDisplay :programData="seminars.talk" />
@@ -21,7 +26,7 @@
 
 <script setup>
 const route = useRoute();
-const seminars = await queryContent("events")
-  .where({ title: route.params.id })
-  .findOne();
+const seminars = await queryCollection("events")
+  .where("title", "=", route.params.id)
+  .first();
 </script>

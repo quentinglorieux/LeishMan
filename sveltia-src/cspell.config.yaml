@@ -16,39 +16,63 @@ useGitignore: true
 ignorePaths:
   - pnpm-lock.yaml
   - data/**/*.json
-  - dist/**
+  - package/**
+  - src/**/*.test.js
 words:
+  - analyzing
   - astrolicious
   - astros
   - brotlied
+  - BYOK
   - camelcase
   - Cloudinary
+  - cmaps
+  - cooldown
   - CVEs
   - danurbanowicz
   - Decap
   - DeepL
   - deepmerge
+  - dialogs
   - dompurify
   - embeddable
+  - esbuild
+  - exif
+  - exifr
   - Flavored
   - Forgejo
+  - frontmatter
+  - gitdir
   - Gitea
-  - Gittech
+  - goldmark
   - hotlinking
   - hugolify
+  - husenunicorn
   - iarna
+  - iccs
   - IIFE
   - indexeddb
+  - infobar
   - infobars
   - jsdoc
+  - jSquash
   - keymap
   - keyvalue
   - kyoshino
+  - lvml
   - mdwn
+  - messageformat
   - mkdn
+  - Mtei
   - Mullvad
+  - notranslate
   - onkeydowncapture
+  - onpastecapture
   - onwheelcapture
+  - OPFS
+  - oxlint
+  - parseable
+  - passwordless
   - pexels
   - Photoshop
   - Pixabay
@@ -60,39 +84,52 @@ words:
   - prefs
   - previewable
   - privatemaker
+  - programmatically
   - proxified
   - proxify
+  - qrcode
   - Ragdoll
+  - rearchitect
+  - rebranded
   - reimagined
   - Roadmap
   - safesearch
   - sebousan
+  - Shiki
   - sindresorhus
   - singleline
+  - slugification
+  - slugified
+  - slugifying
   - smol
   - strikethrough
   - stylelint
-  - Sveitia
   - sveltejs
   - Sveltia
   - templatized
   - Typecheck
   - unadded
-  - uncategorized
   - unflatten
   - unflattened
   - unflattening
   - unlinkable
+  - unlocalized
+  - unpatched
   - unproxify
+  - unsubscribers
   - Uploadcare
   - videoseries
   - Vite
+  - Vitest
   - WCAG
   - weba
   - webformat
   - whitespaces
+  - worktree
   - xslx
+  - yacosta
   - zanhk
+  - Zola
 overrides:
   - language: en-gb
     filename: "**/*.md"

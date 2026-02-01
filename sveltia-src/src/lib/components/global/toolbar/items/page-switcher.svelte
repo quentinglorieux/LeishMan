@@ -1,37 +1,75 @@
 <script>
   import { Icon, SelectButton, SelectButtonGroup } from '@sveltia/ui';
   import { _ } from 'svelte-i18n';
-  import { goto, selectedPageName } from '$lib/services/app/navigation';
-  import { selectedAssetFolder } from '$lib/services/assets';
-  import { selectedCollection } from '$lib/services/contents/collection';
 
-  const pages = $derived([
-    {
-      key: 'collections',
-      label: $_('contents'),
-      icon: 'library_books',
-      link: `/collections/${$selectedCollection?.name}`,
-    },
-    {
-      key: 'assets',
-      label: $_('assets'),
-      icon: 'folder_open',
-      // link: $selectedAssetFolder ? `/assets/${$selectedAssetFolder.internalPath}` : '/assets',
-      link:  '/nextcloud',
-    },
-    // {
-    //   key: 'workflow',
-    //   label: $_('editorial_workflow'),
-    //   icon: 'rebase_edit',
-    //   link: '/workflow',
-    // },
-    // {
-    //   key: 'config',
-    //   label: $_('site_config'),
-    //   icon: 'settings',
-    //   link: '/config',
-    // },
-  ]);
+  import { goto, selectedPageName } from '$lib/services/app/navigation';
+  import { allAssetFolders, selectedAssetFolder } from '$lib/services/assets/folders';
+  import { backendName } from '$lib/services/backends';
+  import { cmsConfig } from '$lib/services/config';
+  import { isSmallScreen } from '$lib/services/user/env';
+  import { userRole } from '$lib/services/user/role';
+
+  const pages = $derived.by(() => {
+    const _pages = [
+      {
+        key: 'collections',
+        label: $_('contents'),
+        icon: 'library_books',
+        link: '/collections',
+      },
+    ];
+
+    // Hide Assets page if there is no asset folder configured
+    // @todo Remove this condition when the Asset Library supports external storage providers
+    if ($allAssetFolders.length) {
+      _pages.push({
+        key: 'assets',
+        label: $_('assets'),
+        icon: 'photo_library',
+        link: $isSmallScreen
+          ? '/assets'
+          : `/assets/${$selectedAssetFolder?.internalPath ?? '-/all'}`,
+      });
+    }
+
+    if ($cmsConfig?.publish_mode === 'editorial_workflow') {
+      // _pages.push({
+      //   key: 'workflow',
+      //   label: $_('editorial_workflow'),
+      //   icon: 'rebase_edit',
+      //   link: '/workflow',
+      // });
+    }
+
+    if ($userRole === 'admin') {
+      _pages.push({
+        key: 'nextcloud',
+        label: $_('nextcloud'),
+        icon: 'folder',
+        link: '/nextcloud',
+      });
+    }
+
+    if ($backendName === 'local') {
+      // _pages.push({
+      //   key: 'config',
+      //   label: $_('cms_config'),
+      //   icon: 'settings',
+      //   link: '/config',
+      // });
+    }
+
+    if ($isSmallScreen) {
+      _pages.push({
+        key: 'settings',
+        label: $_('settings'),
+        icon: 'settings',
+        link: '/settings',
+      });
+    }
+
+    return _pages;
+  });
 </script>
 
 <div role="none" class="wrapper">
@@ -43,7 +81,7 @@
         selected={$selectedPageName === key}
         aria-label={label}
         keyShortcuts="Alt+{index + 1}"
-        onSelect={() => {
+        onclick={() => {
           goto(link);
         }}
       >
@@ -59,12 +97,19 @@
   .wrapper {
     display: contents;
 
-    :global(.sui.select-button-group) {
-      gap: 4px;
-    }
+    :global {
+      .sui.select-button-group {
+        gap: 4px;
 
-    :global(.sui.button) {
-      border-radius: var(--sui-button-medium-border-radius) !important;
+        @media (width < 768px) {
+          justify-content: space-evenly;
+          width: 100%;
+        }
+      }
+
+      .sui.button {
+        border-radius: var(--sui-button-medium-border-radius) !important;
+      }
     }
   }
 </style>

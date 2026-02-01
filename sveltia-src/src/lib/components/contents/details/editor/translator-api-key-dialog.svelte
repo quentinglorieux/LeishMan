@@ -1,15 +1,14 @@
 <script>
-  import { PromptDialog } from '@sveltia/ui';
-  import DOMPurify from 'isomorphic-dompurify';
+  import { PromptDialog, Spacer } from '@sveltia/ui';
+  import { sanitize } from 'isomorphic-dompurify';
   import { _ } from 'svelte-i18n';
-  import {
-    showContentOverlay,
-    translatorApiKeyDialogState,
-  } from '$lib/services/contents/draft/editor';
+
+  import TranslatorSelector from '$lib/components/settings/controls/translator-selector.svelte';
+  import { showContentOverlay, translatorApiKeyDialogState } from '$lib/services/contents/editor';
   import { translator } from '$lib/services/integrations/translators';
   import { prefs } from '$lib/services/user/prefs';
 
-  const { serviceId, serviceLabel, developerURL, apiKeyURL, apiKeyPattern } = $derived($translator);
+  const { serviceId, apiLabel, developerURL, apiKeyURL, apiKeyPattern } = $derived($translator);
 
   $effect(() => {
     if (!$showContentOverlay && $translatorApiKeyDialogState.show) {
@@ -24,7 +23,11 @@
   bind:open={$translatorApiKeyDialogState.show}
   title={$_($translatorApiKeyDialogState.multiple ? 'translate_fields' : 'translate_field')}
   showOk={false}
-  textboxAttrs={{ spellcheck: false, 'aria-label': $_('api_key') }}
+  textboxAttrs={{
+    spellcheck: false,
+    monospace: true,
+    'aria-label': $_('api_key'),
+  }}
   oninput={(event) => {
     const _value = /** @type {HTMLInputElement} */ (event.target).value.trim();
 
@@ -39,10 +42,12 @@
     $translatorApiKeyDialogState.resolve?.();
   }}
 >
-  {@html DOMPurify.sanitize(
-    $_('prefs.languages.translator.description', {
+  <TranslatorSelector />
+  <Spacer />
+  {@html sanitize(
+    $_('prefs.i18n.translators.description', {
       values: {
-        service: serviceLabel,
+        service: apiLabel,
         homeHref: `href="${developerURL}"`,
         apiKeyHref: `href="${apiKeyURL}"`,
       },

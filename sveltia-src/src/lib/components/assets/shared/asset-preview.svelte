@@ -1,25 +1,32 @@
 <script>
   import { Icon } from '@sveltia/ui';
   import { waitForVisibility } from '@sveltia/utils/element';
-  import { getAssetBlobURL, getAssetThumbnailURL } from '$lib/services/assets';
+  import { flushSync } from 'svelte';
+  import { _ } from 'svelte-i18n';
+
+  import { getAssetBlobURL, getAssetThumbnailURL } from '$lib/services/assets/info';
+
+  /**
+   * @import { Asset, AssetKind } from '$lib/types/private';
+   */
 
   /**
    * @typedef {object} Props
-   * @property {AssetKind} kind - Asset type.
-   * @property {'lazy' | 'eager'} [loading] - Loading method.
-   * @property {Asset} [asset] - Asset.
-   * @property {string} [src] - Source URL.
-   * @property {'tile' | 'icon'} [variant] - Style variant.
-   * @property {boolean} [blurBackground] - Whether to show a blurred background (like Slack’s media
+   * @property {AssetKind} kind Asset type.
+   * @property {'lazy' | 'eager'} [loading] Loading method.
+   * @property {Asset} [asset] Asset.
+   * @property {string} [src] Source URL.
+   * @property {'tile' | 'icon'} [variant] Style variant.
+   * @property {boolean} [blurBackground] Whether to show a blurred background (like Slack’s media
    * overlay).
-   * @property {boolean} [cover] - Whether to use `object-fit: cover`.
-   * @property {boolean} [checkerboard] - Whether to show a checkerboard background below a
+   * @property {boolean} [cover] Whether to use `object-fit: cover`.
+   * @property {boolean} [checkerboard] Whether to show a checkerboard background below a
    * transparent image.
-   * @property {boolean} [dissolve] - Whether to add a short dissolve transition (fade-in effect) to
+   * @property {boolean} [dissolve] Whether to add a short dissolve transition (fade-in effect) to
    * the image/video when it’s first loaded to avoid a sudden appearance.
-   * @property {string} [alt] - Alt text for the image.
-   * @property {boolean} [controls] - Whether to show controls for audio/video. If this is `false`
-   * and {@link kind} is `audio`, an icon will be displayed instead.
+   * @property {string} [alt] Alt text for the image.
+   * @property {boolean} [controls] Whether to show controls for audio/video. If this is `false` and
+   * {@link kind} is `audio`, an icon will be displayed instead.
    */
 
   /** @type {Props & Record<string, any>} */
@@ -44,8 +51,10 @@
   let mediaElement = $state();
   let hasError = $state(false);
   let loaded = $state(false);
+  /** @type {string | undefined} */
+  let blurImageURL = $state();
 
-  const isThumbnail = $derived(!!asset && !!variant);
+  const isThumbnail = $derived(!!asset && !!variant && !controls);
   const isImage = $derived(isThumbnail || kind === 'image' || asset?.name.endsWith('.pdf'));
 
   let updatingSrc = false;
@@ -71,7 +80,15 @@
       hasError = true;
     }
 
+    if (blurBackground && !blurImageURL && src) {
+      blurImageURL = src;
+    }
+
     updatingSrc = false;
+
+    // For some reason this is required to update the `$effect` calling `checkLoaded()`, otherwise
+    // navigating from `/assets` to `/assets/<collection>` on small screen leaves the preview empty
+    flushSync();
   };
 
   /**
@@ -92,7 +109,7 @@
         mediaElement?.addEventListener(
           isImage ? 'load' : 'loadedmetadata',
           () => {
-            resolve(void 0);
+            resolve(undefined);
           },
           { once: true },
         );
@@ -113,15 +130,23 @@
   };
 
   $effect(() => {
-    void mediaElement;
-    void asset;
-    updateSrc();
+    if (asset && !blurImageURL) {
+      (async () => {
+        blurImageURL = await getAssetThumbnailURL(asset, { cacheOnly: true });
+      })();
+    }
   });
 
   $effect(() => {
-    void mediaElement;
-    void src;
-    checkLoaded();
+    if (mediaElement && asset) {
+      updateSrc();
+    }
+  });
+
+  $effect(() => {
+    if (mediaElement && src) {
+      checkLoaded();
+    }
   });
 </script>
 
@@ -152,13 +177,12 @@
   {/if}
   {#if blurBackground}
     <div role="none" class="blur">
-      <div role="none" class="overlay"></div>
-      {#if kind === 'video'}
-        <!-- svelte-ignore a11y_media_has_caption -->
-        <video {src} playsinline></video>
-      {:else}
-        <img {loading} {src} alt="" />
-      {/if}
+      <div role="status" class="overlay">
+        {#if !isThumbnail && !loaded}
+          {$_('loading')}
+        {/if}
+      </div>
+      <img role="none" loading="lazy" src={blurImageURL} alt="" class:loaded={!!blurImageURL} />
     </div>
   {/if}
 </div>
@@ -176,8 +200,7 @@
       border-width: 1px;
       border-style: solid;
       border-color: transparent;
-      padding: var(--tile-padding, 8px);
-      background-color: var(--sui-secondary-background-color);
+      padding: var(--tile-padding, 12px);
 
       :global(.sui.icon) {
         font-size: 48px;
@@ -185,15 +208,19 @@
     }
 
     &.icon {
-      width: 40px;
-      height: 40px;
+      border-radius: var(--sui-control-medium-border-radius);
+      width: var(--icon-size, 32px);
+      height: var(--icon-size, 32px);
     }
 
-    &.tile,
-    &.icon {
+    &:is(.tile, .icon) {
       overflow: hidden;
-      border-radius: var(--sui-control-medium-border-radius);
       aspect-ratio: 1 / 1;
+
+      img {
+        // Prevent the image from being dragged
+        pointer-events: none;
+      }
     }
 
     .blur {
@@ -205,17 +232,24 @@
         pointer-events: none;
       }
 
-      :global(.overlay) {
+      .overlay {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         z-index: -1;
         backdrop-filter: blur(32px) brightness(0.8);
       }
 
-      :is(:global(img, video)) {
+      img {
         width: 100%;
         height: 100%;
         z-index: -2;
         object-fit: cover;
         transform: scale(1.2);
+
+        &.loaded {
+          opacity: 1;
+        }
       }
     }
 

@@ -1,3 +1,47 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme static {
+  --font-sans: "Manrope", system-ui, -apple-system, sans-serif;
+  --font-display: "Fraunces", "Times New Roman", serif;
+  --color-pasteur-blue: #005a9c;
+  --color-pasteur-light-blue: #f0f8ff;
+  --color-pasteur-dark: #003a6e;
+  --color-ink: #0b1220;
+  --color-ink-muted: #3a455a;
+  --color-paper: #f7f8fb;
+  --color-accent: #0f6abf;
+  --color-accent-2: #1aa3b5;
+  --radius-card: 18px;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  text-rendering: optimizeLegibility;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.page-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 420px at 85% -5%, rgba(15, 106, 191, 0.18), transparent 60%),
+    radial-gradient(700px 380px at -10% 5%, rgba(26, 163, 181, 0.18), transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, #f6f7fb 40%, #f1f4fb 100%);
+}
+
+.page-content {
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
+  backdrop-filter: blur(10px);
+}

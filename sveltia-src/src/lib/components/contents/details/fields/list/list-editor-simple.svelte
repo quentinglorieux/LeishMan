@@ -1,0 +1,120 @@
+<!--
+  @component
+  Implement the editor for a List field without subfield(s).
+  @see https://decapcms.org/docs/widgets/#List
+  @see https://sveltiacms.app/en/docs/fields/list
+-->
+<script>
+  import { TextArea } from '@sveltia/ui';
+  import { escapeRegExp } from '@sveltia/utils/string';
+  import { getContext, onMount, untrack } from 'svelte';
+
+  import { entryDraft } from '$lib/services/contents/draft';
+
+  /**
+   * @import { EntryDraft, FieldEditorContext, FieldEditorProps } from '$lib/types/private';
+   * @import { SimpleListField } from '$lib/types/public';
+   */
+
+  /**
+   * @typedef {object} Props
+   * @property {SimpleListField} fieldConfig Field configuration.
+   * @property {string[]} currentValue Field value.
+   */
+
+  /** @type {FieldEditorContext} */
+  const { valueStoreKey = 'currentValues' } = getContext('field-editor') ?? {};
+
+  /** @type {FieldEditorProps & Props} */
+  let {
+    /* eslint-disable prefer-const */
+    locale,
+    keyPath,
+    fieldId,
+    fieldConfig,
+    currentValue,
+    required = true,
+    readonly = false,
+    invalid = false,
+    /* eslint-enable prefer-const */
+  } = $props();
+
+  let mounted = $state(false);
+  let inputValue = $state('');
+
+  const { i18n } = $derived(fieldConfig);
+
+  /**
+   * Update {@link inputValue} when {@link currentValue} is updated.
+   */
+  const setInputValue = () => {
+    inputValue = currentValue?.join('\n') ?? '';
+  };
+
+  /**
+   * Update the value for the List field without subfield(s). This has to be called from the `input`
+   * event handler on `<TextArea>`, not a `inputValue` reaction, because it causes an infinite loop
+   * due to {@link setInputValue}.
+   * @param {string[]} [listItems] List items to set. If not provided, split {@link inputValue}.
+   */
+  const updateSimpleList = (listItems = inputValue.split(/\n/g)) => {
+    Object.keys($entryDraft?.[valueStoreKey] ?? {}).forEach((_locale) => {
+      if (i18n !== 'duplicate' && _locale !== locale) {
+        return;
+      }
+
+      Object.keys($entryDraft?.[valueStoreKey][_locale] ?? {}).forEach((_keyPath) => {
+        if (_keyPath.match(`^${escapeRegExp(keyPath)}\\.\\d+$`)) {
+          delete $entryDraft?.[valueStoreKey][_locale][_keyPath];
+        }
+      });
+
+      listItems.forEach((val, index) => {
+        /** @type {EntryDraft} */ ($entryDraft)[valueStoreKey][_locale][`${keyPath}.${index}`] =
+          val;
+      });
+    });
+  };
+
+  /**
+   * Trim spaces on each line and remove any empty lines from the list.
+   */
+  const cleanUpValue = () => {
+    currentValue = inputValue
+      .split(/\n/g)
+      .map((val) => val.trim())
+      .filter((val) => !!val);
+
+    updateSimpleList(currentValue);
+  };
+
+  onMount(() => {
+    mounted = true;
+  });
+
+  $effect(() => {
+    if (mounted) {
+      void [currentValue];
+
+      untrack(() => {
+        setInputValue();
+      });
+    }
+  });
+</script>
+
+<TextArea
+  bind:value={inputValue}
+  autoResize={true}
+  flex
+  {readonly}
+  {required}
+  {invalid}
+  aria-errormessage="{fieldId}-error"
+  oninput={() => {
+    updateSimpleList();
+  }}
+  onblur={() => {
+    cleanUpValue();
+  }}
+/>

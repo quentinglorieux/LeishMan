@@ -1,16 +1,15 @@
-<svelte:options runes={true} />
-
 <script>
   import { _ } from 'svelte-i18n';
-  import YAML from 'yaml';
+  import { stringify } from 'yaml';
+
   import PageContainer from '$lib/components/common/page-container.svelte';
-  import { siteConfig } from '$lib/services/config';
+  import { rawCmsConfig } from '$lib/services/config';
 </script>
 
-<PageContainer class="content" aria-label={$_('site_configuration_editor')}>
+<PageContainer aria-label={$_('site_configuration_editor')}>
   {#snippet main()}
-    <div role="blockquote" aria-label={$_('site_config')}>
-      <pre>{YAML.stringify($siteConfig)}</pre>
+    <div role="blockquote" aria-label={$_('cms_config')}>
+      <pre>{stringify(rawCmsConfig)}</pre>
     </div>
   {/snippet}
 </PageContainer>
@@ -24,5 +23,11 @@
   pre {
     margin: 0;
     padding: 16px;
+    width: 100%;
+    min-width: fit-content;
+    min-height: -moz-available;
+    min-height: -webkit-fill-available;
+    min-height: stretch;
+    background-color: var(--sui-primary-background-color);
   }
 </style>

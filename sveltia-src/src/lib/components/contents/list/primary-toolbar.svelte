@@ -1,82 +1,125 @@
 <script>
-  import { Button, Icon, Spacer, Toolbar } from '@sveltia/ui';
-  import DOMPurify from 'isomorphic-dompurify';
+  import {
+    Button,
+    FloatingActionButtonWrapper,
+    Infobar,
+    Spacer,
+    Toolbar,
+    TruncatedText,
+  } from '@sveltia/ui';
+  import { sanitize } from 'isomorphic-dompurify';
   import { marked } from 'marked';
-  import { _ } from 'svelte-i18n';
+  import { _, locale as appLocale } from 'svelte-i18n';
+
+  import BackButton from '$lib/components/common/page-toolbar/back-button.svelte';
   import DeleteEntriesDialog from '$lib/components/contents/shared/delete-entries-dialog.svelte';
-  // import ImportPubliDialog from '$lib/components/contents/shared/import-publi-dialog.svelte';
-  import { goto } from '$lib/services/app/navigation';
-  import { selectedCollection } from '$lib/services/contents/collection';
-  import { selectedEntries } from '$lib/services/contents/collection/entries';
+  import CreateEntryButton from '$lib/components/contents/toolbar/create-entry-button.svelte';
+  import { goBack } from '$lib/services/app/navigation';
+  import { getCollectionLabel, selectedCollection } from '$lib/services/contents/collection';
+  import { canCreateEntry, selectedEntries } from '$lib/services/contents/collection/entries';
+  import { listedEntries } from '$lib/services/contents/collection/view';
+  import { isSmallScreen } from '$lib/services/user/env';
 
   let showDeleteDialog = $state(false);
-  // let showImportDialog = $state(false);
 
   /**
    * Parse the given string as Markdown and sanitize the result to only allow certain tags.
-   * @param {string} str - Original string.
+   * @param {string} str Original string.
    * @returns {string} Sanitized string.
    */
-  const sanitize = (str) =>
-    DOMPurify.sanitize(/** @type {string} */ (marked.parseInline(str)), {
+  const _sanitize = (str) =>
+    sanitize(/** @type {string} */ (marked.parseInline(str)), {
       ALLOWED_TAGS: ['strong', 'em', 'del', 'code', 'a'],
       ALLOWED_ATTR: ['href'],
     });
 
-  const name = $derived($selectedCollection?.name);
-  const label = $derived($selectedCollection?.label);
+  const name = $derived($selectedCollection?.name ?? '');
   const description = $derived($selectedCollection?.description);
-  const files = $derived($selectedCollection?.files);
-  const canCreate = $derived($selectedCollection?.create ?? false);
-  const canDelete = $derived($selectedCollection?.delete ?? true);
-  const collectionLabel = $derived(label || name || '');
+  const createDisabled = $derived(!canCreateEntry($selectedCollection));
+  const collectionLabel = $derived(
+    // `$appLocale` is a key, because `getCollectionLabel` can return a localized label
+    $appLocale && $selectedCollection ? getCollectionLabel($selectedCollection) : name,
+  );
+
+  const { isEntryCollection, canCreate, canDelete, limit } = $derived.by(() => {
+    const collection = $selectedCollection;
+
+    if (collection?._type === 'entry') {
+      return {
+        isEntryCollection: true,
+        canCreate: collection.create ?? false,
+        canDelete: collection.delete ?? true,
+        limit: collection.limit ?? Infinity,
+      };
+    }
+
+    return {
+      isEntryCollection: false,
+      canCreate: false,
+      canDelete: false,
+      limit: Infinity,
+    };
+  });
 </script>
 
 {#if $selectedCollection}
   <Toolbar variant="primary" aria-label={$_('collection')}>
-    <h2 role="none">{collectionLabel}</h2>
-    <div role="none" class="description">{@html sanitize(description || '')}</div>
-    <Spacer flex />
-    <!-- {#if collectionLabel === 'Publications'}
-      <Button
-        variant="secondary"
-        label={$_('import')}
-        aria-label={$_('import_entries')}
+    {#if $isSmallScreen}
+      <BackButton
+        aria-label={$_('back_to_collection_list')}
         onclick={() => {
-          showImportDialog = true;
-        }}
-      >
-      </Button>
-    {/if} -->
-
-    {#if !files}
-      <Button
-        variant="ghost"
-        label={$_('delete')}
-        aria-label={$selectedEntries.length === 1
-          ? $_('delete_selected_entry')
-          : $_('delete_selected_entries')}
-        disabled={!$selectedEntries.length || !canDelete}
-        onclick={() => {
-          showDeleteDialog = true;
+          goBack('/collections');
         }}
       />
-      <Button
-        variant="primary"
-        disabled={!canCreate}
-        label={$_('create')}
-        aria-label={$_('create_new_entry')}
-        keyShortcuts="Accel+E"
-        onclick={() => {
-          goto(`/collections/${name}/new`);
-        }}
-      >
-        {#snippet startIcon()}
-          <Icon name="edit" />
-        {/snippet}
-      </Button>
+    {/if}
+    <h2 role="none">{collectionLabel}</h2>
+    {#if $isSmallScreen}
+      <Spacer flex />
+    {:else}
+      <div role="none" class="description">
+        <TruncatedText>
+          {@html _sanitize(description || '')}
+        </TruncatedText>
+      </div>
+    {/if}
+    {#if isEntryCollection}
+      {#if !$isSmallScreen}
+        <Button
+          variant="ghost"
+          label={$_('delete')}
+          aria-label={$selectedEntries.length === 1
+            ? $_('delete_selected_entry')
+            : $_('delete_selected_entries')}
+          disabled={!$selectedEntries.length || !canDelete}
+          onclick={() => {
+            showDeleteDialog = true;
+          }}
+        />
+      {/if}
+      <FloatingActionButtonWrapper>
+        {#if !$isSmallScreen || ($listedEntries.length && !createDisabled)}
+          <CreateEntryButton
+            collectionName={name}
+            label={$isSmallScreen ? undefined : $_('create')}
+            keyShortcuts="Accel+E"
+          />
+        {/if}
+      </FloatingActionButtonWrapper>
     {/if}
   </Toolbar>
+  {#if isEntryCollection && createDisabled}
+    <Infobar
+      dismissible={false}
+      --sui-infobar-border-width="1px 0"
+      --sui-infobar-message-justify-content="center"
+    >
+      {#if !canCreate}
+        {$_('creating_entries_disabled_by_admin')}
+      {:else}
+        {$_('creating_entries_disabled_by_limit', { values: { limit } })}
+      {/if}
+    </Infobar>
+  {/if}
 {/if}
 
 <DeleteEntriesDialog bind:open={showDeleteDialog} />
@@ -90,8 +133,5 @@
     flex: auto;
     font-size: var(--sui-font-size-small);
     opacity: 0.8;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
   }
 </style>

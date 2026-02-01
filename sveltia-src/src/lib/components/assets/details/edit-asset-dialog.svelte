@@ -1,8 +1,15 @@
 <script>
   import { Dialog, Switch, TextArea } from '@sveltia/ui';
   import { _ } from 'svelte-i18n';
-  import { editingAsset, getAssetBlob, showAssetOverlay } from '$lib/services/assets';
-  import { saveAssets } from '$lib/services/assets/data';
+
+  import { editingAsset } from '$lib/services/assets';
+  import { saveAssets } from '$lib/services/assets/data/create';
+  import { getAssetBlob } from '$lib/services/assets/info';
+  import { showAssetOverlay } from '$lib/services/assets/view';
+
+  /**
+   * @import { Asset } from '$lib/types/private';
+   */
 
   const asset = $derived($editingAsset);
   let open = $state(false);
@@ -70,6 +77,7 @@
   bind:open
   okLabel={$_('save')}
   okDisabled={currentValue === originalValue}
+  okShortcuts="Accel+S"
   onOk={() => {
     saveAsset();
   }}
@@ -89,17 +97,19 @@
   .wrapper {
     display: contents;
 
-    :global(textarea) {
-      min-height: 40dvh;
-      max-height: 80dvh;
-      font-family: var(--sui-font-family-monospace);
-      font-size: var(--sui-font-size-monospace);
-      text-wrap: nowrap;
-      resize: vertical;
-    }
+    :global {
+      textarea {
+        min-height: 40dvh;
+        max-height: 80dvh;
+        font-family: var(--sui-font-family-monospace);
+        font-size: var(--sui-font-size-monospace);
+        text-wrap: nowrap;
+        resize: vertical;
+      }
 
-    &.wrap :global(textarea) {
-      text-wrap: wrap;
+      &.wrap textarea {
+        text-wrap: wrap;
+      }
     }
   }
 </style>

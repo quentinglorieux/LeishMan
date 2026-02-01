@@ -1,19 +1,29 @@
+/**
+ * IMPORTANT: These strings are not ready for localization. DO NOT TRANSLATE THIS FILE.
+ * @see https://github.com/sveltia/sveltia-cms/blob/main/src/lib/locales/README.md
+ */
 export const strings = {
   // Pages & Navigation
   collections: 'Collections',
   contents: 'Contents',
   entries: 'Entries',
+  files: 'Files',
   assets: 'Assets',
   media: 'Media',
   workflow: 'Workflow',
   editorial_workflow: 'Editorial Workflow',
+  menu: 'Menu',
 
   // Account
   user_name: 'User Name',
   password: 'Password',
   sign_in: 'Sign In',
+  sign_in_with_mobile: 'Sign In with Mobile',
+  sign_in_with_mobile_instruction:
+    'Scan the QR code below with your phone or tablet for passwordless sign-in. Your settings will be automatically copied.',
   signed_in_as_x: 'Signed In as {name}',
   working_with_local_repo: 'Working with Local Repository',
+  working_with_test_repo: 'Working with Test Repository',
   sign_out: 'Sign Out',
 
   // Common terms
@@ -28,6 +38,7 @@ export const strings = {
   save: 'Save',
   saving: 'Saving…',
   rename: 'Rename',
+  update: 'Update',
   replace: 'Replace',
   add: 'Add',
   remove: 'Remove',
@@ -41,6 +52,7 @@ export const strings = {
   restore: 'Restore',
   discard: 'Discard',
   searching: 'Searching…',
+  no_results: 'No results found.',
   global: 'Global',
   primary: 'Primary',
   secondary: 'Secondary',
@@ -48,28 +60,42 @@ export const strings = {
   folder: 'Folder',
   api_key: 'API Key',
   details: 'Details',
+  back: 'Back',
+  loading: 'Loading…',
+  later: 'Later',
+  slug: 'Slug',
+  singleton: 'Singleton',
+  singletons: 'Singletons',
 
   // Common errors
   clipboard_error: 'There was an error while copying data.',
 
   // Entrance
-  welcome_to_sveltia_cms: 'Welcome to Leishman CMS',
-  loading_site_config: 'Loading Site Configuration…',
+  welcome_to_sveltia_cms: 'Welcome to Sveltia CMS',
+  loading_cms_config: 'Loading CMS Configuration…',
   loading_site_data: 'Loading Site Data…',
   loading_site_data_error: 'There was an error while loading site data.',
   sign_in_with_x: 'Sign In with {service}',
+  sign_in_with_x_using_token: 'Sign In with {service} Using Token',
+  sign_in_using_pat_title: 'Sign In Using Personal Access Token',
+  sign_in_using_pat_description:
+    'Enter your token below. It must have read/write access to the repository content.',
+  sign_in_using_pat_link: 'You can generate a token on the <a>{service} user settings page</a>.',
+  personal_access_token: 'Personal Access Token',
   authorizing: 'Authorizing…',
   signing_in: 'Signing in…',
   work_with_local_repo: 'Work with Local Repository',
   work_with_local_repo_description:
-    'Click the button to select the root directory of the “{repo}” repository.',
+    'Once prompted, select the root directory of the “{repo}” repository.',
   work_with_local_repo_description_no_repo:
-    'Click the button to select the root directory of your Git repository.',
+    'Once prompted, select the root directory of your Git repository.',
+  work_with_test_repo: 'Work with Test Repository',
   sign_in_error: {
     not_project_root:
       'The folder you have selected is not a repository root directory. Please try again.',
     picker_dismissed: 'A repository root directory could not be selected. Please try again.',
     authentication_aborted: 'Authentication aborted. Please try again.',
+    invalid_token: 'The provided token is invalid. Please check and try again.',
     // Errors defined in Sveltia CMS Authenticator
     // https://github.com/sveltia/sveltia-cms-auth/blob/main/src/index.js
     UNSUPPORTED_BACKEND: 'Your Git backend is not supported by the authenticator.',
@@ -78,8 +104,10 @@ export const strings = {
     AUTH_CODE_REQUEST_FAILED: 'Failed to receive an authorization code. Please try again later.',
     CSRF_DETECTED: 'Potential CSRF attack detected. Authentication flow aborted.',
     TOKEN_REQUEST_FAILED: 'Failed to request an access token. Please try again later.',
+    TOKEN_REFRESH_FAILED: 'Failed to refresh the access token. Please try again later.',
     MALFORMED_RESPONSE: 'Server responded with malformed data. Please try again later.',
   },
+  backend_unsupported_version: 'The {name} backend requires {name} {version} or later.',
   repository_no_access: 'You don’t have access to the “{repo}” repository.',
   repository_not_found: 'The “{repo}” repository doesn’t exist.',
   repository_empty: 'The “{repo}” repository has no branches.',
@@ -92,10 +120,16 @@ export const strings = {
   entry_parse_errors:
     'There were errors while parsing entry files. Check the browser console for details.',
 
+  // Onboarding
+  mobile_promo_title: 'Sveltia CMS is now available on mobile!',
+  mobile_promo_button: 'Give it a try',
+
   // Global toolbar
   visit_live_site: 'Visit Live Site',
   switch_page: 'Switch Page',
-  search_placeholder: 'Search for entries and assets…',
+  search_placeholder_entries: 'Search for entries…',
+  search_placeholder_assets: 'Search for assets…',
+  search_placeholder_all: 'Search for entries and assets…',
   create_entry_or_assets: 'Create Entry or Assets',
   publish_changes: 'Publish Changes',
   publishing_changes: 'Publishing Changes…',
@@ -107,22 +141,30 @@ export const strings = {
   live_site: 'Live Site',
   git_repository: 'Git Repository',
   settings: 'Settings',
-  site_config: 'Site Configuration',
+  cms_config: 'CMS Configuration',
   show_help_menu: 'Show Help Menu',
   help: 'Help',
   keyboard_shortcuts: 'Keyboard Shortcuts',
   documentation: 'Documentation',
-  release_notes: 'Release Note 0.56',
+  release_notes: 'Release Notes',
+  announcements: 'Announcements',
   version_x: 'Version {version}',
   report_issue: 'Report Issue',
   share_feedback: 'Share Feedback',
   get_help: 'Get Help',
   join_discord: 'Join Us on Discord',
+  bluesky: 'Follow Us on Bluesky',
 
   // Update notification
   update_available: 'The latest version of Sveltia CMS is available.',
   update_now: 'Update Now',
-  import : 'Import from DOI',
+
+  // Custom features
+  import: 'Import from DOI',
+  import_entries: 'Import entries',
+  doi_empty: 'DOI cannot be empty.',
+  doi_fetch_error: 'Error fetching DOI metadata.',
+  nextcloud: 'Nextcloud',
 
   // Backend status indicator
   backend_status: {
@@ -135,13 +177,19 @@ export const strings = {
   // Library
   content_library: 'Content Library',
   asset_library: 'Asset Library',
+  asset_location: {
+    repository: 'Your Site',
+    external: 'External Locations',
+    stock_photos: 'Stock Photos',
+  },
   collection_assets: 'Collection Assets',
-  entry_assets: 'Entry Assets',
   entry_list: 'Entry List',
   file_list: 'File List',
   asset_list: 'Asset List',
   x_collection: '“{collection}” Collection',
   x_asset_folder: '“{folder}” Asset Folder',
+  viewing_collection_list: 'You’re now viewing the collection list.',
+  viewing_asset_folder_list: 'You’re now viewing the asset folder list.',
   viewing_x_collection_many_entries:
     'You’re now viewing the “{collection}” collection, which has {count} entries.',
   viewing_x_collection_one_entry:
@@ -154,17 +202,21 @@ export const strings = {
     'You’re now viewing the “{folder}” asset folder, which has one asset.',
   viewing_x_asset_folder_no_assets:
     'You’re now viewing the “{folder}” asset folder, which has no assets yet.',
+  singleton_selected_announcement: 'Press Enter to edit the “{file}” file.',
   collection_not_found: 'Collection not found',
   file_not_found: 'File not found.',
   x_of_x_selected: '{selected} of {total} selected',
   switch_view: 'Switch View',
   list_view: 'List View',
   grid_view: 'Grid View',
+  switch_to_list_view: 'Switch to List View',
+  switch_to_grid_view: 'Switch to Grid View',
   sort: 'Sort',
   sorting_options: 'Sorting Options',
   sort_keys: {
     none: 'None',
     name: 'Name',
+    slug: 'Slug',
     commit_author: 'Updated by',
     commit_date: 'Updated on',
   },
@@ -187,12 +239,24 @@ export const strings = {
   hide_assets: 'Hide Assets',
   show_info: 'Show Info',
   hide_info: 'Hide Info',
-  asset_folders: 'Asset Folders',
   all_assets: 'All Assets',
-  uncategorized: 'Uncategorized',
+  global_assets: 'Global Assets',
+  entry_not_found: 'Entry not found.',
+  creating_entries_disabled_by_admin:
+    'Creating new entries in this collection is disabled by the administrator.',
+  creating_entries_disabled_by_limit:
+    'You cannot add new entries to this collection because it has reached its limit of {limit} entries.',
+  back_to_collection: 'Back to Collection',
+  collection_list: 'Collection List',
+  back_to_collection_list: 'Back to Collection List',
+  asset_folder_list: 'Asset Folder List',
+  back_to_asset_folder_list: 'Back to Asset Folder List',
+  search_results: 'Search Results',
   search_results_for_x: 'Search Results for “{terms}”',
-  viewing_search_results:
-    'You’re now viewing search results for “{terms}”. We’ve found {entries} and {assets}.',
+  viewing_entry_search_results:
+    'You’re now viewing search results for “{terms}”. We’ve found {entries}.',
+  viewing_asset_search_results:
+    'You’re now viewing search results for “{terms}”. We’ve found {assets}.',
   many_entries: '{count} entries',
   one_entry: 'one entry',
   no_entries: 'no entries',
@@ -221,14 +285,18 @@ export const strings = {
   },
   replace_asset: 'Replace Asset',
   replace_x: 'Replace {name}',
-  browse_file: 'Click to browse',
-  drop_or_browse_file: 'Drop a file here or click to browse',
-  drop_or_browse_files: 'Drop files here or click to browse',
-  drop_or_browse_image_file: 'Drop an image file here or click to browse',
-  drop_or_browse_image_files: 'Drop image files here or click to browse',
+  click_to_browse: 'Click to browse…',
+  tap_to_browse: 'Tap to browse…',
+  drop_file_or_click_to_browse: 'Drop a file here or click to browse…',
+  drop_files_or_click_to_browse: 'Drop files here or click to browse…',
+  drop_image_file_or_click_to_browse: 'Drop an image file here or click to browse…',
+  drop_image_files_or_click_to_browse: 'Drop image files here or click to browse…',
   drop_file_here: 'Drop a file here',
   drop_files_here: 'Drop files here',
-  drop_files_type_mismatch: 'The dropped file is not the “{type}” type. Please try again.',
+  unsupported_file_type: 'Unsupported File Type',
+  dropped_file_type_mismatch: 'The dropped file is not the {type} type. Please try again.',
+  dropped_image_type_mismatch:
+    'The dropped file is not supported. Only an AVIF, GIF, JPEG, PNG, WebP or SVG image is accepted. Please try again.',
   choose_file: 'Choose File',
   choose_files: 'Choose Files',
   delete_asset: 'Delete Asset',
@@ -255,12 +323,28 @@ export const strings = {
   confirm_deleting_all_entries: 'Are you sure to delete all the entries?',
   confirm_deleting_all_entries_with_assets:
     'Are you sure to delete all the entries and associated assets?',
+  processing_file: 'Processing a file. This may take a while.',
+  processing_files: 'Processing files. This may take a while.',
+  uploading_files: 'Uploading Files',
   confirm_replacing_file: 'Are you sure to replace “{name}” with the following file?',
   confirm_uploading_file: 'Are you sure to save the following file to the “{folder}” folder?',
   confirm_uploading_files:
     'Are you sure to save the following {count} files to the “{folder}” folder?',
+  oversized_files: 'Oversized Files',
+  warning_oversized_file:
+    'This file cannot be uploaded because it exceeds the maximum size of {size}. Please reduce the size or select a different file.',
+  warning_oversized_files:
+    'These files cannot be uploaded because they exceed the maximum size of {size}. Please reduce the sizes or select different files.',
+  uploading_files_progress: 'Uploading files…',
+  uploading_file_progress: 'Uploading file…',
+  uploading_files_failed: 'Files could not be uploaded',
+  uploading_file_failed: 'File could not be uploaded',
+  file_meta: '{type} · {size}',
+  file_meta_converted_from_x: '(converted from {type})',
   no_entries_created: 'This collection has no entries yet.',
   create_new_entry: 'Create New Entry',
+  entry: 'Entry',
+  index_file: 'Index File',
   no_files_in_collection: 'No files available in this collection.',
   asset_info: 'Asset Info',
   select_asset_show_info: 'Select an asset to show the info.',
@@ -299,13 +383,13 @@ export const strings = {
   draft_backup_restored: 'Draft backup has been restored.',
   draft_backup_deleted: 'Draft backup has been deleted.',
   cancel_editing: 'Cancel Editing',
-  creating_x: 'Creating {name}',
-  creating_x_collection_entry: 'You’re now creating a new entry in the “{collection}” collection.',
-  editing_x_in_x: 'Editing {collection} › {entry}',
-  editing_x_collection_entry:
+  create_entry_title: 'Creating {name}',
+  create_entry_announcement: 'You’re now creating a new entry in the “{collection}” collection.',
+  edit_entry_title: '{collection} › {entry}',
+  edit_entry_announcement:
     'You’re now editing the “{entry}” entry in the “{collection}” collection.',
-  editing_x_collection_file:
-    'You’re now editing the “{file}” file in the “{collection}” collection.',
+  edit_file_announcement: 'You’re now editing the “{file}” file in the “{collection}” collection.',
+  edit_singleton_announcement: 'You’re now editing the “{file}” file.',
   save_and_publish: 'Save and Publish',
   save_without_publishing: 'Save without Publishing',
   show_editor_options: 'Show Editor Options',
@@ -313,7 +397,8 @@ export const strings = {
   show_preview: 'Show Preview',
   sync_scrolling: 'Sync Scrolling',
   switch_locale: 'Switch Locale',
-  locale_content_errors: 'One more more fields in this locale content have an error.',
+  locale_content_disabled_short: '(disabled)',
+  locale_content_error_short: '(error)',
   edit: 'Edit',
   preview: 'Preview',
   edit_x_locale: 'Edit {locale} Content',
@@ -324,7 +409,7 @@ export const strings = {
   x_field: '“{field}” Field',
   show_field_options: 'Show Field Options',
   field_options: 'Field Options',
-  unsupported_widget_x: 'Unsupported widget: {name}',
+  unsupported_field_type_x: 'Unsupported field type: {name}',
   enable_x_locale: 'Enable {locale}',
   reenable_x_locale: 'Reenable {locale}',
   disable_x_locale: 'Disable {locale}',
@@ -344,6 +429,13 @@ export const strings = {
   translate_from_x: 'Translate from {locale}',
   revert_changes: 'Revert Changes',
   revert_all_changes: 'Revert All Changes',
+  edit_slug: 'Edit Slug',
+  edit_slug_warning:
+    'Changing the slug may break internal and external links to the entry. Currently, Sveltia CMS does not update references created with Relation fields, so you’ll need to manually update such references along with other links.',
+  edit_slug_error: {
+    empty: 'The slug cannot be empty.',
+    duplicate: 'This slug is used for another entry.',
+  },
   required: 'Required',
   editor: {
     translation: {
@@ -414,8 +506,11 @@ export const strings = {
   dimensions: 'Dimensions',
   duration: 'Duration',
   used_in: 'Used in',
+  created_date: 'Created Date',
+  location: 'Location',
+  map_lat_lng: 'Map showing latitude {latitude}, longitude {longitude}',
 
-  // Widgets
+  // Fields
   select_file: 'Select File',
   select_image: 'Select Image',
   replace_file: 'Replace File',
@@ -426,6 +521,8 @@ export const strings = {
   move_up: 'Move Up',
   move_down: 'Move Down',
   add_x: 'Add {name}',
+  add_item_above: 'Add Item Above',
+  add_item_below: 'Add Item Below',
   select_list_type: 'Select List Type',
   opacity: 'Opacity',
   unselected_option: '(None)',
@@ -437,11 +534,12 @@ export const strings = {
     search_for_file: 'Search for Files',
     search_for_image: 'Search for Images',
     locations: 'Locations',
-    location: {
-      local: 'Your Computer',
-      repository: 'This Repository',
-      external_locations: 'External Locations',
-      stock_photos: 'Stock Photos',
+    folder: {
+      field: 'Field Assets',
+      entry: 'Entry Assets',
+      file: 'File Assets',
+      collection: 'Collection Assets',
+      global: 'Global Assets',
     },
     error: {
       invalid_key: 'Your API Key is invalid or expired. Please double check and try again.',
@@ -455,12 +553,12 @@ export const strings = {
     enter_image_url: 'Enter URL of the image:',
     large_file: {
       title: 'Large File',
-      description: 'This file exceeds the maximum size of {size}. Please choose another.',
     },
     photo_credit: {
       title: 'Photo Credit',
       description: 'Use the following credit if possible:',
     },
+    unsaved: 'Unsaved',
   },
   character_counter: {
     min_max: {
@@ -493,6 +591,11 @@ export const strings = {
     empty_key: 'Key is required.',
     duplicate_key: 'Key must be unique.',
   },
+  find_place: 'Find a Place',
+  use_your_location: 'Use Your Location',
+  geolocation_error_title: 'Geolocation Error',
+  geolocation_error_body: 'There was an error while retrieving your location.',
+  geolocation_unsupported: 'Geolocation API is not supported by this browser.',
 
   // Content preview
   boolean: {
@@ -504,34 +607,146 @@ export const strings = {
   cloud_storage: {
     invalid: 'The service is not configured properly.',
     auth: {
-      initial: 'Sign into {service} to insert media on the storage to entry fields.',
-      requested: 'Signing in…',
-      error: 'User name or password is incorrect. Please double check and try again.',
+      api_key: {
+        initial: 'Enter your API key to sign in to {service}.',
+        requested: 'Validating…',
+        error: 'The provided API key is invalid. Please double check and try again.',
+      },
+      password: {
+        initial: 'Enter your password to sign in to {service}.',
+        requested: 'Signing in…',
+        error: 'User name or password is incorrect. Please double check and try again.',
+      },
+    },
+    cloudinary: {
+      iframe_title: 'Cloudinary media library',
+      activate: {
+        button_label: 'Activate Cloudinary',
+        description: 'After signing in, click the Sign In button again to continue.', // Don’t translate "Sign In" here
+      },
+      auth: {
+        initial: 'Enter you API Secret to use Cloudinary.', // Not "API Key"
+        requested: 'Validating…',
+        error: 'The provided API Secret is invalid. Please double check and try again.',
+      },
+    },
+    uploadcare: {
+      auth: {
+        initial: 'Enter your API Secret Key to use Uploadcare.',
+        requested: 'Validating…',
+        error: 'The provided Secret Key is invalid. Please double check and try again.',
+      },
     },
   },
 
   // Configuration
   config: {
+    one_error: 'There is an error in the CMS configuration. Please solve the issue and try again.',
+    many_errors:
+      'There are errors in the CMS configuration. Please solve the issues and try again.',
+    error_locator: {
+      collection: '{collection} collection',
+      file: '{file} file',
+      field: '`{field}` field',
+    },
     error: {
       no_secure_context: 'Sveltia CMS only works with HTTPS or localhost URLs.',
       fetch_failed: 'The configuration file could not be retrieved.',
       fetch_failed_not_ok: 'HTTP response returned with status {status}.',
       parse_failed: 'The configuration file could not be parsed.',
       parse_failed_invalid_object: 'The configuration file is not a valid JavaScript object.',
-      no_collection: 'Collections are not defined in the configuration file.',
-      no_backend: 'The backend is not defined in the configuration file.',
-      unsupported_backend: 'The configured “{name}” backend is not supported.',
-      no_repository: 'The repository is not defined in the configuration file.',
-      oauth_implicit_flow: 'The configured authentication method (implicit flow) is not supported.',
-      oauth_no_app_id: 'OAuth application ID is not defined in the configuration file.',
-      no_media_folder: 'The media folder is not defined in the configuration file.',
-      unexpected: 'There was an unexpected error while validating the configuration file.',
-      try_again: 'Please solve the issue and try again.',
+      parse_failed_unsupported_type:
+        'The configuration file is not a valid file type. Only YAML, TOML and JSON are supported.',
+      no_collection: 'Collections are not defined.',
+      missing_backend: 'The backend is not defined.',
+      missing_backend_name: 'The backend name is not defined.',
+      unsupported_known_backend:
+        'The {name} backend is [not supported](https://sveltiacms.app/en/docs/migration/netlify-decap-cms#compatibility) in Sveltia CMS.',
+      unsupported_custom_backend:
+        'Custom backends are [not supported](https://sveltiacms.app/en/docs/migration/netlify-decap-cms#compatibility) in Sveltia CMS.',
+      unsupported_backend_suggestion:
+        'Use one of the [supported backends](https://sveltiacms.app/en/docs/backends#supported-backends) instead.',
+      missing_repository: 'The repository is not defined.',
+      invalid_repository:
+        'The configured repository is invalid. It must be in “owner/repo” format.',
+      oauth_implicit_flow:
+        'The configured authentication method (implicit flow) is not supported in Sveltia CMS. Use PKCE authorization instead.',
+      oauth_no_app_id: 'OAuth application ID is not defined.',
+      missing_media_folder: 'The media folder is not defined.',
+      invalid_media_folder: 'The configured media folder is invalid. It must be a string.',
+      invalid_public_folder: 'The configured public folder is invalid. It must be a string.',
+      public_folder_relative_path:
+        'The configured public folder is invalid. It must be an absolute path starting with “/”.',
+      public_folder_absolute_url:
+        'An absolute URL for the public folder option is not supported in Sveltia CMS.',
+      invalid_collection_no_options:
+        'The collection must have either the `folder`, `files` or `divider` option defined.',
+      invalid_collection_multiple_options:
+        'The collection cannot have the `folder`, `files` and `divider` options together.',
+      file_format_mismatch: 'The `{extension}` extension doesn’t match the `{format}` format.',
+      invalid_slug_slash:
+        'The slug template `{slug}` is invalid as it cannot contain slashes. To organize entries in subfolders, use the `path` option instead of `slug`.',
+      missing_collection_name:
+        'The collection {count} must have the `name` option defined as a non-empty string.',
+      invalid_collection_name:
+        'The collection name `{name}` is invalid. It must not contain special characters.',
+      duplicate_collection_name:
+        'Collection names must be unique, but `{name}` is used more than once.',
+      missing_collection_file_name:
+        'The collection file {count} must have the `name` option defined as a non-empty string.',
+      invalid_collection_file_name:
+        'The collection file name `{name}` is invalid. It must not contain special characters.',
+      duplicate_collection_file_name:
+        'Collection file names must be unique, but `{name}` is used more than once.',
+      missing_field_name:
+        'The field {count} must have the `name` option defined as a non-empty string.',
+      invalid_field_name:
+        'The field name `{name}` is invalid. It must not contain special characters.',
+      duplicate_field_name: 'Field names must be unique, but `{name}` is used more than once.',
+      missing_variable_type:
+        'The variable type {count} must have the `name` option defined as a non-empty string.',
+      invalid_variable_type:
+        'The variable type name `{name}` is invalid. It must not contain special characters.',
+      duplicate_variable_type:
+        'Variable type names must be unique, but `{name}` is used more than once.',
+      date_field_type:
+        'The deprecated Date field type is not supported in Sveltia CMS. Use the DateTime field type with the `time_format:false` option instead.',
+      unsupported_deprecated_option:
+        'The deprecated `{prop}` option is not supported in Sveltia CMS. Use the `{newProp}` option instead.',
+      allow_multiple:
+        'The `allow_multiple` option is not supported in Sveltia CMS. Use the `multiple` option instead, which defaults to `false`.',
+      invalid_list_field:
+        'The List field cannot have the `field`, `fields` and `types` options together.',
+      invalid_list_variable_type:
+        'The List field’s variable type is invalid. The `widget` option is set to `{widget}` but it must be `object`.',
+      invalid_object_field:
+        'The Object field cannot have the `fields` and `types` options together.',
+      object_field_missing_fields:
+        'The Object field must have either the `fields` or `types` option defined.',
+      relation_field_invalid_collection:
+        'The referenced `{collection}` collection is invalid or not defined.',
+      relation_field_invalid_collection_file:
+        'The referenced `{file}` file is invalid or not defined.',
+      relation_field_missing_file_name:
+        'The `file` option must be defined for a relation to a file collection.',
+      relation_field_invalid_value_field:
+        'The referenced value field `{field}` is invalid or not defined.',
+      unexpected: 'Unexpected error',
     },
+    warning: {
+      editorial_workflow_unsupported: 'Editorial workflow is not yet supported in Sveltia CMS.',
+      open_authoring_unsupported: 'Open authoring is not yet supported in Sveltia CMS.',
+      nested_collections_unsupported: 'Nested collections are not yet supported in Sveltia CMS.',
+      unsupported_ignored_option:
+        'The `{prop}` option is not supported in Sveltia CMS. It will be ignored.',
+    },
+    compatibility_link:
+      'See the compatibility notes for details: https://sveltiacms.app/en/docs/migration/netlify-decap-cms#compatibility',
   },
 
   // Backends
   local_backend: {
+    indicator: 'Local',
     unsupported_browser:
       'Local development is not supported in your browser. Please use Chrome or Edge instead.',
     disabled: 'Local development is disabled in your browser. <a>Here’s how to enable it</a>.',
@@ -565,37 +780,64 @@ export const strings = {
       dark: 'Dark',
       light: 'Light',
     },
-    languages: {
-      title: 'Languages',
+    language: {
+      title: 'Language',
       ui_language: {
         title: 'User Interface Language',
         select_language: 'Select Language',
-      },
-      translator: {
-        title: '{service} Translator',
-        field_label: '{service} API Authentication Key',
-        description:
-          'Sign up for <a {homeHref}>{service} API</a> and enter <a {apiKeyHref}>your Authentication Key</a> here to enable quick translation of text entry fields.',
       },
     },
     contents: {
       title: 'Contents',
       editor: {
         title: 'Editor',
+        use_draft_backup: {
+          switch_label: 'Automatically back up entry drafts',
+        },
         close_on_save: {
           switch_label: 'Close the editor after saving a draft',
         },
+        close_with_escape: {
+          switch_label: 'Close the editor with the Escape key',
+        },
+      },
+    },
+    i18n: {
+      title: 'Internationalization',
+      translators: {
+        default: {
+          title: 'Default Translation Service',
+          select_service: 'Select Service',
+        },
+        api_keys: {
+          title: 'Translation Service API Keys',
+          description: 'Manage API keys for <a>translation services</a>.',
+        },
+        field_label: '{service} Key',
+        description:
+          'Sign up for <a {homeHref}>{service}</a> and enter <a {apiKeyHref}>your API Key</a> here to enable quick translation of text entry fields.',
       },
     },
     media: {
       title: 'Media',
       stock_photos: {
-        title: '{service} Free Images',
+        api_keys: {
+          title: 'Stock Photo Service API Keys',
+          description: 'Manage API keys for <a>stock photo services</a>.',
+        },
         field_label: '{service} API Key',
         description:
           'Sign up for <a {homeHref}>{service} API</a> and enter <a {apiKeyHref}>your API Key</a> here to insert free stock photos to image entry fields.',
         credit: 'Photos provided by {service}',
       },
+      cloud_storage: {
+        api_keys: {
+          title: 'Cloud Storage Service API Keys',
+          description: 'Manage API keys for <a>cloud storage services</a>.',
+        },
+        field_label: '{service} API Key',
+      },
+      libraries_disabled: 'External media libraries are disabled by the administrator.',
     },
     accessibility: {
       title: 'Accessibility',
@@ -607,19 +849,31 @@ export const strings = {
     },
     advanced: {
       title: 'Advanced',
-      deploy_hook: {
-        title: 'Deploy Hook',
-        description:
-          'Enter a webhook URL to be called when you manually trigger a deployment by selecting Publish Changes. This can be left blank if you’re using GitHub Actions.',
-        field_label: 'Deploy Hook URL',
-        url_saved: 'Webhook URL has been saved.',
-        url_removed: 'Webhook URL has been removed.',
+      beta: {
+        title: 'Beta Features',
+        description: 'Enable some beta features that may be unstable or unlocalized.',
+        switch_label: 'Join Beta Program',
       },
       developer_mode: {
         title: 'Developer Mode',
         description:
-          'Enable some features, including detailed console logs and native context menus.',
+          'Enable some developer-oriented features, including detailed console logs and native context menus.',
         switch_label: 'Enable Developer Mode',
+      },
+      deploy_hook: {
+        title: 'Deploy Hook',
+        description:
+          'Enter a webhook URL to be called when you manually trigger a deployment by selecting Publish Changes. This can be left blank if you’re using GitHub Actions.',
+        url: {
+          field_label: 'Hook URL',
+          saved: 'Hook URL has been saved.',
+          removed: 'Hook URL has been removed.',
+        },
+        auth: {
+          field_label: 'Authorization header (e.g. Bearer <token>) (optional)',
+          saved: 'Authorization header has been saved.',
+          removed: 'Authorization header has been removed.',
+        },
       },
     },
   },
@@ -648,9 +902,13 @@ export const strings = {
     tiff: 'TIFF image',
     webp: 'WebP image',
     avi: 'AVI video',
+    m4v: 'MP4 video',
+    mov: 'QuickTime video',
     mp4: 'MP4 video',
     mpeg: 'MPEG video',
-    ogv: 'OGG video',
+    mpg: 'MPEG video',
+    ogg: 'Ogg video',
+    ogv: 'Ogg video',
     ts: 'MPEG video',
     webm: 'WebM video',
     '3gp': '3GPP video',
@@ -658,7 +916,9 @@ export const strings = {
     aac: 'AAC audio',
     mid: 'MIDI',
     midi: 'MIDI',
+    m4a: 'MP4 audio',
     mp3: 'MP3 audio',
+    oga: 'Ogg audio',
     opus: 'OPUS audio',
     wav: 'WAV audio',
     weba: 'WebM audio',
@@ -692,4 +952,3 @@ export const strings = {
     tb: '{size} TB',
   },
 };
-

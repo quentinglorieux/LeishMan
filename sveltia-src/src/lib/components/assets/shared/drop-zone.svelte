@@ -1,19 +1,27 @@
 <script>
-  import { Button, Icon } from '@sveltia/ui';
+  import { AlertDialog, Button, FilePicker, Icon } from '@sveltia/ui';
   import { scanFiles } from '@sveltia/utils/file';
-  import { _ } from 'svelte-i18n';
+  import { onMount } from 'svelte';
+  import { _, locale as appLocale } from 'svelte-i18n';
+
   import UploadAssetsPreview from '$lib/components/assets/shared/upload-assets-preview.svelte';
-  import FilePicker from '$lib/components/assets/shared/file-picker.svelte';
+  import { getListFormatter } from '$lib/services/contents/i18n';
+  import { hasMouse } from '$lib/services/user/env';
+  import { SUPPORTED_IMAGE_TYPES } from '$lib/services/utils/media/image';
+
+  /**
+   * @import { Snippet } from 'svelte';
+   */
 
   /**
    * @typedef {object} Props
-   * @property {string} [accept] - The `accept` attribute for the `<input type="file">`.
-   * @property {boolean} [disabled] - Whether to disable new file selection.
-   * @property {boolean} [multiple] - Whether to accept multiple files.
-   * @property {boolean} [showUploadButton] - Whether to show the upload button.
-   * @property {boolean} [showFilePreview] - Whether to show file preview after files are selected.
-   * @property {(detail: { files: File[] }) => void} [onSelect] - Custom `select` event handler.
-   * @property {import('svelte').Snippet} [children] - Slot content.
+   * @property {string} [accept] The `accept` attribute for the `<input type="file">`.
+   * @property {boolean} [disabled] Whether to disable new file selection.
+   * @property {boolean} [multiple] Whether to accept multiple files.
+   * @property {boolean} [showUploadButton] Whether to show the upload button.
+   * @property {boolean} [showFilePreview] Whether to show file preview after files are selected.
+   * @property {(detail: { files: File[] }) => void} [onDrop] Custom `Drop` event handler.
+   * @property {Snippet} [children] Slot content.
    */
 
   /** @type {Props} */
@@ -24,17 +32,22 @@
     multiple = false,
     showUploadButton = false,
     showFilePreview = false,
-    onSelect = undefined,
+    onDrop = undefined,
     children = undefined,
     /* eslint-enable prefer-const */
   } = $props();
 
+  /** @type {HTMLElement | undefined} */
+  let dropTarget = $state();
   let dragging = $state(false);
   let typeMismatch = $state(false);
+  let showTypeMismatchAlertDialog = $state(false);
   /** @type {FilePicker | undefined} */
   let filePicker = $state();
   /** @type {File[]}  */
   let files = $state([]);
+
+  const showDefaultContent = $derived(showUploadButton || (showFilePreview && files.length));
 
   /**
    * Open the file picker to let the user choose file(s).
@@ -47,21 +60,53 @@
    * Reset the file list.
    */
   export const reset = () => {
+    // Prevent an infinite loop
+    if (!files.length) {
+      return;
+    }
+
     files = [];
-    onSelect?.({ files });
+    onDrop?.({ files });
   };
 
   /**
    * Cache the selected files, and notify the list.
-   * @param {File[]} allFiles - Files.
+   * @param {File[]} allFiles Files.
    */
   const updateFileList = (allFiles) => {
     files = multiple ? allFiles : allFiles.slice(0, 1);
-    onSelect?.({ files });
+    onDrop?.({ files });
   };
+
+  onMount(() => {
+    dropTarget?.addEventListener('Select', (event) => {
+      onDrop?.({ files: /** @type {CustomEvent} */ (event).detail.files });
+    });
+  });
+
+  $effect(() => {
+    if (!showDefaultContent && typeMismatch) {
+      showTypeMismatchAlertDialog = true;
+    }
+  });
 </script>
 
+{#snippet typeMismatchAlert()}
+  {#if accept === SUPPORTED_IMAGE_TYPES.join(',')}
+    {$_('dropped_image_type_mismatch')}
+  {:else}
+    {$_('dropped_file_type_mismatch', {
+      values: {
+        type: getListFormatter(/** @type {string} */ ($appLocale), {
+          type: 'disjunction',
+        }).format(/** @type {string} */ (accept).split(/,\s*/)),
+      },
+    })}
+  {/if}
+{/snippet}
+
 <div
+  bind:this={dropTarget}
   role="none"
   class="drop-target"
   ondragover={(event) => {
@@ -116,10 +161,16 @@
     with an external upload button. In that case, the file preview, if enabled, should replace the
     default slot content.
   -->
-  {#if showUploadButton || (showFilePreview && files.length)}
+  {#if showDefaultContent}
     <div role="none" class="content">
       {#if showUploadButton}
-        <div role="none">{$_(multiple ? 'drop_or_browse_files' : 'drop_or_browse_file')}</div>
+        <div role="none">
+          {#if $hasMouse}
+            {$_(multiple ? 'drop_files_or_click_to_browse' : 'drop_file_or_click_to_browse')}
+          {:else}
+            {$_('tap_to_browse')}
+          {/if}
+        </div>
         <div role="none">
           <Button
             variant="primary"
@@ -135,7 +186,9 @@
           </Button>
         </div>
         {#if typeMismatch}
-          <div role="alert">{$_('drop_files_type_mismatch', { values: { type: accept } })}</div>
+          <div role="alert">
+            {@render typeMismatchAlert()}
+          </div>
         {/if}
       {/if}
       {#if showFilePreview && files.length}
@@ -164,6 +217,12 @@
   }}
 />
 
+{#if !showDefaultContent}
+  <AlertDialog bind:open={showTypeMismatchAlertDialog} title={$_('unsupported_file_type')}>
+    {@render typeMismatchAlert()}
+  </AlertDialog>
+{/if}
+
 <style lang="scss">
   .drop-target {
     display: flex;
@@ -173,19 +232,17 @@
     height: 100%;
     pointer-events: auto;
 
-    & > :global(.group) {
-      overflow-y: auto;
-      padding: 16px;
-      width: 100%;
-      height: 100%;
-    }
+    :global {
+      & > .group {
+        overflow-y: auto;
+        padding: 16px;
+        width: 100%;
+        height: 100%;
+      }
 
-    & > * {
-      pointer-events: none;
-    }
-
-    :global(button) {
-      pointer-events: auto;
+      button:not(:disabled) {
+        pointer-events: auto;
+      }
     }
   }
 

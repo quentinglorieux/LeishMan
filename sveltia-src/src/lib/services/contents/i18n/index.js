@@ -1,96 +1,15 @@
-import { isObject } from '@sveltia/utils/object';
-import { locale as appLocale } from 'svelte-i18n';
 import { get } from 'svelte/store';
-import { siteConfig } from '$lib/services/config';
+import { locale as appLocale } from 'svelte-i18n';
 
 /**
- * The default, normalized i18n configuration with no locales defined.
- * @type {I18nConfig}
+ * @import { InternalI18nOptions, InternalLocaleCode, } from '$lib/types/private';
+ * @import { LocaleCode } from '$lib/types/public';
  */
-export const defaultI18nConfig = {
-  i18nEnabled: false,
-  saveAllLocales: true,
-  locales: ['_default'],
-  defaultLocale: '_default',
-  structure: 'single_file',
-  canonicalSlug: {
-    key: 'translationKey',
-    value: '{{slug}}',
-  },
-};
-
-/**
- * Get the normalized i18n configuration for the given collection or collection file.
- * @param {RawCollection} collection - Developer-defined collection.
- * @param {RawCollectionFile} [file] - Developer-defined collection file.
- * @returns {I18nConfig} Config.
- * @see https://decapcms.org/docs/i18n/
- */
-export const getI18nConfig = (collection, file) => {
-  const _siteConfig = /** @type {SiteConfig} */ (get(siteConfig));
-  /** @type {RawI18nConfig | undefined} */
-  let config;
-
-  if (isObject(_siteConfig.i18n)) {
-    config = /** @type {RawI18nConfig} */ (_siteConfig.i18n);
-
-    if (collection.i18n) {
-      if (isObject(collection.i18n)) {
-        Object.assign(config, collection.i18n);
-      }
-
-      if (file) {
-        if (file.i18n) {
-          if (isObject(file.i18n)) {
-            Object.assign(config, file.i18n);
-          }
-        } else {
-          config = undefined;
-        }
-      }
-    } else {
-      config = undefined;
-    }
-  }
-
-  const {
-    structure = 'single_file',
-    locales = [],
-    default_locale: defaultLocale = undefined,
-    save_all_locales: saveAllLocales = true,
-    canonical_slug: {
-      key: canonicalSlugKey = 'translationKey',
-      value: canonicalSlugTemplate = '{{slug}}',
-    } = {},
-  } = /** @type {RawI18nConfig} */ (config ?? {});
-
-  const i18nEnabled = !!locales.length;
-
-  return {
-    i18nEnabled,
-    saveAllLocales,
-    locales: i18nEnabled ? locales : ['_default'],
-    defaultLocale: !i18nEnabled
-      ? '_default'
-      : defaultLocale && locales.includes(defaultLocale)
-        ? defaultLocale
-        : locales[0],
-    structure: !file
-      ? structure
-      : file.file.includes('{{locale}}')
-        ? 'multiple_files'
-        : 'single_file',
-    canonicalSlug: {
-      key: canonicalSlugKey,
-      value: canonicalSlugTemplate,
-    },
-  };
-};
 
 /**
  * Get the canonical locale of the given locale that can be used for various `Intl` methods.
- * @param {LocaleCode} locale - Locale.
- * @returns {StandardLocaleCode | undefined} Locale or `undefined` if not determined.
+ * @param {InternalLocaleCode} locale Locale.
+ * @returns {LocaleCode | undefined} Locale or `undefined` if not determined.
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl#locales_argument
  */
 export const getCanonicalLocale = (locale) => {
@@ -109,35 +28,39 @@ export const getCanonicalLocale = (locale) => {
 
 /**
  * Translate the given locale code in the application UI locale.
- * @param {LocaleCode} locale - Locale code like `en`.
- * @returns {string} Locale label like `English`. If the formatter raises an error, just return the
- * locale code as is.
+ * @param {InternalLocaleCode} locale Locale code like `en`.
+ * @param {object} [options] Options.
+ * @param {InternalLocaleCode} [options.displayLocale] Locale code to display the locale name. If
+ * not given, use the current application locale. Default is `en`.
+ * @returns {string | undefined} Locale label like `English`. If the locale is not valid, returns
+ * `undefined`.
  */
-export const getLocaleLabel = (locale) => {
+export const getLocaleLabel = (
+  locale,
+  { displayLocale = getCanonicalLocale(get(appLocale) ?? 'en') } = {},
+) => {
   const canonicalLocale = getCanonicalLocale(locale);
 
   if (!canonicalLocale) {
-    return locale;
+    return undefined;
   }
 
-  const formatter = new Intl.DisplayNames(/** @type {string} */ (get(appLocale)), {
-    type: 'language',
-  });
+  const formatter = new Intl.DisplayNames(displayLocale, { type: 'language' });
 
   try {
-    return formatter.of(canonicalLocale) ?? locale;
+    return formatter.of(canonicalLocale);
   } catch (/** @type {any} */ ex) {
     // eslint-disable-next-line no-console
     console.error(ex);
 
-    return locale;
+    return undefined;
   }
 };
 
 /**
  * Get a simple list formatter.
- * @param {LocaleCode} locale - Locale code.
- * @param {Partial<Intl.ListFormatOptions>} options - Format options.
+ * @param {InternalLocaleCode} locale Locale code.
+ * @param {Partial<Intl.ListFormatOptions>} options Format options.
  * @returns {Intl.ListFormat} Formatter.
  */
 export const getListFormatter = (locale, options = {}) =>
@@ -146,3 +69,25 @@ export const getListFormatter = (locale, options = {}) =>
     type: 'conjunction',
     ...options,
   });
+
+/**
+ * Get the complete path for the given entry folder, including the locale.
+ * @param {object} args Arguments.
+ * @param {InternalI18nOptions} args._i18n I18n configuration.
+ * @param {InternalLocaleCode} args.locale Locale code.
+ * @param {string} args.path Collection file path with `{{locale}}` placeholder.
+ * @returns {string} Complete path, including the locale.
+ */
+export const getLocalePath = ({ _i18n, locale, path }) => {
+  const { defaultLocale, omitDefaultLocaleFromFileName } = _i18n;
+
+  // Remove the default locale from the file name (for Zola compatibility)
+  // @see https://github.com/sveltia/sveltia-cms/discussions/394
+  if (omitDefaultLocaleFromFileName && locale === defaultLocale) {
+    path = path.replace(/\.{{locale}}\.(\w+)$/, '.$1');
+  }
+
+  // Replace the placeholder with the actual locale. The placeholder may appear multiple times
+  // @see https://github.com/sveltia/sveltia-cms/issues/462
+  return path.replaceAll('{{locale}}', locale);
+};

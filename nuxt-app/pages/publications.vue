@@ -1,21 +1,21 @@
 <template>
-  <div class="mx-auto px-4 pt-10 dark:bg-slate-800">
-    <Titleheader title="  Publications" />
+  <div class="mx-auto pt-4">
+    <Titleheader title="Publications" />
     <!-- Year Filter -->
     <!-- <div v-for="x in filteredPublications">
       <pre>{{ x }}</pre>
     </div> -->
 
-    <div class="flex flex-wrap space-x-2 mb-6">
+    <div class="flex flex-wrap gap-2 mb-6">
       <button
         v-for="year in availableYears"
         :key="year"
         @click="filterByYear(year)"
         :class="[
-          'py-2 px-4 rounded-full text-sm',
+          'py-2 px-4 rounded-full text-xs font-semibold uppercase tracking-wide',
           {
-            'bg-gray-300 text-black': selectedYear === year,
-            'bg-gray-100 text-gray-600 ': selectedYear !== year,
+            'bg-slate-900 text-white': selectedYear === year,
+            'bg-white text-slate-600 border border-slate-200': selectedYear !== year,
           },
         ]"
       >
@@ -23,12 +23,12 @@
       </button>
       <button
         @click="filterByYear('all')"
-        class="py-2 px-4 rounded-full bg-gray-100 text-gray-600 text-sm dark:text-gray-600"
+        class="py-2 px-4 rounded-full text-xs font-semibold uppercase tracking-wide border border-slate-200 text-slate-600"
         :class="[
-          'py-2 px-4 rounded-full text-sm',
+          'py-2 px-4 rounded-full text-xs font-semibold uppercase tracking-wide',
           {
-            'bg-gray-300 text-black': printedYears.length > 1,
-            'bg-gray-100 text-gray-600 ': printedYears.length == 1,
+            'bg-slate-900 text-white': selectedYear === 'all',
+            'bg-white text-slate-600': selectedYear !== 'all',
           },
         ]"
       >
@@ -38,48 +38,45 @@
 
     <!-- Publications List -->
 
+    <div v-if="groupedPublications.length === 0" class="rounded-[18px] border border-white/70 bg-white/80 p-6 text-center text-sm text-slate-500">
+      No publications found for this filter.
+    </div>
+
     <div
-      class="dark:bg-slate-800 dark:text-gray-300"
-      v-for="yr in printedYears"
+      class="space-y-6"
+      v-for="[yr, works] in groupedPublications"
       :key="yr"
     >
-      <h2 class="text-2xl font-semibold mt-6">{{ yr }}</h2>
-      <ul>
+      <div class="flex items-center justify-between">
+        <h2 class="font-display text-2xl text-slate-900 mt-6">{{ yr }}</h2>
+        <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">{{ works.length }} items</span>
+      </div>
+      <ul class="space-y-4">
         <li
-          v-for="(work, index) in filteredPublications"
+          v-for="(work, index) in works"
           :key="index"
-          class="mb-4"
+          class="rounded-[18px] border border-white/70 bg-white/80 p-4 shadow-sm"
         >
-          <div v-if="work.year == yr">
-            <div class="text-xl font-semibold">
-              <a
-                :href="'https://doi.org/' + work.DOI"
-                target="_blank"
-                class="hover:underline text-black dark:text-gray-300"
-              >
-                {{ work.title }}
-              </a>
-            </div>
-            <div class="text-gray-600 mb-2 dark:text-gray-300">
-              {{ work.authors }}
-              <!-- <span
-                v-for="(author, index) in work.authorslist"
-                :key="author"
-                class="mr-2"
-              >
-                {{ author.author
-                }}<span v-if="index < work.authorslist.length - 1">,</span>
-              </span> -->
-            </div>
+          <div class="text-lg font-semibold text-slate-900">
+            <a
+              :href="'https://doi.org/' + work.DOI"
+              target="_blank"
+              class="hover:underline text-slate-900"
+            >
+              {{ work.title }}
+            </a>
+          </div>
+          <div class="text-sm text-slate-600 mb-2">
+            {{ work.authors }}
+          </div>
 
-            <div v-if="work.DOI" class="text-sm text-blue-500">
-              <a :href="'https://doi.org/' + work.DOI" target="_blank" class="">
-                <span>{{ work.journal }}, </span>
-                <span>
-                  <strong> {{ work.volume }} </strong> ({{ work.year }})</span
-                >
-              </a>
-            </div>
+          <div v-if="work.DOI" class="text-xs font-semibold uppercase tracking-wide text-blue-700">
+            <a :href="'https://doi.org/' + work.DOI" target="_blank" class="">
+              <span>{{ work.journal }}, </span>
+              <span>
+                <strong> {{ work.volume }} </strong> ({{ work.year }})</span
+              >
+            </a>
           </div>
         </li>
       </ul>
@@ -88,11 +85,19 @@
 </template>
 
 <script setup>
-const publications = await queryContent("publications").find();
+const publications = await queryCollection("publications").all();
 const selectedYear = ref("all");
 const availableYears = ref([]);
-const printedYears = ref([]);
-const filteredPublications = ref({});
+const filteredPublications = ref([]);
+const groupedPublications = computed(() => {
+  const groups = {};
+  for (const pub of filteredPublications.value) {
+    const year = pub.year || "Unknown";
+    (groups[year] ||= []).push(pub);
+  }
+  return Object.entries(groups)
+    .sort((a, b) => (a[0] === "Unknown" ? 1 : b[0] === "Unknown" ? -1 : Number(b[0]) - Number(a[0])));
+});
 
 onMounted(async () => {
   try {
@@ -112,16 +117,11 @@ async function filterByYear(yr) {
   selectedYear.value = yr;
 
   if (yr === "all") {
-    printedYears.value = availableYears.value;
-    filteredPublications.value = await queryContent("publications").find();
+    filteredPublications.value = await queryCollection("publications").all();
   } else {
-    printedYears.value = [yr];
-
-    filteredPublications.value = await queryContent("publications")
-      .where({
-        year: String(yr) 
-      })
-      .find();
+    filteredPublications.value = await queryCollection("publications")
+      .where("year", "=", String(yr))
+      .all();
   }
 }
 </script>

@@ -1,14 +1,14 @@
 <script>
   import { Alert, Button, Toast } from '@sveltia/ui';
   import { _ } from 'svelte-i18n';
-  import { backend, backendName, isLastCommitPublished } from '$lib/services/backends';
-  import { siteConfig } from '$lib/services/config';
+
+  import { backend, isLastCommitPublished } from '$lib/services/backends';
+  import { skipCIConfigured } from '$lib/services/backends/git/shared/integration';
+  import { isSmallScreen } from '$lib/services/user/env';
   import { prefs } from '$lib/services/user/prefs';
 
-  const autoDeployEnabled = $derived($siteConfig?.backend.automatic_deployments);
-  const { deployHookURL } = $derived($prefs);
+  const { deployHookURL, deployHookAuthHeader } = $derived($prefs);
   const triggerDeployment = $derived($backend?.triggerDeployment);
-  const showButton = $derived($backendName !== 'local' && typeof autoDeployEnabled === 'boolean');
   const canPublish = $derived(
     (!!deployHookURL || typeof triggerDeployment === 'function') && !$isLastCommitPublished,
   );
@@ -27,16 +27,20 @@
 
     try {
       const { ok, status } = deployHookURL
-        ? await fetch(deployHookURL, { method: 'POST', mode: 'no-cors' })
+        ? await fetch(deployHookURL, {
+            method: 'POST',
+            mode: deployHookAuthHeader ? 'cors' : 'no-cors',
+            headers: deployHookAuthHeader ? { Authorization: deployHookAuthHeader } : {},
+          })
         : ((await triggerDeployment?.()) ?? {});
 
       // If the `mode` is `no-cors`, the regular response status will be `0`
-      if (!ok && status !== 0) {
+      if (!ok && (deployHookAuthHeader || status !== 0)) {
         throw new Error(`Webhook returned ${status} error`);
       }
 
       $isLastCommitPublished = true;
-    } catch (/** @type {any} */ ex) {
+    } catch (ex) {
       toastStatus = 'error';
       showToast = true;
       // eslint-disable-next-line no-console
@@ -45,9 +49,10 @@
   };
 </script>
 
-{#if showButton}
+{#if $skipCIConfigured}
   <Button
     variant="secondary"
+    size={$isSmallScreen ? 'small' : 'medium'}
     label={$_('publish_changes')}
     disabled={!canPublish}
     onclick={() => publish()}

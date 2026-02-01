@@ -3,14 +3,19 @@
   import { _ } from 'svelte-i18n';
 
   /**
+   * @import { Writable } from 'svelte/store';
+   * @import { AssetListView, EntryListView } from '$lib/types/private';
+   * @import { ViewGroup } from '$lib/types/public';
+   */
+
+  /**
    * @typedef {object} Props
-   * @property {import('svelte/store').Writable<EntryListView | AssetListView>} currentView -
-   * Current view details.
-   * @property {string} aria-controls - The `aria-controls` attribute for the menu.
-   * @property {string} [label] - Menu button label.
-   * @property {boolean} [disabled] - Whether to disable the button.
-   * @property {string} [noneLabel] - Label to be displayed on the None item.
-   * @property {ViewFilter[]} [groups] - Group conditions.
+   * @property {Writable<EntryListView | AssetListView>} currentView Current view details.
+   * @property {string} aria-controls The `aria-controls` attribute for the menu.
+   * @property {string} [label] Menu button label.
+   * @property {boolean} [disabled] Whether to disable the button.
+   * @property {string} [noneLabel] Label to be displayed on the None item.
+   * @property {ViewGroup[]} [groups] Group conditions.
    */
 
   /** @type {Props} */
@@ -35,14 +40,15 @@
         onSelect={() => {
           currentView.update((view) => ({
             ...view,
-            group: undefined,
+            group: null,
           }));
         }}
       />
       {#each groups as { label: _label, field, pattern }}
         <MenuItemRadio
           label={_label}
-          checked={$currentView.group?.field === field && $currentView.group.pattern === pattern}
+          checked={$currentView.group?.field === field &&
+            String($currentView.group.pattern) === String(pattern)}
           onSelect={() => {
             currentView.update((view) => ({
               ...view,

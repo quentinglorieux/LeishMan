@@ -1,6 +1,6 @@
 <template>
   <h1
-    class="mt-2 mb-4 text-2xl text-center font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-4xl dark:text-white"
+    class="font-display mt-2 mb-6 text-center text-3xl leading-tight text-slate-900 md:text-4xl lg:text-5xl"
   >
     {{ title }}
   </h1>

@@ -1,17 +1,13 @@
 <script>
-  import { Dialog } from '@sveltia/ui';
+  import { Dialog, FilePicker } from '@sveltia/ui';
   import mime from 'mime';
   import { _ } from 'svelte-i18n';
+
   import DropZone from '$lib/components/assets/shared/drop-zone.svelte';
-  import FilePicker from '$lib/components/assets/shared/file-picker.svelte';
-  import {
-    globalAssetFolder,
-    selectedAssetFolder,
-    showAssetOverlay,
-    uploadingAssets,
-  } from '$lib/services/assets';
-  import { showUploadAssetsDialog } from '$lib/services/assets/view';
-  import { canDragDrop } from '$lib/services/utils/file';
+  import { uploadingAssets } from '$lib/services/assets';
+  import { targetAssetFolder } from '$lib/services/assets/folders';
+  import { showAssetOverlay, showUploadAssetsDialog } from '$lib/services/assets/view';
+  import { hasMouse } from '$lib/services/user/env';
 
   /** @type {FilePicker | undefined} */
   let filePicker = $state();
@@ -24,7 +20,7 @@
 
   /**
    * Update the asset list, which will show the confirmation dialog.
-   * @param {File[]} files - Selected files.
+   * @param {File[]} files Selected files.
    */
   const onSelect = (files) => {
     if (!files.length) {
@@ -32,9 +28,7 @@
     }
 
     $uploadingAssets = {
-      folder: originalAsset
-        ? originalAsset.folder
-        : $selectedAssetFolder?.internalPath || $globalAssetFolder?.internalPath,
+      folder: originalAsset ? originalAsset.folder : $targetAssetFolder,
       files,
       originalAsset,
     };
@@ -43,7 +37,7 @@
 
   $effect(() => {
     // Open the file picker directly if drag & drop is not supported (on mobile)
-    if (!canDragDrop() && $showUploadAssetsDialog) {
+    if (!$hasMouse && $showUploadAssetsDialog) {
       filePicker?.open();
     }
   });
@@ -55,7 +49,7 @@
   });
 </script>
 
-{#if canDragDrop()}
+{#if $hasMouse}
   <Dialog
     title={originalAsset
       ? $_('replace_x', { values: { name: originalAsset.name } })
@@ -67,7 +61,7 @@
       showUploadButton={true}
       {accept}
       {multiple}
-      onSelect={({ files }) => {
+      onDrop={({ files }) => {
         onSelect(files);
       }}
     />
@@ -79,6 +73,9 @@
     {multiple}
     onSelect={({ files }) => {
       onSelect(files);
+    }}
+    onCancel={() => {
+      $showUploadAssetsDialog = false;
     }}
   />
 {/if}

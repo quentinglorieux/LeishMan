@@ -1,6 +1,7 @@
 <script>
   import { writable } from "svelte/store";
   import { onMount, onDestroy } from "svelte";
+  import { cmsConfig } from "$lib/services/config";
 
   const files = writable([]);
   const folders = writable([]);
@@ -10,6 +11,13 @@
   const newFolderName = writable(""); // Store new folder name
   const previewFile = writable(null);
   const loadingPreview = writable(false); //  Track loading state
+  const breadcrumbParts = $derived($currentFolder.split("/").filter(Boolean));
+  let editorOpen = $state(false);
+  let editorContent = $state("");
+  let editorFilePath = $state("");
+  let editorFileType = $state("");
+  let editorError = $state("");
+  let editorSaving = $state(false);
 
   function encodePathOnce(p) {
     try {
@@ -19,7 +27,37 @@
     }
   }
 
-  async function fetchNextcloudFiles(folder = "") {
+  const listCache = new Map();
+
+  function getWorkerBase() {
+    return (
+      $cmsConfig?.sveltia?.nextcloudWorkerBase ||
+      "https://nextcloud-leishman.quentin-glorieux.workers.dev"
+    );
+  }
+
+  function getWorkerHeaders() {
+    const headers = {};
+    const cfg = $cmsConfig?.sveltia?.nextcloudAuth || {};
+    if (cfg.headerName && cfg.token) {
+      headers[cfg.headerName] = cfg.token;
+    } else if (cfg.token) {
+      headers["X-Worker-Token"] = cfg.token;
+    }
+    return headers;
+  }
+
+  function getNextcloudHeaders() {
+    const headers = getWorkerHeaders();
+    const storedGroups =
+      JSON.parse(localStorage.getItem("sveltia-cms.userGroups")) || [];
+    if (storedGroups.length) {
+      headers["X-User-Groups"] = storedGroups.join(",");
+    }
+    return headers;
+  }
+
+  async function fetchNextcloudFiles(folder = "", { force = false } = {}) {
     loading.set(true);
     error.set(null);
 
@@ -32,10 +70,21 @@
       ? `?folder=${encodeURIComponent(cleanFolder)}`
       : "";
 
+    const cacheKey = cleanFolder || "__root__";
+    if (!force && listCache.has(cacheKey)) {
+      const cached = listCache.get(cacheKey);
+      files.set(cached.files);
+      folders.set(cached.folders);
+      currentFolder.set(cleanFolder);
+      loading.set(false);
+      return;
+    }
+
     try {
+      const workerBase = getWorkerBase();
       const response = await fetch(
-        `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/files${folderParam}`,
-        { method: "GET" }
+        `${workerBase}/api/nextcloud/files${folderParam}`,
+        { method: "GET", headers: getWorkerHeaders() }
       );
 
       if (!response.ok)
@@ -57,6 +106,7 @@
       files.set(filteredFiles);
       folders.set(filteredFolders);
       currentFolder.set(cleanFolder);
+      listCache.set(cacheKey, { files: filteredFiles, folders: filteredFolders });
     } catch (err) {
       console.error("Nextcloud Fetch Error:", err);
       error.set(err.message);
@@ -103,16 +153,18 @@
 
     try {
       const response = await fetch(
-        `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/upload`,
+        `${getWorkerBase()}/api/nextcloud/upload`,
         {
           method: "POST",
           body: formData,
+          headers: getWorkerHeaders(),
         }
       );
 
       if (!response.ok) throw new Error("Upload failed!");
 
-      fetchNextcloudFiles($currentFolder);
+      listCache.clear();
+      fetchNextcloudFiles($currentFolder, { force: true });
     } catch (err) {
       console.error("Upload Error:", err);
       error.set(err.message);
@@ -135,18 +187,19 @@
 
     try {
       const response = await fetch(
-        `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/create-folder`,
+        `${getWorkerBase()}/api/nextcloud/create-folder`,
         {
           method: "POST",
           body: JSON.stringify({ folder: targetFolder }),
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...getWorkerHeaders() },
         }
       );
 
       if (!response.ok) throw new Error("Failed to create folder!");
 
       console.log(` Folder Created: ${targetFolder}`);
-      fetchNextcloudFiles($currentFolder); //  Refresh file list
+      listCache.clear();
+      fetchNextcloudFiles($currentFolder, { force: true }); //  Refresh file list
       newFolderName.set(""); //  Reset input field
     } catch (err) {
       console.error("Create Folder Error:", err);
@@ -170,18 +223,19 @@
 
     try {
       const response = await fetch(
-        `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/delete-folder`,
+        `${getWorkerBase()}/api/nextcloud/delete-folder`,
         {
           method: "DELETE",
           body: JSON.stringify({ folder: folderPath }),
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...getWorkerHeaders() },
         }
       );
 
       if (!response.ok) throw new Error("Failed to delete folder!");
 
       console.log(` Folder Deleted: ${folderPath}`);
-      fetchNextcloudFiles($currentFolder); //  Refresh file list
+      listCache.clear();
+      fetchNextcloudFiles($currentFolder, { force: true }); //  Refresh file list
     } catch (err) {
       console.error("Delete Folder Error:", err);
       error.set(err.message);
@@ -201,14 +255,15 @@
 
     try {
       const response = await fetch(
-        `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/delete-file?file=${encodePathOnce(filePath)}`,
-        { method: "DELETE" }
+        `${getWorkerBase()}/api/nextcloud/delete-file?file=${encodePathOnce(filePath)}`,
+        { method: "DELETE", headers: getWorkerHeaders() }
       );
 
       if (!response.ok) throw new Error("File deletion failed!");
 
       console.log(" File Deleted:", filePath);
-      fetchNextcloudFiles($currentFolder); //  Refresh file list
+      listCache.clear();
+      fetchNextcloudFiles($currentFolder, { force: true }); //  Refresh file list
     } catch (err) {
       console.error("Delete File Error:", err);
       error.set(err.message);
@@ -220,7 +275,7 @@
     if (!filePath) return;
     console.log("⬇️ Downloading:", filePath);
 
-    const downloadURL = `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/download?file=${encodePathOnce(filePath)}`;
+    const downloadURL = `${getWorkerBase()}/api/nextcloud/download?file=${encodePathOnce(filePath)}`;
 
     window.open(downloadURL, "_blank");
   }
@@ -236,10 +291,14 @@
       "md",
       "docx",
       "odt",
-      "tex"
+      "tex",
+      "txt",
+      "ods"
     ];
+    const editableTextTypes = ["txt", "md", "tex"];
+    const officeTypes = ["odt", "ods", "docx"];
 
-    let previewUrl = `https://nextcloud-leishman.quentin-glorieux.workers.dev/api/nextcloud/download?file=${encodePathOnce(filePath)}`;
+    let previewUrl = `${getWorkerBase()}/api/nextcloud/download?file=${encodePathOnce(filePath)}`;
 
     if (!previewableTypes.includes(fileType)) {
       alert("Preview not supported for this file type.");
@@ -248,15 +307,46 @@
 
     loadingPreview.set(true); //  Start loading animation
 
+    if (editableTextTypes.includes(fileType)) {
+      try {
+        const response = await fetch(previewUrl, { headers: getWorkerHeaders() });
+        if (!response.ok) throw new Error("Failed to load file.");
+        editorContent = await response.text();
+        editorFilePath = filePath;
+        editorFileType = fileType;
+        editorOpen = true;
+      } catch (err) {
+        console.error("Editor load error:", err);
+        alert("Failed to load file for editing.");
+      } finally {
+        loadingPreview.set(false);
+      }
+      return;
+    }
+
     if (["jpg", "jpeg", "png", "gif"].includes(fileType)) {
       //  Show images inside the modal
       previewFile.set({ url: previewUrl, type: `image/${fileType}` });
       loadingPreview.set(false);
+    } else if (officeTypes.includes(fileType)) {
+      try {
+        const shareUrl = `${getWorkerBase()}/api/nextcloud/share?file=${encodePathOnce(filePath)}`;
+        const response = await fetch(shareUrl, { headers: getNextcloudHeaders() });
+        const data = await response.json();
+        if (data?.url) {
+          previewFile.set({ url: data.url, type: "office" });
+        } else {
+          window.open(previewUrl, "_blank");
+        }
+      } catch (err) {
+        console.error("Error fetching share link:", err);
+        window.open(previewUrl, "_blank");
+      } finally {
+        loadingPreview.set(false);
+      }
     } else {
       window.open(previewUrl, "_blank");
       loadingPreview.set(false);
-      const storedGroups =
-        JSON.parse(localStorage.getItem("sveltia-cms.userGroups")) || [];
       // console.log("🔹 Sending user groups for preview:", storedGroups);
       //  Fetch the Nextcloud Share Link for PDFs, Markdown, and DOCX
       try {
@@ -300,15 +390,86 @@
     }
   }
 
+  async function saveEditedFile() {
+    if (!editorFilePath) return;
+    editorSaving = true;
+    editorError = "";
+
+    const parts = editorFilePath.split("/");
+    const filename = parts.pop() || "file.txt";
+    const folder = parts.join("/");
+    const mimeType =
+      editorFileType === "md"
+        ? "text/markdown"
+        : editorFileType === "tex"
+          ? "text/plain"
+          : "text/plain";
+
+    const file = new File([editorContent], filename, { type: mimeType });
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", folder);
+
+    try {
+      const response = await fetch(`${getWorkerBase()}/api/nextcloud/upload`, {
+        method: "POST",
+        body: formData,
+        headers: getWorkerHeaders(),
+      });
+
+      if (!response.ok) throw new Error("Save failed.");
+
+      listCache.clear();
+      await fetchNextcloudFiles($currentFolder, { force: true });
+      closeEditor();
+    } catch (err) {
+      console.error("Save error:", err);
+      editorError = "Failed to save changes.";
+    } finally {
+      editorSaving = false;
+    }
+  }
+
   function closePreview() {
     previewFile.set(null);
     loadingPreview.set(false); //  Reset loading state
+  }
+
+  function closeEditor() {
+    editorOpen = false;
+    editorContent = "";
+    editorFilePath = "";
+    editorFileType = "";
+    editorError = "";
+    editorSaving = false;
   }
 
   //  Close preview when pressing Escape
   function handleKeydown(event) {
     if (event.key === "Escape") {
       closePreview();
+      closeEditor();
+    }
+  }
+
+  function handleRowKeydown(event, path) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openPreview(path);
+    }
+  }
+
+  function handleOverlayKeydown(event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      closePreview();
+    }
+  }
+
+  function handleEditorOverlayKeydown(event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      closeEditor();
     }
   }
 
@@ -324,394 +485,638 @@
   onMount(() => fetchNextcloudFiles());
 </script>
 
-<div class="file-manager">
-  <!-- 📂 Sidebar (Folders) -->
-  <div class="sidebar">
-    <h2>📂 Documents</h2>
-    <!-- <button class="breadcrumb-button" on:click={goUpOneLevel}>⬅️ Go Back</button> -->
-    <button class="breadcrumb-button" on:click={() => fetchNextcloudFiles("")}>
-      🏠 Root
-    </button>
-
-    <div class="folder-list">
-      {#each $folders as folder}
-        <div
-          class="folder-item"
-          style="padding-left: {(folder.depth - 1) * 15}px;"
-        >
-          <button
-            class="folder-name"
-            on:click={() => fetchNextcloudFiles(folder.path)}
-          >
-            📁 {folder.name}
-          </button>
-          <button
-            class="delete-folder"
-            on:click={() => deleteFolder(folder.path)}>🗑️</button
-          >
-        </div>
-      {/each}
+<div class="nc-page">
+  <header class="nc-header">
+    <div class="nc-title">
+      <h1>Nextcloud Files</h1>
+      <p class="nc-subtitle">Secure workspace for your project documents</p>
     </div>
-
-    <!-- 📁 Create Folder (Bottom Section) -->
-    <div class="create-folder">
-      <input
-        class="new-folder-input"
-        type="text"
-        bind:value={$newFolderName}
-        placeholder="New folder name"
-      />
-      <button class="folder-action-button" on:click={createFolder}
-        >📁 Create Folder</button
-      >
+    <div class="nc-actions">
+      <label class="nc-button primary">
+        Upload
+        <input type="file" onchange={uploadFile} hidden />
+      </label>
+      <button class="nc-button ghost" onclick={() => fetchNextcloudFiles("")}>
+        Root
+      </button>
+      <button class="nc-button" onclick={goUpOneLevel}>Up</button>
     </div>
-  </div>
+  </header>
 
-  <!-- 📄 Main Content (Files + Upload) -->
-  <div class="main-content">
-    <div class="header">
-      <h2>📄 Files</h2>
-
-      <!-- 📤 Upload Section -->
-      <div class="upload-container">
-        <label class="upload-label">
-          <input type="file" on:change={uploadFile} hidden />
-          📤 Upload File
-        </label>
+  <div class="nc-body">
+    <aside class="nc-sidebar">
+      <div class="nc-sidebar-header">
+        <h2>Folders</h2>
+        <p>Browse and manage directories</p>
       </div>
-    </div>
 
-    <div class="file-list">
-      {#each $files as file}
-        <div class="file-item">
-          <div class="file-info" on:click={() => openPreview(file.path)}>
-            📄 <span class="file-name">{file.name}</span>
-          </div>
-          <button class="delete-file" on:click={() => deleteFile(file.path)}
-            >🗑️</button
-          >
+      <div class="nc-folder-list">
+        {#if $loading}
+          <div class="nc-muted">Loading folders…</div>
+        {:else if $error}
+          <div class="nc-error">{$error}</div>
+        {:else if !$folders.length}
+          <div class="nc-muted">No folders available.</div>
+        {:else}
+          {#each $folders as folder}
+            <div
+              class="nc-folder-row"
+              style="padding-left: {(folder.depth - 1) * 14}px;"
+            >
+              <button
+                class="nc-folder-button"
+                onclick={() => fetchNextcloudFiles(folder.path)}
+              >
+                <span class="nc-icon">📁</span>
+                <span class="nc-name">{folder.name}</span>
+              </button>
+              <button
+                class="nc-icon-button danger"
+                aria-label="Delete folder"
+                onclick={() => deleteFolder(folder.path)}
+              >
+                🗑️
+              </button>
+            </div>
+          {/each}
+        {/if}
+      </div>
+
+      <div class="nc-create">
+        <label class="nc-label" for="nc-new-folder">Create folder</label>
+        <input
+          id="nc-new-folder"
+          class="nc-input"
+          type="text"
+          bind:value={$newFolderName}
+          placeholder="New folder name"
+        />
+        <button class="nc-button primary" onclick={createFolder}>
+          Create
+        </button>
+      </div>
+    </aside>
+
+    <section class="nc-content">
+      <div class="nc-toolbar">
+        <div class="nc-breadcrumb">
+          <button class="nc-crumb" onclick={() => fetchNextcloudFiles("")}>
+            Root
+          </button>
+          {#each breadcrumbParts as part, i}
+            <span class="nc-sep">/</span>
+            <button
+              class="nc-crumb"
+              onclick={() => fetchNextcloudFiles(breadcrumbParts.slice(0, i + 1).join("/"))}
+            >
+              {part}
+            </button>
+          {/each}
         </div>
-      {/each}
-    </div>
+        <div class="nc-stats">
+          <span>{$folders.length} folders</span>
+          <span>{$files.length} files</span>
+        </div>
+      </div>
+
+      {#if $loading}
+        <div class="nc-state">Loading files…</div>
+      {:else if $error}
+        <div class="nc-state error">{$error}</div>
+      {:else if !$files.length}
+        <div class="nc-state">No files in this folder yet.</div>
+      {/if}
+
+      <div class="nc-list">
+        {#each $files as file}
+          <div
+            class="nc-row"
+            role="button"
+            tabindex="0"
+            onclick={() => openPreview(file.path)}
+            onkeydown={(event) => handleRowKeydown(event, file.path)}
+          >
+            <div class="nc-row-main">
+              <span class="nc-icon">📄</span>
+              <span class="nc-name">{file.name}</span>
+            </div>
+            <div class="nc-row-actions">
+              <button
+                class="nc-icon-button"
+                onclick={(event) => {
+                  event.stopPropagation();
+                  downloadFile(file.path);
+                }}
+              >
+                Download
+              </button>
+              <button
+                class="nc-icon-button danger"
+                onclick={(event) => {
+                  event.stopPropagation();
+                  deleteFile(file.path);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        {/each}
+      </div>
+    </section>
   </div>
 </div>
 
 <!-- File Preview Modal -->
 {#if $previewFile}
-  <div class="preview-modal" class:visible={$previewFile}>
-    <div class="preview-content">
-      <button class="close-preview" on:click={() => previewFile.set(null)}
-        >✖ Close</button
-      >
+  <div
+    class="preview-modal"
+    class:visible={$previewFile}
+    role="button"
+    tabindex="0"
+    onclick={closePreview}
+    onkeydown={handleOverlayKeydown}
+  >
+    <div
+      class="preview-content"
+      role="dialog"
+      aria-modal="true"
+      tabindex="0"
+      onclick={(event) => event.stopPropagation()}
+      onkeydown={(event) => event.stopPropagation()}
+    >
+      <button class="close-preview" onclick={closePreview}>✖ Close</button>
 
-      {#if !loadingPreview}
+      {#if $loadingPreview}
         <p class="loading-preview">⏳ Loading preview...</p>
       {:else if $previewFile.type.startsWith("image/")}
         <img src={$previewFile.url} alt="Preview" class="preview-image" />
       {:else if $previewFile.type === "application/pdf"}
-        <iframe class="preview-pdf" src={$previewFile.url} frameborder="0"
+        <iframe
+          class="preview-pdf"
+          src={$previewFile.url}
+          frameborder="0"
+          title="PDF preview"
+        ></iframe>
+      {:else if $previewFile.type === "office"}
+        <iframe
+          class="preview-docx"
+          src={$previewFile.url}
+          frameborder="0"
+          title="Office editor"
         ></iframe>
       {:else if $previewFile.type === "markdown"}
-        <iframe class="preview-markdown" src={$previewFile.url} frameborder="0"
+        <iframe
+          class="preview-markdown"
+          src={$previewFile.url}
+          frameborder="0"
+          title="Markdown preview"
         ></iframe>
       {:else if $previewFile.type === "docx"}
-        <iframe class="preview-docx" src={$previewFile.url} frameborder="0"
+        <iframe
+          class="preview-docx"
+          src={$previewFile.url}
+          frameborder="0"
+          title="DOCX preview"
         ></iframe>
       {:else if $previewFile.type === "odt"}
-        <iframe class="preview-docx" src={$previewFile.url} frameborder="0"
+        <iframe
+          class="preview-docx"
+          src={$previewFile.url}
+          frameborder="0"
+          title="ODT preview"
         ></iframe>
       {:else}
         <p>
-          File preview not available. <a href={$previewFile.url} target="_blank"
-            >Download it</a
-          >.
+          File preview not available.
+          <a href={$previewFile.url} target="_blank" rel="noreferrer">Download it</a>.
         </p>
       {/if}
     </div>
   </div>
 {/if}
 
+{#if editorOpen}
+  <div
+    class="preview-modal"
+    class:visible={editorOpen}
+    role="button"
+    tabindex="0"
+    onclick={closeEditor}
+    onkeydown={handleEditorOverlayKeydown}
+  >
+    <div
+      class="preview-content editor"
+      role="dialog"
+      aria-modal="true"
+      tabindex="0"
+      onclick={(event) => event.stopPropagation()}
+      onkeydown={(event) => event.stopPropagation()}
+    >
+      <div class="editor-header">
+        <strong>Editing {editorFilePath.split("/").pop()}</strong>
+      </div>
+      {#if editorError}
+        <p class="nc-error">{editorError}</p>
+      {/if}
+      <textarea class="nc-editor" bind:value={editorContent}></textarea>
+      <div class="editor-actions">
+        <button class="nc-button ghost" onclick={closeEditor} disabled={editorSaving}>
+          Cancel
+        </button>
+        <button class="nc-button primary" onclick={saveEditedFile} disabled={editorSaving}>
+          {editorSaving ? "Saving…" : "Save"}
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
+
 <style>
-  /* 🌟 Full-screen layout */
-  .file-manager {
-    display: flex;
-    height: 100vh;
-    font-family: "Arial", sans-serif;
+  :global(body) {
+    --nc-bg: linear-gradient(140deg, #f6f4f1 0%, #eef2f3 100%);
+    --nc-panel: #ffffff;
+    --nc-ink: #1c1f1e;
+    --nc-muted: #5b6a65;
+    --nc-border: #e1e6e4;
+    --nc-accent: #1f8f78;
+    --nc-accent-strong: #16755f;
+    --nc-danger: #b3261e;
+    --nc-shadow: 0 12px 24px rgba(30, 40, 36, 0.08);
   }
 
-  /* 📂 Sidebar (Folders) */
-  .sidebar {
-    width: 280px;
-    background: #2c3e50;
-    color: white;
-    padding: 20px;
+  .nc-page {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 16px;
+    height: 100vh;
+    padding: 20px 24px 24px;
+    background: var(--nc-bg);
+    color: var(--nc-ink);
   }
 
-  /* 📂 Folder List */
-  .folder-list {
-    flex-grow: 1;
-    overflow-y: auto;
-  }
-
-  .folder-item {
+  .nc-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 10px;
-    border-radius: 4px;
-    background: transparent;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s ease-in-out;
+    gap: 16px;
   }
 
-  .folder-item:hover {
-    background: #34495e;
+  .nc-title h1 {
+    margin: 0;
+    font-size: 24px;
+    letter-spacing: -0.02em;
   }
 
-  .folder-name {
-    flex-grow: 1;
-    text-align: left;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
+  .nc-subtitle {
+    margin: 4px 0 0;
+    color: var(--nc-muted);
+    font-size: 14px;
   }
 
-  .folder-name:hover {
-    /* text-decoration: underline; */
+  .nc-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
   }
 
-  /* Delete Folder Button */
-  .delete-folder {
-    background: transparent;
-    border: none;
-    color: white;
-    padding: 3px 7px;
+  .nc-button {
+    border: 1px solid var(--nc-border);
+    background: var(--nc-panel);
+    color: var(--nc-ink);
     border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 14px;
     cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border 0.12s ease;
   }
 
-  .delete-folder:hover {
-    background: rgba(128, 128, 128, 0.245);
+  .nc-button:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--nc-shadow);
   }
 
-  /* 📁 Create Folder (Bottom Section) */
-  .create-folder {
-    padding-top: 10px;
-    border-top: 1px solid #7f8c8d;
+  .nc-button.primary {
+    background: var(--nc-accent);
+    color: white;
+    border-color: transparent;
+  }
+
+  .nc-button.primary:hover {
+    background: var(--nc-accent-strong);
+  }
+
+  .nc-button.ghost {
+    background: transparent;
+  }
+
+  .nc-body {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 16px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .nc-sidebar,
+  .nc-content {
+    background: var(--nc-panel);
+    border: 1px solid var(--nc-border);
+    border-radius: 16px;
+    box-shadow: var(--nc-shadow);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .nc-sidebar {
+    padding: 16px;
+  }
+
+  .nc-sidebar-header h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .nc-sidebar-header p {
+    margin: 4px 0 12px;
+    color: var(--nc-muted);
+    font-size: 13px;
+  }
+
+  .nc-folder-list {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 6px;
+  }
+
+  .nc-folder-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .nc-folder-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: transparent;
+    color: var(--nc-ink);
+    text-align: left;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 8px;
+    flex: 1;
+  }
+
+  .nc-folder-button:hover {
+    background: #f1f5f4;
+  }
+
+  .nc-icon {
+    font-size: 14px;
+  }
+
+  .nc-name {
+    font-size: 14px;
+  }
+
+  .nc-icon-button {
+    border: 1px solid var(--nc-border);
+    background: white;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--nc-ink);
+  }
+
+  .nc-icon-button.danger {
+    color: var(--nc-danger);
+    border-color: rgba(179, 38, 30, 0.2);
+  }
+
+  .nc-icon-button:hover {
+    background: #f3f6f5;
+  }
+
+  .nc-create {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--nc-border);
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
 
-  .new-folder-input {
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background: white;
-    color: black;
+  .nc-label {
+    font-size: 12px;
+    color: var(--nc-muted);
   }
 
-  .folder-action-button {
-    padding: 8px;
-    border-radius: 4px;
+  .nc-input {
+    border-radius: 10px;
+    border: 1px solid var(--nc-border);
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .nc-content {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .nc-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--nc-border);
+    padding-bottom: 12px;
+  }
+
+  .nc-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .nc-crumb {
     border: none;
-    background: #16a085;
-    color: white;
+    background: none;
+    color: var(--nc-ink);
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s ease-in-out;
   }
 
-  .folder-action-button:hover {
-    background: #138d75;
+  .nc-crumb:hover {
+    color: var(--nc-accent);
   }
 
-  /* 📄 Main Content */
-  .main-content {
-    flex-grow: 1;
-    padding: 20px;
-    background: #ecf0f1;
+  .nc-sep {
+    color: var(--nc-muted);
+  }
+
+  .nc-stats {
+    display: flex;
+    gap: 12px;
+    color: var(--nc-muted);
+    font-size: 12px;
+  }
+
+  .nc-state {
+    padding: 14px;
+    border-radius: 12px;
+    background: #f3f6f5;
+    color: var(--nc-muted);
+    font-size: 14px;
+  }
+
+  .nc-state.error {
+    background: rgba(179, 38, 30, 0.08);
+    color: var(--nc-danger);
+  }
+
+  .nc-list {
     display: flex;
     flex-direction: column;
+    gap: 8px;
+    overflow: auto;
   }
 
-  /* 📤 Upload Section */
-  .header {
+  .nc-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-  }
-
-  .upload-container {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .upload-label {
-    background: #16a085;
-    padding: 8px 12px;
-    border-radius: 6px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s ease-in-out;
-  }
-
-  .upload-label:hover {
-    background: #138d75;
-  }
-
-  /* 📄 File List */
-  .file-list {
-    flex-grow: 1;
-    overflow-y: auto;
-  }
-
-  .file-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid var(--nc-border);
+    border-radius: 12px;
     background: white;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    transition: background 0.2s ease-in-out;
     cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
 
-  .file-item:hover {
-    background: #f9f9f9;
+  .nc-row:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--nc-shadow);
   }
 
-  /*  File Name Clickable */
-  .file-info {
-    flex-grow: 1;
-    font-size: 16px;
-    font-weight: 500;
-    color: #333;
+  .nc-row-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
-  /*  Delete File Button (Same Style as Folder) */
-  .delete-file {
-    background: transparent;
-    border: none;
-    padding: 9px 12px;
-    border-radius: 40px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background 0.2s ease-in-out;
+  .nc-row-actions {
+    display: flex;
+    gap: 8px;
   }
 
-  .delete-file:hover {
-    /* background: rgb(241, 221, 221); */
-    border-width: 1px;
-    border-color: red;
-    background-color: #ccc;
+  .nc-muted {
+    color: var(--nc-muted);
+    font-size: 13px;
   }
 
-  .breadcrumb-button {
-    background: #16a085;
-    border: none;
-    padding: 6px 6px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background 0.2s ease-in-out;
-    color: white;
-  }
-
-  .breadcrumb-button:hover {
-    background: #138d75;
+  .nc-error {
+    color: var(--nc-danger);
+    font-size: 13px;
   }
 
   .preview-modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
+    inset: 0;
+    background: rgba(18, 20, 19, 0.7);
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     z-index: 1000;
-    visibility: hidden;
     opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
   }
 
   .preview-modal.visible {
-    visibility: visible;
     opacity: 1;
+    visibility: visible;
   }
 
   .preview-content {
     background: white;
+    border-radius: 16px;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: min(900px, 90vw);
+    max-height: 82vh;
+    box-shadow: var(--nc-shadow);
     position: relative;
-    max-width: 80%;
-    max-height: 80vh; /*  Limits height of modal */
-    overflow: hidden; /*  Ensures content stays inside */
+  }
+
+  .preview-content.editor {
+    width: min(900px, 90vw);
+  }
+
+  .editor-header {
+    margin-bottom: 12px;
+  }
+
+  .nc-editor {
+    width: 100%;
+    height: 55vh;
+    border-radius: 12px;
+    border: 1px solid var(--nc-border);
+    padding: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+    font-size: 14px;
+    color: var(--nc-ink);
+    background: #fbfbfb;
+  }
+
+  .editor-actions {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 12px;
   }
 
   .preview-image {
     max-width: 100%;
-    max-height: 70vh; /*  Prevent image from exceeding the viewport height */
-    display: block;
-    margin: 0 auto;
-    object-fit: contain; /*  Ensures the image is fully visible inside the preview box */
+    max-height: 70vh;
+    object-fit: contain;
   }
 
-  .preview-pdf {
-    width: 800px;
-    height: 800px;
-  }
-
-  .preview-markdown {
-    width: 800px;
-    height: 800px;
-  }
-
+  .preview-pdf,
+  .preview-markdown,
   .preview-docx {
-    width: 800px;
-    height: 800px;
+    width: min(860px, 85vw);
+    height: 70vh;
   }
 
   .close-preview {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: red;
-    color: white;
+    top: 12px;
+    right: 12px;
     border: none;
-    padding: 5px 10px;
+    background: var(--nc-danger);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 999px;
     cursor: pointer;
   }
 
-  /* 🔄 Loading Spinner */
-  .loading-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 18px;
-    font-weight: bold;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 10px 20px;
-    border-radius: 6px;
-    z-index: 10;
+  @media (max-width: 900px) {
+    .nc-body {
+      grid-template-columns: 1fr;
+    }
+
+    .nc-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>

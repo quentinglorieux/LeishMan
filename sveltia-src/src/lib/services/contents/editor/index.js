@@ -1,0 +1,78 @@
+import { writable } from 'svelte/store';
+
+/**
+ * @import { ComponentType } from 'react';
+ * @import { Writable } from 'svelte/store';
+ * @import { EntryEditorPane, InternalLocaleCode, SelectAssetsView } from '$lib/types/private';
+ * @import { CustomPreviewTemplateProps } from '$lib/types/public';
+ */
+
+/**
+ * @typedef {object} CopyToastState
+ * @property {number | undefined} id Unique identifier for the toast.
+ * @property {boolean} show Whether the toast is currently visible.
+ * @property {'info' | 'success' | 'error'} status Status of the toast.
+ * @property {string | undefined} message Message to display in the toast.
+ * @property {number} count Number of copies made.
+ * @property {InternalLocaleCode | undefined} sourceLanguage Source locale for the copy.
+ */
+
+/**
+ * @type {Writable<boolean>}
+ */
+export const showContentOverlay = writable(false);
+
+/**
+ * @type {Writable<boolean>}
+ */
+export const showDuplicateToast = writable(false);
+
+/**
+ * @type {Writable<{ show: boolean, multiple: boolean, resolve?: (value?: string) => void }>}
+ */
+export const translatorApiKeyDialogState = writable({ show: false, multiple: false });
+
+/**
+ * Copy/translation toast state.
+ * @type {Writable<CopyToastState>}
+ */
+export const copyFromLocaleToast = writable({
+  id: undefined,
+  show: false,
+  status: 'success',
+  message: undefined,
+  count: 1,
+  sourceLanguage: undefined,
+});
+
+/**
+ * @type {Writable<?EntryEditorPane>}
+ */
+export const editorFirstPane = writable(null);
+
+/**
+ * @type {Writable<?EntryEditorPane>}
+ */
+export const editorSecondPane = writable(null);
+
+/**
+ * View settings for the Select Assets dialog.
+ * @type {Writable<SelectAssetsView | undefined>}
+ */
+export const selectAssetsView = writable();
+
+/**
+ * Custom entry preview stylesheet URLs registered with the `CMS.registerPreviewStyle()` API.
+ * @type {Set<string>}
+ * @see https://decapcms.org/docs/customization/
+ * @see https://sveltiacms.app/en/docs/api/preview-styles
+ */
+export const customPreviewStyleRegistry = new Set();
+
+/**
+ * Custom entry preview templates registered with the `CMS.registerPreviewTemplate()` API.
+ * @type {Map<string, ComponentType<CustomPreviewTemplateProps>>}
+ * @see https://decapcms.org/docs/customization/#registerpreviewtemplate
+ * @see https://sveltiacms.app/en/docs/api/preview-templates
+ */
+export const customPreviewTemplateRegistry = new Map();

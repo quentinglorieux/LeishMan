@@ -1,69 +1,62 @@
 <script>
   import { Progressbar } from '@sveltia/ui';
-  import DOMPurify from 'isomorphic-dompurify';
+  import { sanitize } from 'isomorphic-dompurify';
   import { marked } from 'marked';
   import { _ } from 'svelte-i18n';
+
   import SveltiaLogo from '$lib/assets/sveltia-logo.svg?raw&inline';
   import SignIn from '$lib/components/entrance/sign-in.svelte';
   import { announcedPageStatus } from '$lib/services/app/navigation';
-  import { inAuthPopup } from '$lib/services/backends/shared/auth';
-  import { siteConfig, siteConfigError } from '$lib/services/config';
+  import { inAuthPopup } from '$lib/services/backends/git/shared/auth';
+  import { cmsConfig, cmsConfigErrors } from '$lib/services/config';
   import { dataLoaded, dataLoadedProgress } from '$lib/services/contents';
   import { user } from '$lib/services/user';
   import { signInError, unauthenticated } from '$lib/services/user/auth';
   import { prefs, prefsError } from '$lib/services/user/prefs';
-  import { userRole } from "$lib/services/user/role";
-
 
   $effect(() => {
     $announcedPageStatus = $_('welcome_to_sveltia_cms');
   });
 </script>
 
+{#snippet parseMarkdown(/** @type {string} */ str)}
+  {@html sanitize(/** @type {string} */ (marked.parseInline(str)), {
+    ALLOWED_TAGS: ['a', 'code'],
+    ALLOWED_ATTR: ['href'],
+  })}
+{/snippet}
+
 <div role="none" class="container" inert={$user && $dataLoaded}>
   <div role="none" class="inner">
-    {#if $siteConfig || $siteConfigError}
-      {@const logoURL = $siteConfig?.logo_url}
+    {#if $cmsConfig || $cmsConfigErrors.length}
+      {@const logoURL = $cmsConfig?.logo?.src ?? $cmsConfig?.logo_url}
       <img src={logoURL || `data:image/svg+xml;base64,${btoa(SveltiaLogo)}`} alt="" class="logo" />
     {/if}
-
-    {#if $userRole === "admin"}
-  <div class="admin-section">
-    <h2>🔧 Admin Controls</h2>
-  </div>
-{:else if $userRole === "editor"}
-  <div class="editor-section">
-    <h2>✍️ Editor Controls</h2>
-  </div>
-{:else if $userRole === "viewer"}
-  <div class="viewer-section">
-    <h2>👀 Viewer Mode</h2>
-  </div>
-{:else}
-  <p>🔒 You are not logged in.</p>
-{/if}
-
-
-    <h1> Rubidium CMS for Leishman</h1>
-    {#if $siteConfigError}
+    <h1>Sveltia CMS</h1>
+    {#if $cmsConfigErrors.length}
       <div role="alert" class="message">
-        {$siteConfigError.message}
-        {$_('config.error.try_again')}
+        <div role="none">
+          {$_($cmsConfigErrors.length === 1 ? 'config.one_error' : 'config.many_errors')}
+        </div>
+        <ul class="error">
+          {#each $cmsConfigErrors as error}
+            <li>
+              {@render parseMarkdown(error)}
+            </li>
+          {/each}
+        </ul>
       </div>
     {:else if $prefsError}
       <div role="alert" class="message">
         {$_(`prefs.error.${$prefsError.type}`)}
       </div>
-    {:else if !$siteConfig || !$prefs}
-      <div role="alert" class="message">{$_('loading_site_config')}</div>
-    {:else if $signInError.message && !$signInError.canRetry}
+    {:else if !$cmsConfig || !$prefs}
+      <div role="alert" class="message">{$_('loading_cms_config')}</div>
+    {:else if $signInError.message && $signInError.context === 'dataFetch'}
       <div role="alert">
         <div role="none" class="message">{$_('loading_site_data_error')}</div>
         <div role="none" class="error">
-          {@html DOMPurify.sanitize(
-            /** @type {string} */ (marked.parseInline($signInError.message)),
-            { ALLOWED_TAGS: ['a', 'code'], ALLOWED_ATTR: ['href'] },
-          )}
+          {@render parseMarkdown($signInError.message)}
         </div>
       </div>
     {:else if $inAuthPopup}
@@ -109,6 +102,10 @@
     .logo {
       max-width: 160px;
       height: auto;
+
+      @media (width < 768px) {
+        max-width: 120px;
+      }
     }
 
     h1 {
@@ -119,20 +116,38 @@
       font-size: var(--sui-font-size-xxx-large);
     }
 
-    :global(.message) {
-      margin: 0 0 16px;
-      font-size: var(--sui-font-size-large);
-      font-weight: var(--sui-font-weight-normal);
-      text-align: center;
-    }
-
     .error {
       border-radius: var(--sui-control-medium-border-radius);
       padding: 12px;
-      background-color: var(--sui-secondary-background-color);
+      background-color: var(--sui-tertiary-background-color);
       font-size: var(--sui-font-size-default);
-      line-height: 1.5;
       text-align: center;
+      -webkit-user-select: text;
+      user-select: text;
+      cursor: text;
+    }
+
+    :global {
+      // `<SignIn>` also has `.message`
+      .message {
+        margin: 0 0 16px;
+        font-size: var(--sui-font-size-large);
+        font-weight: var(--sui-font-weight-normal);
+        text-align: center;
+
+        ul {
+          margin: 12px 0 0;
+          padding: 0;
+          max-height: 160px;
+          overflow-y: auto;
+          list-style: none;
+        }
+
+        li {
+          margin: 12px;
+          padding: 0;
+        }
+      }
     }
   }
 </style>

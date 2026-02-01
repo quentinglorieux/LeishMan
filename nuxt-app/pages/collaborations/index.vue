@@ -1,13 +1,18 @@
 <template>
-  <section class="bg-pasteur-blue text-white py-16">
-    <div class="container mx-auto text-center">
-      <h1 class="text-4xl font-bold">Collaborations</h1>
+  <section class="relative overflow-hidden rounded-[28px] border border-white/70 bg-white/70 px-8 py-10 shadow-lg">
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-600/15 via-cyan-500/10 to-transparent"></div>
+    <div class="relative">
+      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Partners</p>
+      <h1 class="font-display text-3xl sm:text-4xl">Collaborations</h1>
+      <p class="mt-3 max-w-2xl text-sm text-slate-600">
+        Organizations, labs, and institutions collaborating with the network.
+      </p>
     </div>
   </section>
 
 
-  <div class="md:p-10">
-    <div class="flex flex-wrap sbt">
+  <div class="mt-10">
+    <div class="grid gap-6 lg:grid-cols-2">
       <div v-for="(collab, index) in collaborations" class="col">
         
         <CardLR
@@ -15,6 +20,7 @@
         :title="collab.title"
         :imageURL="collab.image"
         :html="collab.htmlDescription"
+        :forceSideImage="true"
         :externalLink="{
           label: 'Go to the website',
           link: `${collab?.lien}`,
@@ -30,7 +36,7 @@
 <script setup>
 import MarkdownIt from "markdown-it";
 
-const collaborationsRaw = await queryContent("collaborations").find();
+const collaborationsRaw = await queryCollection("collaborations").all();
 
 const md = new MarkdownIt({
   html: true,

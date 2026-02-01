@@ -1,17 +1,19 @@
 <script>
   import { Dialog, TextInput } from '@sveltia/ui';
-  import { generateUUID } from '@sveltia/utils/crypto';
   import { getPathInfo } from '@sveltia/utils/file';
   import { _ } from 'svelte-i18n';
-  import { moveAssets } from '$lib/services/assets/data';
-  import {
-    getAssetDetails,
-    getAssetsByDirName,
-    renamingAsset,
-    showAssetOverlay,
-  } from '$lib/services/assets';
 
-  const componentId = generateUUID('short');
+  import { goto, parseLocation } from '$lib/services/app/navigation';
+  import { getAssetsByDirName, renamingAsset } from '$lib/services/assets';
+  import { moveAssets } from '$lib/services/assets/data/move';
+  import { getAssetDetails } from '$lib/services/assets/info';
+  import { showAssetOverlay } from '$lib/services/assets/view';
+
+  /**
+   * @import { Entry } from '$lib/types/private';
+   */
+
+  const componentId = $props.id();
 
   let open = $state(false);
   /** @type {{ dirname?: string, filename: string, extension?: string }} */
@@ -49,6 +51,25 @@
     }
   };
 
+  /**
+   * Rename the asset by moving it to a new path. Also, update the URL hash silently to reflect the
+   * new asset name if the rename dialog was opened in the asset details view.
+   */
+  const renameAsset = async () => {
+    if (!asset) {
+      return;
+    }
+
+    const oldPath = asset.path;
+    const newPath = `${dirname}/${newName}${extension ? `.${extension}` : ''}`;
+
+    await moveAssets('rename', [{ asset, path: newPath }]);
+
+    if (parseLocation().path === `/assets/${oldPath}`) {
+      await goto(`/assets/${newPath}`, { replaceState: true, notifyChange: false });
+    }
+  };
+
   $effect(() => {
     if (asset) {
       initState();
@@ -69,11 +90,7 @@
   okLabel={$_('rename')}
   okDisabled={newName === filename || invalid}
   onOk={() => {
-    if (asset) {
-      moveAssets('rename', [
-        { asset, path: `${dirname}/${newName}${extension ? `.${extension}` : ''}` },
-      ]);
-    }
+    renameAsset();
   }}
   onClose={() => {
     $renamingAsset = undefined;
@@ -95,7 +112,7 @@
       <span role="none">.{extension}</span>
     {/if}
   </div>
-  <div class="error" id="{componentId}-error">
+  <div role="none" class="error" id="{componentId}-error">
     {#if invalid}
       {$_(`enter_new_name_for_asset_error.${error}`)}
     {/if}

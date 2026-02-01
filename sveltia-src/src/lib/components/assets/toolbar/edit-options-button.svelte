@@ -1,27 +1,30 @@
 <script>
   import { Divider, Menu, MenuButton, MenuItem } from '@sveltia/ui';
   import { _ } from 'svelte-i18n';
-  import {
-    canEditAsset,
-    defaultAssetDetails,
-    editingAsset,
-    getAssetDetails,
-    renamingAsset,
-    uploadingAssets,
-  } from '$lib/services/assets';
+
+  import { editingAsset, renamingAsset, uploadingAssets } from '$lib/services/assets';
+  import { defaultAssetDetails, getAssetDetails } from '$lib/services/assets/info';
+  import { canEditAsset } from '$lib/services/assets/kinds';
   import { showUploadAssetsDialog } from '$lib/services/assets/view';
   import { backend } from '$lib/services/backends';
   import { prefs } from '$lib/services/user/prefs';
 
   /**
+   * @import { Snippet } from 'svelte';
+   * @import { Asset, AssetDetails } from '$lib/types/private';
+   */
+
+  /**
    * @typedef {object} Props
-   * @property {Asset} [asset] - Selected asset.
+   * @property {Asset} [asset] Selected asset.
+   * @property {Snippet} [extraItems] Slot content.
    */
 
   /** @type {Props} */
   let {
     /* eslint-disable prefer-const */
     asset,
+    extraItems = undefined,
     /* eslint-enable prefer-const */
   } = $props();
 
@@ -38,7 +41,7 @@
   };
 
   $effect(() => {
-    void asset;
+    void [asset];
     updateProps();
   });
 </script>
@@ -51,6 +54,7 @@
 >
   {#snippet popup()}
     <Menu aria-label={$_('edit_options')}>
+      {@render extraItems?.()}
       <MenuItem
         variant="ghost"
         label={$_('edit')}

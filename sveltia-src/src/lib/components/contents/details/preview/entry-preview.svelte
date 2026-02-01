@@ -1,12 +1,19 @@
 <script>
-  import { sleep } from '@sveltia/utils/misc';
   import { _ } from 'svelte-i18n';
+
+  import VisibilityObserver from '$lib/components/common/visibility-observer.svelte';
+  import EntryPreviewIframe from '$lib/components/contents/details/preview/entry-preview-iframe.svelte';
   import FieldPreview from '$lib/components/contents/details/preview/field-preview.svelte';
   import { entryDraft } from '$lib/services/contents/draft';
+  import { customPreviewStyleRegistry } from '$lib/services/contents/editor';
+
+  /**
+   * @import { InternalLocaleCode } from '$lib/types/private';
+   */
 
   /**
    * @typedef {object} Props
-   * @property {LocaleCode} locale - Current pane’s locale.
+   * @property {InternalLocaleCode} locale Current pane’s locale.
    */
 
   /** @type {Props} */
@@ -16,21 +23,37 @@
     /* eslint-enable prefer-const */
   } = $props();
 
-  const collection = $derived($entryDraft?.collection);
-  const collectionFile = $derived($entryDraft?.collectionFile);
-  const fields = $derived(collectionFile?.fields ?? collection?.fields ?? []);
+  const fields = $derived($entryDraft?.fields ?? []);
 </script>
 
-<div role="document" aria-label={$_('content_preview')}>
+{#snippet children()}
   {#each fields as fieldConfig (fieldConfig.name)}
-    {#await sleep(0) then}
-      <FieldPreview keyPath={fieldConfig.name} {locale} {fieldConfig} />
-    {/await}
+    <VisibilityObserver>
+      <FieldPreview
+        keyPath={fieldConfig.name}
+        typedKeyPath={fieldConfig.name}
+        {locale}
+        {fieldConfig}
+      />
+    </VisibilityObserver>
   {/each}
-</div>
+{/snippet}
+
+<VisibilityObserver>
+  {#if customPreviewStyleRegistry.size}
+    <EntryPreviewIframe {locale} styleURLs={[...customPreviewStyleRegistry]} {children} />
+  {:else}
+    <div role="document" aria-label={$_('content_preview')}>
+      {@render children()}
+    </div>
+  {/if}
+</VisibilityObserver>
 
 <style lang="scss">
   div {
-    padding: 8px 16px;
+    --entry-preview-padding-block: 8px;
+    --entry-preview-padding-inline: 16px;
+    padding-block: var(--entry-preview-padding-block);
+    padding-inline: var(--entry-preview-padding-inline);
   }
 </style>

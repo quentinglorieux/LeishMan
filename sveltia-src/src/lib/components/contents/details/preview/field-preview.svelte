@@ -1,15 +1,23 @@
 <script>
   import { escapeRegExp } from '@sveltia/utils/string';
-  import { previews } from '$lib/components/contents/details/widgets';
+
+  import { previews } from '$lib/components/contents/details/fields';
   import { entryDraft } from '$lib/services/contents/draft';
-  import { getExpanderKeys, syncExpanderStates } from '$lib/services/contents/draft/editor';
-  import { defaultI18nConfig } from '$lib/services/contents/i18n';
+  import { getExpanderKeys, syncExpanderStates } from '$lib/services/contents/editor/expanders';
+  import { isFieldMultiple } from '$lib/services/contents/entry/fields';
+  import { DEFAULT_I18N_CONFIG } from '$lib/services/contents/i18n/config';
+
+  /**
+   * @import { InternalLocaleCode, TypedFieldKeyPath } from '$lib/types/private';
+   * @import { Field, FieldKeyPath, VisibleField } from '$lib/types/public';
+   */
 
   /**
    * @typedef {object} Props
-   * @property {LocaleCode} locale - Current pane’s locale.
-   * @property {FieldKeyPath} keyPath - Field key path.
-   * @property {Field} fieldConfig - Field configuration.
+   * @property {InternalLocaleCode} locale Current pane’s locale.
+   * @property {FieldKeyPath} keyPath Field key path.
+   * @property {TypedFieldKeyPath} typedKeyPath Typed field key path.
+   * @property {Field} fieldConfig Field configuration.
    */
 
   /** @type {Props} */
@@ -17,29 +25,26 @@
     /* eslint-disable prefer-const */
     locale,
     keyPath,
+    typedKeyPath,
     fieldConfig,
     /* eslint-enable prefer-const */
   } = $props();
 
-  const {
-    name: fieldName,
-    label = '',
-    widget: widgetName = 'string',
-    preview = true,
-    i18n = false,
-  } = $derived(fieldConfig);
-  const hasMultiple = $derived(['relation', 'select'].includes(widgetName));
-  const multiple = $derived(
-    hasMultiple ? /** @type {RelationField | SelectField} */ (fieldConfig).multiple : undefined,
-  );
-  const isList = $derived(widgetName === 'list' || (hasMultiple && multiple));
+  const { name: fieldName, widget: fieldType = 'string', i18n = false } = $derived(fieldConfig);
+  const { label = '', preview = true } = $derived(/** @type {VisibleField} */ (fieldConfig));
+  const multiple = $derived(isFieldMultiple(fieldConfig));
+  const isList = $derived(fieldType === 'list' || multiple);
+  const isIndexFile = $derived($entryDraft?.isIndexFile ?? false);
   const collection = $derived($entryDraft?.collection);
   const collectionName = $derived($entryDraft?.collectionName ?? '');
   const collectionFile = $derived($entryDraft?.collectionFile);
   const fileName = $derived($entryDraft?.fileName);
   const valueMap = $derived($state.snapshot($entryDraft?.currentValues[locale] ?? {}));
+  const expanderKeys = $derived(
+    getExpanderKeys({ collectionName, fileName, valueMap, keyPath, isIndexFile }),
+  );
   const { i18nEnabled, defaultLocale } = $derived(
-    (collectionFile ?? collection)?._i18n ?? defaultI18nConfig,
+    (collectionFile ?? collection)?._i18n ?? DEFAULT_I18N_CONFIG,
   );
   const canTranslate = $derived(i18nEnabled && (i18n === true || i18n === 'translate'));
   const canDuplicate = $derived(i18nEnabled && i18n === 'duplicate');
@@ -56,14 +61,11 @@
 
   /**
    * Called whenever the preview field is clicked. Highlight the corresponding editor field by
-   * expanding the parent list/object(s), moving the element into the viewport, and blinking it.
+   * expanding the parent list/object(s), moving the element into the viewport, and focus any
+   * control within the field, such as a text input or button.
    */
   const highlightEditorField = () => {
-    syncExpanderStates(
-      Object.fromEntries(
-        getExpanderKeys({ collectionName, fileName, valueMap, keyPath }).map((key) => [key, true]),
-      ),
-    );
+    syncExpanderStates(Object.fromEntries(expanderKeys.map((key) => [key, true])));
 
     window.requestAnimationFrame(() => {
       const targetField = document.querySelector(
@@ -77,23 +79,25 @@
           targetField.scrollIntoView();
         }
 
-        targetField.classList.add('highlight');
+        const widgetWrapper = targetField.querySelector('.field-wrapper');
 
-        window.setTimeout(() => {
-          targetField.classList.remove('highlight');
-        }, 1500);
+        /** @type {HTMLElement | null} */ (
+          widgetWrapper?.querySelector('[contenteditable="true"], [tabindex="0"]') ??
+            widgetWrapper?.querySelector('input, textarea, button')
+        )?.focus();
       }
     });
   };
 </script>
 
-{#if widgetName !== 'hidden' && preview && (locale === defaultLocale || canTranslate || canDuplicate)}
+{#if fieldType !== 'hidden' && preview && (locale === defaultLocale || canTranslate || canDuplicate)}
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
   <section
     role="group"
-    data-widget={widgetName}
+    data-field-type={fieldType}
     data-key-path={keyPath}
+    data-typed-key-path={typedKeyPath}
     tabindex="0"
     onkeydown={(event) => {
       if (event.key === 'Enter') {
@@ -107,24 +111,18 @@
     }}
   >
     <h4>{label || fieldName}</h4>
-    {#if widgetName in previews}
-      {@const Preview = previews[widgetName]}
-      <Preview {keyPath} {locale} {fieldConfig} {currentValue} />
+    {#if fieldType in previews}
+      {@const Preview = previews[fieldType]}
+      <Preview {keyPath} {typedKeyPath} {locale} {fieldConfig} {currentValue} />
     {/if}
   </section>
 {/if}
 
 <style lang="scss">
-  section {
+  :global([role='document']) section {
     overflow: hidden;
     margin: 8px 0;
     padding: 8px 0;
-
-    & > :global(*) {
-      margin-right: auto;
-      margin-left: auto;
-      max-width: 768px;
-    }
 
     h4 {
       color: var(--sui-secondary-foreground-color);
@@ -135,14 +133,35 @@
       }
     }
 
-    :global(p) {
-      margin: 8px auto 0;
-      -webkit-user-select: text;
-      user-select: text;
-    }
+    :global {
+      & > * {
+        margin-inline: auto;
+        max-width: 768px;
+      }
 
-    :global(img) {
-      max-height: 800px !important;
+      p {
+        margin: 8px auto 0;
+        -webkit-user-select: text;
+        user-select: text;
+      }
+
+      img {
+        max-height: 800px !important;
+      }
+    }
+  }
+
+  @media (width < 768px) {
+    :global([role='document']) {
+      & > section:is([data-field-type='file'], [data-field-type='image']):has(:global(img)),
+      & > section:is([data-field-type='string']):has(:global(iframe)) {
+        overflow: visible;
+      }
+
+      & > section:is([data-field-type='file'], [data-field-type='image']) :global(img) {
+        width: 100%;
+        max-height: none !important;
+      }
     }
   }
 </style>

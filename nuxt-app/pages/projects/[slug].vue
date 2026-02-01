@@ -1,46 +1,56 @@
 <template>
-  <div class="w-4/5 mx-auto">
+  <div class="space-y-8">
     <!-- Title row with back button -->
-    <div class="flex items-center justify-between my-8 gap-4">
-      <h1 class="text-4xl font-bold m-0 dark:text-white">
-        {{ newsItem?.title }}
-      </h1>
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Working group</p>
+        <div class="flex items-center gap-3">
+          <img
+            v-if="newsItem?.image"
+            :src="newsItem?.image"
+            :alt="newsItem?.title"
+            class="h-12 w-12 rounded-full border border-white/70 object-cover shadow-sm"
+          />
+          <h1 class="font-display text-3xl sm:text-4xl text-slate-900">
+            {{ newsItem?.title }}
+          </h1>
+        </div>
+      </div>
 
-      <NuxtLink
-        to="/projects"
-        class="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 transition"
-        aria-label="All Working Groups"
-      >
+      <div class="flex items-center gap-3">
+        <NuxtLink
+          to="/projects"
+          class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          aria-label="All Working Groups"
+        >
         <!-- left arrow icon -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
              viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round"
                 d="M10 19l-7-7m0 0l7-7m-7 7h20"/>
         </svg>
-        <span class="hidden sm:inline">All Working Groups</span>
+        <span class="hidden sm:inline">All working groups</span>
         <span class="sm:hidden">Back</span>
-      </NuxtLink>
+        </NuxtLink>
+      </div>
     </div>
 
-    <p>{{ newsItem?.date }}</p>
+    <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <span class="rounded-full border border-slate-200 bg-white px-3 py-1">{{ newsItem?.date }}</span>
+    </div>
 
-    <img
-      v-if="newsItem?.image"
-      :src="newsItem?.image"
-      :alt="newsItem?.title"
-      class="w-full h-64 object-cover mb-6"
-    />
+    <!-- No hero image -->
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Left column: main content -->
       <div class="lg:col-span-2">
-        <div class="prose dark:prose-invert pt-10" v-html="renderedHtml" />
+        <div class="prose max-w-none text-slate-700" v-html="renderedHtml" />
       </div>
 
       <!-- Right column: Nextcloud files via Cloudflare Worker -->
       <aside class="lg:col-span-1">
-        <div class="sticky top-8">
-          <h2 class="text-2xl font-semibold mb-4 pt-10">Documents</h2>
+        <div class="sticky top-6 rounded-[22px] border border-white/70 bg-white/80 p-5 shadow-lg">
+          <h2 class="font-display text-2xl mb-4">Documents</h2>
           <div v-if="authPending" class="text-sm text-gray-500">Checking access…</div>
           <div v-else-if="!isAuthorized" class="text-sm text-red-600">
             You don’t have access to “{{ targetFolderName }}”.
@@ -91,7 +101,9 @@ const route = useRoute()
 const { public: { workerBase } } = useRuntimeConfig()
 
 /* ---------- Main content ---------- */
-const newsItem = await queryContent('project').where({ title: route.params.slug }).findOne()
+const newsItem = await queryCollection("projects")
+  .where("title", "=", route.params.slug)
+  .first();
 const md = new MarkdownIt()
 const renderedHtml = md.render(newsItem?.description || '')
 

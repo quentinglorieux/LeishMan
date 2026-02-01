@@ -7,9 +7,14 @@
   import { sleep } from '@sveltia/utils/misc';
 
   /**
+   * @import { Snippet } from 'svelte';
+   * @import { ViewType } from '$lib/types/private';
+   */
+
+  /**
    * @typedef {object} Props
-   * @property {ViewType} viewType - View type.
-   * @property {import('svelte').Snippet} [children] - Slot content.
+   * @property {ViewType} viewType View type.
+   * @property {Snippet} [children] Slot content.
    */
 
   /** @type {Props & Record<string, any>} */
@@ -23,7 +28,7 @@
 </script>
 
 <div role="none" class="{viewType}-view">
-  {#await sleep(0) then}
+  {#await sleep() then}
     <Grid multiple clickToSelect={false} {...rest}>
       {@render children?.()}
     </Grid>
@@ -31,179 +36,184 @@
 </div>
 
 <style lang="scss">
+  :is(.grid-view, .list-view) {
+    display: block;
+    padding: 0 16px 16px;
+    height: 100%;
+    overflow-y: auto;
+  }
+
   .grid-view {
-    :global(.row-group-caption) {
-      display: block;
-      margin: 8px;
-      grid-column: 1 / -1; // span the entire row
+    @media (width < 768px) {
+      padding: 4px;
+    }
 
-      :global(th) {
+    :global {
+      .row-group-caption {
         display: block;
-      }
-    }
+        grid-column: 1 / -1; // span the entire row
 
-    :global(.grid-body) {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(var(--grid-size, 200px), 1fr));
-      border-width: 0;
-    }
-
-    :global([role='row']) {
-      display: block;
-      position: relative;
-      overflow: hidden;
-      height: auto;
-      text-align: left;
-
-      &:focus-visible {
-        outline-color: transparent;
-
-        :global(.preview) {
-          outline-offset: -2px;
-          outline-width: 2px !important;
-          outline-style: solid;
-          outline-color: var(--sui-primary-accent-color-light);
+        th {
+          display: block;
         }
       }
 
-      :global(.grid-cell) {
-        display: block;
+      .row-group:not(:first-child) .row-group-caption {
+        margin-top: 16px;
       }
 
-      :global(.grid-cell.image:empty) {
-        border-radius: var(--sui-control-medium-border-radius);
-        background-color: var(--sui-secondary-background-color);
-        aspect-ratio: 1 / 1;
-      }
+      .grid-body {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(var(--grid-size, 200px), 1fr));
+        gap: 16px;
+        border-width: 0;
 
-      :global(.checkbox) {
-        position: absolute;
-        inset: 8px auto auto 8px;
-        z-index: 2;
-      }
-
-      :global(.title) {
-        :global(span) {
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          line-clamp: 2;
-          overflow: hidden;
-          margin: 12px 8px 0;
-          height: 40px;
-          line-height: 1.5;
-          word-break: break-all;
+        @media (width < 768px) {
+          grid-template-columns: repeat(auto-fill, minmax(var(--grid-size, 160px), 1fr));
+          gap: 8px;
         }
       }
-    }
 
-    :global([role='row'][tabindex]) {
-      border-radius: var(--sui-control-medium-border-radius);
-      padding: 8px;
-      cursor: pointer;
-      transition: background-color 200ms;
+      .grid-row {
+        display: block;
+        position: relative;
+        overflow: hidden;
+        height: auto;
+        text-align: start;
 
-      &:hover,
-      &:focus,
-      &:active {
-        background-color: var(--sui-hover-background-color);
+        .grid-cell {
+          display: block;
+
+          &.image:empty {
+            aspect-ratio: 1 / 1;
+          }
+        }
+
+        .checkbox {
+          position: absolute;
+          inset-block-start: 4px;
+          inset-inline-start: 4px;
+          z-index: 2;
+        }
+
+        .title {
+          .label {
+            overflow: hidden;
+            margin: 12px;
+            height: 40px;
+            line-height: 1.5;
+          }
+        }
+
+        &[tabindex] {
+          border-radius: var(--sui-control-large-border-radius);
+          background-color: var(--sui-secondary-background-color);
+          cursor: pointer;
+          transition: background-color 200ms;
+
+          &:is(:hover, :focus, :active) {
+            background-color: var(--sui-hover-background-color);
+          }
+        }
       }
     }
   }
 
   .list-view {
-    :global([role='grid']) {
-      :global(.row-group) {
-        :global(.row-group-caption + .grid-row) {
-          :global(.grid-cell) {
-            border-top-width: 0 !important;
+    @media (width < 768px) {
+      padding: 0;
+    }
+
+    :global {
+      [role='grid'] {
+        @media (width < 768px) {
+          width: 100%;
+          --sui-focus-ring-width: 0;
+        }
+
+        .row-group {
+          .row-group-caption + .grid-row {
+            .grid-cell {
+              border-top-width: 0 !important;
+            }
+          }
+
+          .row-group-caption ~ .grid-row:last-child {
+            .grid-cell {
+              border-bottom-width: 0 !important;
+            }
           }
         }
 
-        :global(.row-group-caption ~ .grid-row:last-child) {
-          :global(.grid-cell) {
-            border-bottom-width: 0 !important;
+        .grid-row {
+          transition-property: background-color, outline-color;
+          transition-duration: 200ms;
+
+          &[tabindex] {
+            cursor: pointer;
+          }
+
+          &:hover {
+            background-color: var(--sui-hover-background-color);
+          }
+
+          &:last-child .grid-cell {
+            border-width: 1px 0;
           }
         }
-      }
 
-      :global([role='row']) {
-        outline-offset: -2px;
-        outline-width: 2px !important;
-        outline-style: solid;
-        outline-color: transparent;
-        transition-property: background-color, outline-color;
-        transition-duration: 200ms;
-
-        &:focus {
-          outline-color: var(--sui-primary-accent-color-light);
-        }
-      }
-
-      :global([role='row'][tabindex]) {
-        cursor: pointer;
-      }
-
-      :global([role='row']:hover) {
-        background-color: var(--sui-hover-background-color);
-      }
-
-      :global([role='gridcell']) {
-        vertical-align: middle;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        height: 40px;
-        padding: 0 8px;
-        max-width: 100%;
-        color: var(--sui-secondary-foreground-color);
-        white-space: nowrap;
-
-        :global(.label) {
+        .grid-cell {
           overflow: hidden;
-          text-overflow: ellipsis;
+          border-width: 1px 0 0;
+          border-color: var(--sui-secondary-border-color);
+          padding: 0 16px 0 0;
+          height: 40px;
+          max-width: 100%;
+          color: var(--sui-secondary-foreground-color);
+          white-space: nowrap;
+          vertical-align: middle;
+
+          @media (width < 768px) {
+            border-width: 0 !important;
+            height: 64px;
+          }
+
+          &.checkbox {
+            padding-inline-start: 8px !important;
+            width: 44px;
+          }
+
+          &.title {
+            width: 100%; /* flex: auto */
+            color: var(--sui-primary-foreground-color);
+          }
+
+          &:first-child {
+            padding-inline-start: 16px;
+          }
+
+          .label {
+            overflow: hidden;
+
+            @media (width < 768px) {
+              white-space: normal;
+              line-height: var(--sui-line-height-compact);
+            }
+          }
+
+          &.image {
+            width: 48px;
+
+            &:empty::before {
+              display: block;
+              border-radius: var(--sui-control-medium-border-radius);
+              width: var(--icon-size);
+              height: var(--icon-size);
+              background-color: var(--sui-secondary-background-color);
+              content: '';
+            }
+          }
         }
-      }
-
-      :global(.grid-cell.image:empty::before) {
-        display: block;
-        border-radius: var(--sui-control-medium-border-radius);
-        width: 40px;
-        height: 40px;
-        background-color: var(--sui-secondary-background-color);
-        content: '';
-      }
-
-      :global([role='gridcell']:first-child) {
-        padding-left: 16px;
-      }
-
-      :global([role='gridcell']:last-child) {
-        padding-right: 16px;
-      }
-
-      :global([role='row'] [role='gridcell']) {
-        border-width: 1px 0 0;
-        border-color: var(--sui-secondary-border-color);
-      }
-
-      :global([role='row']:last-child [role='gridcell']) {
-        border-width: 1px 0;
-      }
-
-      :global([role='gridcell'].checkbox) {
-        width: 16px;
-      }
-
-      :global([role='gridcell'].title) {
-        width: 100%; /* flex: auto */
-        color: var(--sui-primary-foreground-color);
-      }
-
-      :global([role='gridcell'].image) {
-        box-sizing: content-box;
-        padding: 8px;
-        width: 40px;
-        height: 40px;
       }
     }
   }

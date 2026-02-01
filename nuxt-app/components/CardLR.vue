@@ -1,74 +1,76 @@
 <template>
-  <div class="w-screen">
-    <div
-      class="block w-11/12 m-4 px-2 py-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+  <div>
+    <article
+      class="flex h-full flex-col rounded-[22px] border border-white/70 bg-white/80 p-6 shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
     >
-      <div class="flex flex-wrap items-center justify-between p-4">
-        <h3
-          class="text-gray-800 font-bold text-xl md:uppercase dark:text-white"
-        >
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <h3 class="font-display text-2xl text-slate-900">
           {{ title }}
         </h3>
-        <div
-          class="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-800 dark:text-white"
-        >
-          <div v-if="date" class="sm:mr-10 pt-5 sm:p-0">
-            {{ date }}
-          </div>
-          <div v-if="location">
-            {{ location }}
-          </div>
+        <div class="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div v-if="date">{{ date }}</div>
+          <div v-if="location">{{ location }}</div>
           <div v-if="mail">
-            <a :href="'mailto:' + mail">{{ mail }}</a>
+            <a :href="'mailto:' + mail" class="text-blue-700 hover:text-blue-500">Email</a>
           </div>
         </div>
       </div>
 
-      <div class="sm:flex">
-        <!-- Image on the left (if leftright is false) -->
-        <div v-if="!leftright" class="flex-shrink-0 mr-4">
-          <img :src="imageURL" class="fixed-size" />
+      <div
+        class="mt-6 grid gap-6"
+        :class="imageURL
+          ? (forceSideImage ? 'grid-cols-[120px_1fr] sm:grid-cols-[160px_1fr] lg:grid-cols-[220px_1fr]' : 'lg:grid-cols-[220px_1fr]')
+          : 'lg:grid-cols-1'"
+      >
+        <!-- Image -->
+        <div
+          v-if="imageURL"
+          class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100"
+          :class="[
+            leftright ? 'lg:order-2' : 'lg:order-1',
+            imageSize === 'sm' ? 'lg:w-32' : imageSize === 'md' ? 'lg:w-44' : 'lg:w-56',
+            imageShape === 'square' ? 'aspect-square' : ''
+          ]"
+        >
+          <img
+            :src="imageURL"
+            class="w-full object-cover"
+            :class="imageSize === 'sm' ? 'h-24 sm:h-28 lg:h-32' : imageSize === 'md' ? 'h-32 sm:h-36 lg:h-40' : imageShape === 'square' ? 'h-full' : 'h-40 sm:h-48 lg:h-full'"
+          />
         </div>
-      
+        <div
+          v-else
+          class="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 text-xs uppercase tracking-[0.2em] text-slate-400"
+        >
+          No image provided
+        </div>
+
         <!-- Textual content -->
-        <div class="flex-1">
-          <div v-if="html" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
-            <div
-              class="prose dark:prose-invert mb-4 md:w-5/6 p-4 text-gray-800 dark:text-white"
-              v-html="html"
-            />
-          </div>
-      
-          <div v-if="abstract" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
+        <div class="flex h-full flex-col space-y-4">
+          <div v-if="html" class="prose max-w-none text-slate-700" v-html="html" />
+          <p v-if="abstract" class="text-sm text-slate-600">
             {{ abstract }}
-          </div>
-      
-          <div v-if="seeMore?.link" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
+          </p>
+
+          <div class="mt-auto flex flex-wrap gap-3">
             <NuxtLink
+              v-if="seeMore?.link"
               :to="seeMore.link"
-              class="inline-block bg-blue-400 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition dark:bg-blue-500 dark:hover:bg-blue-400"
+              class="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-slate-800"
             >
               {{ seeMore.label }}
             </NuxtLink>
-          </div>
-      
-          <div v-if="externalLink?.link" class="md:w-5/6 p-4 text-gray-800 dark:text-white">
             <NuxtLink
+              v-if="externalLink?.link"
               :to="externalLink.link"
-              class="inline-block bg-blue-400 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition dark:bg-blue-500 dark:hover:bg-blue-400"
+              class="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
             >
               {{ externalLink.label }}
             </NuxtLink>
           </div>
         </div>
-      
-        <!-- Image on the right (if leftright is true) -->
-        <div v-if="leftright" class="flex-shrink-0 ml-4">
-          <img :src="imageURL" class="fixed-size" />
-        </div>
       </div>
-      
-    </div>
+    </article>
   </div>
 </template>
 
@@ -85,14 +87,19 @@ defineProps({
   html: String,
   leftright: Boolean,
   mail: String,
+  imageSize: {
+    type: String,
+    default: "lg",
+  },
+  imageShape: {
+    type: String,
+    default: "rect",
+  },
+  forceSideImage: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 
-<style scoped>
-.fixed-size {
-  width: 200px; /* Set a fixed width */
-  height: 200px; /* Set a fixed height */
-  object-fit: cover; /* This ensures the image covers the container */
-  border-radius: 8px; /* Optional: for rounded corners */
-}
-</style>
+<style scoped></style>

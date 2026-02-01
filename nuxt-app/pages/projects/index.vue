@@ -1,19 +1,25 @@
 <template>
-  <section class="bg-pasteur-blue text-white py-16">
-    <div class="container mx-auto text-center">
-      <h1 class="text-4xl font-bold">Working Groups</h1>
+  <section class="relative overflow-hidden rounded-[28px] border border-white/70 bg-white/70 px-8 py-10 shadow-lg">
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-600/15 via-cyan-500/10 to-transparent"></div>
+    <div class="relative">
+      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Working groups</p>
+      <h1 class="font-display text-3xl sm:text-4xl">Working Groups</h1>
+      <p class="mt-3 max-w-2xl text-sm text-slate-600">
+        Explore the network's working groups and their focus areas.
+      </p>
     </div>
   </section>
 
-  <div class="md:p-10">
-    <div class="flex flex-wrap sbt">
-      <div v-for="(project, index) in projectsList" class="col">
+  <div class="mt-10">
+    <div class="grid gap-6 lg:grid-cols-2 lg:auto-rows-fr">
+      <div v-for="(project, index) in projectsList" class="col h-full">
         <CardLR
           :leftright="index % 2 == 1"
           :title="project.title"
           :imageURL="project.image"
           :html="project.htmlDescription"
           :date="project.date"
+          imageShape="square"
           :seeMore="{
             label: 'Read more',
             link: `/projects/${project?.title}`,
@@ -27,7 +33,7 @@
 <script setup>
 import MarkdownIt from "markdown-it";
 
-const projectsRaw = await queryContent("projects").find();
+const projectsRaw = await queryCollection("projects").all();
 
 const md = new MarkdownIt({
   html: true,

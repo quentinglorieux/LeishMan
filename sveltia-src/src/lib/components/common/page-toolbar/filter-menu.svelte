@@ -3,15 +3,20 @@
   import { _ } from 'svelte-i18n';
 
   /**
+   * @import { Writable } from 'svelte/store';
+   * @import { AssetListView, EntryListView } from '$lib/types/private';
+   * @import { ViewFilter } from '$lib/types/public';
+   */
+
+  /**
    * @typedef {object} Props
-   * @property {import('svelte/store').Writable<EntryListView | AssetListView>} currentView -
-   * Current view details.
-   * @property {string} aria-controls - The `aria-controls` attribute for the menu.
-   * @property {string} [label] - Menu button label.
-   * @property {boolean} [disabled] - Whether to disable the button.
-   * @property {boolean} [multiple] - Whether to allow selecting multiple filter conditions.
-   * @property {string} [noneLabel] - Label to be displayed on the None item.
-   * @property {ViewFilter[]} [filters] - Filter conditions.
+   * @property {Writable<EntryListView | AssetListView>} currentView Current view details.
+   * @property {string} aria-controls The `aria-controls` attribute for the menu.
+   * @property {string} [label] Menu button label.
+   * @property {boolean} [disabled] Whether to disable the button.
+   * @property {boolean} [multiple] Whether to allow selecting multiple filter conditions.
+   * @property {string} [noneLabel] Label to be displayed on the None item.
+   * @property {ViewFilter[]} [filters] Filter conditions.
    */
 
   /** @type {Props} */
@@ -34,7 +39,7 @@
       {#if multiple}
         {#each filters as { label: _label, field, pattern }}
           {@const index = ($currentView.filters || []).findIndex(
-            (f) => f.field === field && f.pattern === pattern,
+            (f) => f.field === field && String(f.pattern) === String(pattern),
           )}
           <MenuItemCheckbox
             label={_label}
@@ -69,7 +74,7 @@
           <MenuItemRadio
             label={_label}
             checked={$currentView.filter?.field === field &&
-              $currentView.filter.pattern === pattern}
+              String($currentView.filter.pattern) === String(pattern)}
             onSelect={() => {
               currentView.update((view) => ({
                 ...view,

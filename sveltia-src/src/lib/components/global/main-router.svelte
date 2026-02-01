@@ -1,27 +1,32 @@
 <script>
-  import { onMount } from "svelte";
-  import AssetsPage from "$lib/components/assets/assets-page.svelte";
-  import UploadAssetsConfirmDialog from "$lib/components/assets/shared/upload-assets-confirm-dialog.svelte";
-  import UploadAssetsDialog from "$lib/components/assets/shared/upload-assets-dialog.svelte";
-  import ConfigPage from "$lib/components/config/config-page.svelte";
-  import ContentsPage from "$lib/components/contents/contents-page.svelte";
-  import TranslatorApiKeyDialog from "$lib/components/contents/details/editor/translator-api-key-dialog.svelte";
-  import EntryParseErrorsToast from "$lib/components/contents/shared/entry-parse-errors-toast.svelte";
-  import GlobalToolbar from "$lib/components/global/toolbar/global-toolbar.svelte";
-  import SearchPage from "$lib/components/search/search-page.svelte";
-  import WorkflowPage from "$lib/components/workflow/workflow-page.svelte";
-  import NextcloudPage from "$lib/components/nextcloud/nextcloud-page.svelte";
-  import {
-    parseLocation,
-    selectedPageName,
-  } from "$lib/services/app/navigation";
-  import { showAssetOverlay } from "$lib/services/assets";
-  import { selectedCollection } from "$lib/services/contents/collection";
-  import { showContentOverlay } from "$lib/services/contents/draft/editor";
+  import { onMount } from 'svelte';
 
-  /**
-   * @type {Record<string, any>}
-   */
+  import AssetsPage from '$lib/components/assets/assets-page.svelte';
+  import UploadAssetsConfirmDialog from '$lib/components/assets/shared/upload-assets-confirm-dialog.svelte';
+  import UploadAssetsDialog from '$lib/components/assets/shared/upload-assets-dialog.svelte';
+  import ConfigPage from '$lib/components/config/config-page.svelte';
+  import ContentsPage from '$lib/components/contents/contents-page.svelte';
+  import TranslatorApiKeyDialog from '$lib/components/contents/details/editor/translator-api-key-dialog.svelte';
+  import EntryParseErrorsToast from '$lib/components/contents/shared/entry-parse-errors-toast.svelte';
+  import MobilePromoInfobar from '$lib/components/global/infobars/mobile-promo-infobar.svelte';
+  import BottomNavigation from '$lib/components/global/toolbar/bottom-navigation.svelte';
+  import GlobalToolbar from '$lib/components/global/toolbar/global-toolbar.svelte';
+  import MenuPage from '$lib/components/menu/menu-page.svelte';
+  import MobileSignInDialog from '$lib/components/menu/mobile-sign-in-dialog.svelte';
+  import SearchPage from '$lib/components/search/search-page.svelte';
+  import SettingsPage from '$lib/components/settings/settings-page.svelte';
+  import WorkflowPage from '$lib/components/workflow/workflow-page.svelte';
+  import NextcloudPage from '$lib/components/nextcloud/nextcloud-page.svelte';
+  import { parseLocation, selectedPageName } from '$lib/services/app/navigation';
+  import { canShowMobileSignInDialog } from '$lib/services/app/onboarding';
+  import { showAssetOverlay } from '$lib/services/assets/view';
+  import { selectedCollection } from '$lib/services/contents/collection';
+  import { showContentOverlay } from '$lib/services/contents/editor';
+  import { searchMode } from '$lib/services/search';
+  import { isSmallScreen } from '$lib/services/user/env';
+  import { userRole } from '$lib/services/user/role';
+
+  /** @type {Record<string, any>} */
   export const pages = {
     collections: ContentsPage,
     assets: AssetsPage,
@@ -29,6 +34,9 @@
     workflow: WorkflowPage,
     config: ConfigPage,
     nextcloud: NextcloudPage,
+    // For small screens
+    menu: MenuPage,
+    settings: SettingsPage,
   };
 
   const SelectedPage = $derived(pages[$selectedPageName]);
@@ -42,38 +50,44 @@
     $showAssetOverlay = false;
 
     const { path } = parseLocation();
-    const { pageName } =
-      path.match(`^\\/(?<pageName>${Object.keys(pages).join("|")})\\b`)
-        ?.groups ?? {};
 
-    const userRole = localStorage.getItem("sveltia-cms.userRole") || "viewer"; // Default role: viewer
-    //  Check if user is accessing an admin-only collection
-    if (
-      pageName === "collections" &&
-      $selectedCollection?.is_admin &&
-      userRole !== "admin"
-    ) {
+    const { pageName } =
+      path.match(`^\\/(?<pageName>${Object.keys(pages).join('|')})\\b`)?.groups ?? {};
+
+    const role =
+      $userRole ||
+      (typeof localStorage !== 'undefined' ? localStorage.getItem('sveltia-cms.userRole') : null) ||
+      'viewer';
+
+    if (pageName === 'collections' && $selectedCollection?.is_admin && role !== 'admin') {
       setTimeout(() => {
-        window.alert(
-          "🚫 You do not have permission to access this collection."
-        );
+        window.alert('🚫 You do not have permission to access this collection.');
       }, 100);
-      window.location.replace("#/collections/members"); // Redirect to a safe location
+      window.location.replace('#/collections');
       return;
     }
-    // ❌ Restrict Nextcloud access if not an admin
-    if (pageName === "nextcloud" && userRole !== "admin") {
+
+    if (pageName === 'nextcloud' && role !== 'admin') {
       setTimeout(() => {
-        window.alert("🚫 You do not have permission to access Nextcloud.");
+        window.alert('🚫 You do not have permission to access Nextcloud.');
       }, 100);
-      window.location.replace("#/collections");
+      window.location.replace('#/collections');
       return;
     }
 
     if (!pageName) {
-      window.location.replace(`#/collections/${$selectedCollection?.name}`);
+      // Redirect any invalid page to the contents page
+      window.location.replace('#/collections');
     } else if ($selectedPageName !== pageName) {
       $selectedPageName = pageName;
+    }
+
+    if (pageName === 'collections') {
+      $searchMode = 'entries';
+    } else if (pageName === 'assets') {
+      $searchMode = 'assets';
+    } else if (pageName !== 'search') {
+      $searchMode = null;
     }
   };
 
@@ -88,10 +102,35 @@
   }}
 />
 
-<GlobalToolbar />
-<SelectedPage />
+{#if $canShowMobileSignInDialog}
+  <MobilePromoInfobar />
+  <MobileSignInDialog />
+{/if}
+
+{#if !$isSmallScreen}
+  <GlobalToolbar />
+{/if}
+
+<div role="none" class="page-root">
+  <SelectedPage />
+</div>
+
+{#if $isSmallScreen}
+  <BottomNavigation />
+{/if}
 
 <UploadAssetsDialog />
 <UploadAssetsConfirmDialog />
 <TranslatorApiKeyDialog />
 <EntryParseErrorsToast />
+
+<style lang="scss">
+  .page-root {
+    position: relative;
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    view-transition-name: page-root;
+  }
+</style>

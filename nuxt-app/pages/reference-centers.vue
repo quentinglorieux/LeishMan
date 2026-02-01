@@ -1,14 +1,20 @@
 <template>
-  <div class="reference-centers-page">
-    <!-- <h1 class="text-3xl font-bold mb-6 pt-10  ">Reference Centres</h1> -->
-    <Titleheader title="Reference Centres" />
-    <!-- Google Map  -->
+  <div class="space-y-10">
+    <section class="relative overflow-hidden rounded-[28px] border border-white/70 bg-white/70 px-8 py-10 shadow-lg">
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-600/15 via-cyan-500/10 to-transparent"></div>
+      <div class="relative">
+        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Network map</p>
+        <h1 class="font-display text-3xl sm:text-4xl">Reference Centres</h1>
+        <p class="mt-3 max-w-2xl text-sm text-slate-600">
+          Explore participating reference centres across the network.
+        </p>
+      </div>
+    </section>
 
     <ReferenceMap />
 
-    <!-- Filterable and Searchable Table -->
     <div class="mt-8">
-      <h2 class="text-2xl font-bold mb-4 text-center">
+      <h2 class="font-display text-2xl text-slate-900 mb-4 text-center">
         Participating Reference Centres
       </h2>
       <ReferenceTable />
@@ -16,10 +22,4 @@
   </div>
 </template>
 <script setup></script>
-
-<style scoped>
-.reference-centers-page {
-  margin-left: 5%;
-  margin-right: 5%;
-}
-</style>
+<style scoped></style>

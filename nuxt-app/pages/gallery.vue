@@ -2,20 +2,21 @@
   <div>
     <!-- Hero Section -->
 
-    <section class="bg-pasteur-blue text-white py-16">
-      <div class="container mx-auto text-center">
+    <section class="relative overflow-hidden rounded-[28px] border border-white/70 bg-white/70 px-8 py-10 shadow-lg">
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-600/15 via-cyan-500/10 to-transparent"></div>
+      <div class="relative text-center">
         <h1 v-if="!isAuthenticated" class="text-4xl font-bold">
           Password Protected Page
         </h1>
-        <h1 v-else class="text-4xl font-bold">{{ page.title }}</h1>
-        <p v-if="!isAuthenticated" class="mt-4 text-lg max-w-2xl mx-auto">
+        <h1 v-else class="font-display text-3xl sm:text-4xl">{{ page.title }}</h1>
+        <p v-if="!isAuthenticated" class="mt-4 text-sm text-slate-600 max-w-2xl mx-auto">
           This page is protected. Please enter the password to proceed or
           contact us if you need access.
         </p>
         <a
           v-if="!isAuthenticated"
           href="/contact"
-          class="mt-6 inline-block bg-white text-pasteur-blue hover:bg-gray-200 px-6 py-3 rounded-full font-bold"
+          class="mt-6 inline-block rounded-full bg-slate-900 px-6 py-2 text-xs font-semibold uppercase tracking-wide text-white"
         >
           Contact Support
         </a>
@@ -23,10 +24,10 @@
     </section>
 
     <!-- Password Form Section -->
-    <section class="py-16 px-10">
+    <section class="py-12">
       <div
         v-if="isAuthenticated"
-        class="mx-auto text-center bg-white p-10 rounded-lg shadow-lg"
+        class="mx-auto text-center rounded-[22px] border border-white/70 bg-white/80 p-8 shadow-lg"
       >
         <div>
           <div class="row">
@@ -38,7 +39,7 @@
       </div>
       <div
         v-else
-        class="mx-auto max-w-lg text-center bg-white p-10 rounded-lg shadow-lg"
+        class="mx-auto max-w-lg text-center rounded-[22px] border border-white/70 bg-white/80 p-8 shadow-lg"
       >
         <div class="max-w-lg">
           <label for="password" class="block text-lg font-bold mb-2"
@@ -48,11 +49,11 @@
             type="password"
             v-model="password"
             @keyup.enter="checkPassword"
-            class="border border-gray-300 rounded-lg w-full px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-pasteur-blue"
+            class="w-full rounded-lg border border-slate-200 px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             @click="checkPassword"
-            class="bg-pasteur-blue hover:bg-pasteur-dark text-white font-bold py-2 px-4 rounded-full w-full"
+            class="w-full rounded-full bg-slate-900 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-slate-800"
           >
             Submit
           </button>
@@ -66,7 +67,7 @@
 </template>
 
 <script setup>
-const page = await queryContent("gallery").findOne();
+const page = await queryCollection("gallery").first();
 
 const password = ref("");
 const isAuthenticated = ref(false);

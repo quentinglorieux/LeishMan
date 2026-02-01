@@ -1,0 +1,428 @@
+import { generateRandomId, generateUUID, getHash } from '@sveltia/utils/crypto';
+import { isObject } from '@sveltia/utils/object';
+import { LocalStorage } from '@sveltia/utils/storage';
+import { get, writable } from 'svelte/store';
+import { _ } from 'svelte-i18n';
+
+import { cmsConfig } from '$lib/services/config';
+
+/**
+ * @import {
+ * ApiEndpointConfig,
+ * AuthTokens,
+ * InternalCmsConfig,
+ * SignInOptions,
+ * } from '$lib/types/private';
+ * @import { GitBackend } from '$lib/types/public';
+ */
+
+export const inAuthPopup = writable(false);
+
+/**
+ * Open a popup window for authentication.
+ * @param {object} args Arguments.
+ * @param {string} args.authURL Authentication site URL.
+ * @returns {Window | null} Popup window object or `null` if the popup could not be opened.
+ */
+export const openPopup = ({ authURL }) => {
+  const width = 600;
+  const height = 800;
+  const { availHeight, availWidth } = window.screen;
+  const top = availHeight / 2 - height / 2;
+  const left = availWidth / 2 - width / 2;
+
+  return window.open(authURL, 'auth', `width=${width},height=${height},top=${top},left=${left}`);
+};
+
+/**
+ * Authenticate with a Git service provider through Netlify Identity or other 3rd party OAuth client
+ * specified with the configuration file.
+ * @param {object} args Arguments.
+ * @param {string} args.backendName Backend name, e.g. `github`.
+ * @param {string} args.authURL Authentication site URL.
+ * @returns {Promise<AuthTokens>} Auth access token and refresh token.
+ * @throws {Error} When authentication failed or the popup window is closed before the auth process
+ * is complete.
+ * @see https://decapcms.org/docs/backends-overview/
+ * @see https://sveltiacms.app/en/docs/backends
+ */
+export const authorize = async ({ backendName, authURL }) => {
+  const popup = openPopup({ authURL });
+
+  return new Promise((resolve, reject) => {
+    /**
+     * Timer to check if the popup is closed. This doesn’t work with GitLab; `window.closed` will
+     * always be `true`.
+     */
+    const timer =
+      backendName === 'github'
+        ? setInterval(() => {
+            if (popup?.closed) {
+              clearInterval(timer);
+              reject(Object.assign(new Error('Authentication aborted'), { name: 'AbortError' }));
+            }
+          }, 1000)
+        : 0;
+
+    /**
+     * Message event handler.
+     * @param {object} args Arguments.
+     * @param {string} args.origin Origin URL.
+     * @param {string} args.data Passed data.
+     */
+    const handler = ({ origin, data }) => {
+      if (origin !== new URL(authURL).origin || typeof data !== 'string') {
+        return;
+      }
+
+      const provider = backendName;
+
+      // First message
+      if (data === `authorizing:${provider}`) {
+        popup?.postMessage(data, origin);
+
+        return;
+      }
+
+      // Second message
+      const { result: resultStr } =
+        data.match(`^authorization:${provider}:(success|error):(?<result>.+)`)?.groups ?? {};
+
+      /**
+       * @type {{ token: string, refreshToken?: string } | { error: string, errorCode?: string }}
+       */
+      let result;
+
+      try {
+        result = resultStr ? JSON.parse(resultStr) : { error: 'No data' };
+
+        if (!isObject(result)) {
+          result = { error: 'Malformed data' };
+        }
+      } catch {
+        result = { error: 'Malformed data' };
+      }
+
+      if ('token' in result) {
+        resolve(result);
+      } else {
+        reject(
+          new Error('Authentication failed', {
+            cause: new Error(
+              result.errorCode
+                ? get(_)(`sign_in_error.${result.errorCode}`, { default: result.error })
+                : result.error,
+            ),
+          }),
+        );
+      }
+
+      window.removeEventListener('message', handler);
+      clearInterval(timer);
+      popup?.close();
+    };
+
+    window.addEventListener('message', handler);
+  });
+};
+
+/**
+ * Initialize the server-side Authorization Code Flow.
+ * @param {object} args Arguments.
+ * @param {string} args.backendName Backend name, e.g. `github`.
+ * @param {string | undefined} args.siteDomain Domain of the site hosting the CMS. Could be
+ * `undefined` if the `site_domain` option is not specified in the backend configuration.
+ * @param {string} args.authURL Authorization site URL.
+ * @param {string} args.scope Authorization scope.
+ * @returns {Promise<AuthTokens>} Auth access token and refresh token.
+ */
+export const initServerSideAuth = async ({ backendName, siteDomain, authURL, scope }) => {
+  const { hostname } = window.location;
+
+  // If the site domain is not specified, use the current hostname. If the hostname is `localhost`,
+  // use `cms.netlify.com` as the default site domain.
+  // @see https://decapcms.org/docs/backends-overview/
+  siteDomain ??= hostname === 'localhost' ? 'cms.netlify.com' : hostname;
+
+  try {
+    // `siteDomain` may contain non-ASCII characters. When authenticating with Netlify, such
+    // internationalized domain names (IDNs) must be written in Punycode. Use `URL` for conversion,
+    // e.g `日本語.jp` -> `xn--wgv71a119e.jp`
+    if (new URL(authURL).origin === 'https://api.netlify.com') {
+      siteDomain = new URL(`https://${siteDomain}`).hostname;
+    }
+  } catch {
+    //
+  }
+
+  const params = new URLSearchParams({
+    provider: backendName,
+    site_id: siteDomain,
+    scope,
+  });
+
+  return authorize({
+    backendName,
+    authURL: `${authURL}?${params}`,
+  });
+};
+
+/**
+ * Create a code verifier and challenge for PKCE auth along with a CSRF token.
+ * @returns {Promise<{ csrfToken: string, codeVerifier: string, codeChallenge: string}>} Secrets.
+ * @see https://stackoverflow.com/questions/63309409/creating-a-code-verifier-and-challenge-for-pkce-auth-on-spotify-api-in-reactjs
+ */
+export const createAuthSecrets = async () => {
+  const codeVerifier = `${generateRandomId()}${generateRandomId()}`;
+
+  const codeChallenge = btoa(
+    await getHash(codeVerifier, { algorithm: 'SHA-256', format: 'binary' }),
+  )
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+
+  return {
+    csrfToken: generateUUID().replaceAll('-', ''),
+    codeVerifier,
+    codeChallenge,
+  };
+};
+
+/**
+ * Initialize the client-side Authorization Code Flow with PKCE.
+ * @param {object} args Arguments.
+ * @param {string} args.backendName Backend name, e.g. `gitlab`.
+ * @param {string} args.clientId OAuth application ID.
+ * @param {string} args.authURL Authorization site URL.
+ * @param {string} args.scope Authorization scope.
+ * @returns {Promise<AuthTokens>} Auth access token and refresh token.
+ * @see https://docs.gitlab.com/ee/api/oauth2.html#authorization-code-with-proof-key-for-code-exchange-pkce
+ */
+export const initClientSideAuth = async ({ backendName, clientId, authURL, scope }) => {
+  const { csrfToken, codeVerifier, codeChallenge } = await createAuthSecrets();
+  const { origin, pathname } = window.location;
+  const redirectURL = `${origin}${pathname}`;
+
+  const params = new URLSearchParams({
+    client_id: clientId,
+    redirect_uri: redirectURL,
+    response_type: 'code',
+    state: csrfToken,
+    scope,
+    code_challenge: codeChallenge,
+    code_challenge_method: 'S256',
+  });
+
+  // Store the temporary secret and real auth URL
+  await LocalStorage.set('sveltia-cms.auth', {
+    csrfToken,
+    codeVerifier,
+    realAuthURL: `${authURL}?${params}`,
+  });
+
+  // Store the user info only with the backend name, so the automatic sign-in flow that triggers
+  // `finishClientSideAuth` below will work
+  await LocalStorage.set('sveltia-cms.user', { backendName });
+
+  return authorize({
+    backendName,
+    authURL: redirectURL,
+  });
+};
+
+/**
+ * Communicate with the window opener as part of {@link finishClientSideAuth}.
+ * @param {object} args Options.
+ * @param {string} [args.provider] Backend name, e,g. `github`.
+ * @param {string} [args.token] OAuth access token.
+ * @param {string} [args.refreshToken] OAuth refresh token.
+ * @param {string} [args.error] Error message when an OAuth token is not available.
+ * @param {string} [args.errorCode] Error code to be used to localize the error message in Sveltia
+ * CMS.
+ */
+export const sendMessage = ({ provider = 'unknown', token, refreshToken, error, errorCode }) => {
+  const _state = error ? 'error' : 'success';
+  const content = error ? { provider, error, errorCode } : { provider, token, refreshToken };
+
+  window.addEventListener('message', ({ data, origin }) => {
+    if (data === `authorizing:${provider}`) {
+      window.opener?.postMessage(
+        `authorization:${provider}:${_state}:${JSON.stringify(content)}`,
+        origin,
+      );
+    }
+  });
+
+  window.opener?.postMessage(`authorizing:${provider}`, '*');
+};
+
+/**
+ * Complete the client-side Authorization Code Flow with PKCE by retrieving an access token and
+ * passing it to the window opener. This code is to be called within the auth popup window and
+ * basically does the same thing as the callback handler of Sveltia CMS Authenticator.
+ * @param {object} args Arguments.
+ * @param {string} args.backendName Backend name, e.g. `gitlab`.
+ * @param {string} args.clientId OAuth application ID.
+ * @param {string} args.tokenURL OAuth token request URL.
+ * @param {string} args.code Authorization code.
+ * @param {string} args.state Authorization state, which is a CSRF token previously set.
+ * @returns {Promise<void>} None.
+ * @see https://docs.gitlab.com/ee/api/oauth2.html#authorization-code-with-proof-key-for-code-exchange-pkce
+ * @see https://github.com/sveltia/sveltia-cms-auth/blob/main/src/index.js
+ */
+export const finishClientSideAuth = async ({ backendName, clientId, tokenURL, code, state }) => {
+  const { origin, pathname } = new URL(window.location.href);
+  const { csrfToken, codeVerifier } = (await LocalStorage.get('sveltia-cms.auth')) ?? {};
+  const provider = backendName;
+  const redirectURL = `${origin}${pathname}`;
+
+  // Remove the temporary secret
+  await LocalStorage.delete('sveltia-cms.auth');
+
+  if (!csrfToken || !codeVerifier || state !== csrfToken) {
+    return sendMessage({
+      provider,
+      error: get(_)('sign_in_error.CSRF_DETECTED'),
+      errorCode: 'CSRF_DETECTED',
+    });
+  }
+
+  let response;
+  let token = '';
+  let refreshToken = '';
+  let error = '';
+
+  try {
+    response = await fetch(tokenURL, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        grant_type: 'authorization_code',
+        client_id: clientId,
+        code,
+        redirect_uri: redirectURL,
+        code_verifier: codeVerifier,
+      }),
+    });
+  } catch {
+    //
+  }
+
+  if (!response) {
+    return sendMessage({
+      provider,
+      error: get(_)('sign_in_error.TOKEN_REQUEST_FAILED'),
+      errorCode: 'TOKEN_REQUEST_FAILED',
+    });
+  }
+
+  try {
+    ({ access_token: token, refresh_token: refreshToken, error } = await response.json());
+  } catch {
+    return sendMessage({
+      provider,
+      error: get(_)('sign_in_error.MALFORMED_RESPONSE'),
+      errorCode: 'MALFORMED_RESPONSE',
+    });
+  }
+
+  return sendMessage({ provider, token, refreshToken, error });
+};
+
+/**
+ * Handle the client-side Authorization Code Flow with PKCE within the auth popup window. Redirect
+ * to the authorization site or finish the flow after being redirected from the auth site.
+ * @param {object} args Arguments.
+ * @param {string} args.backendName Backend name, e.g. `gitlab`.
+ * @param {string} args.clientId OAuth application ID.
+ * @param {string} args.tokenURL OAuth token request URL.
+ */
+export const handleClientSideAuthPopup = async ({ backendName, clientId, tokenURL }) => {
+  inAuthPopup.set(true);
+
+  const { search } = window.location;
+  const { code, state } = Object.fromEntries(new URLSearchParams(search));
+
+  if (code && state) {
+    await finishClientSideAuth({ backendName, clientId, tokenURL, code, state });
+  } else {
+    const { realAuthURL } = (await LocalStorage.get('sveltia-cms.auth')) ?? {};
+
+    if (realAuthURL) {
+      window.location.href = realAuthURL;
+    }
+  }
+};
+
+/**
+ * Handle the authentication flow for a Git service provider. This function decides whether to
+ * initiate a client-side or server-side authentication flow based on the configured backend name
+ * and authentication type.
+ * @internal
+ * @param {object} args Arguments.
+ * @param {boolean} args.auto Whether the sign-in process is automatic.
+ * @param {ApiEndpointConfig} args.apiConfig API endpoint configuration.
+ * @returns {Promise<AuthTokens | undefined>} Auth access token and refresh token, or `undefined` if
+ * the sign-in process is automatic or the flow is being done in a popup window.
+ */
+export const handleAuthFlow = async ({ auto, apiConfig }) => {
+  const { backend } = /** @type {InternalCmsConfig} */ (get(cmsConfig));
+
+  const {
+    name: backendName,
+    site_domain: siteDomain,
+    // @ts-ignore Gitea backend doesn’t have the property
+    auth_type: authType,
+  } = /** @type {GitBackend} */ (backend);
+
+  const { clientId, authScope, authURL, tokenURL } = apiConfig;
+  const authArgs = { backendName, authURL, scope: authScope };
+
+  // Gitea/Forgejo backend only supports PKCE at this time
+  if (backendName === 'gitea' || authType === 'pkce') {
+    const inPopup = window.opener?.origin === window.location.origin && window.name === 'auth';
+
+    if (inPopup) {
+      // We are in the auth popup window; let’s get the OAuth flow done
+      await handleClientSideAuthPopup({ backendName, clientId, tokenURL });
+    }
+
+    if (inPopup || auto) {
+      return undefined;
+    }
+
+    return initClientSideAuth({ ...authArgs, clientId });
+  }
+
+  if (auto) {
+    return undefined;
+  }
+
+  return initServerSideAuth({ ...authArgs, siteDomain });
+};
+
+/**
+ * Get OAuth tokens by handling the authentication flow if necessary.
+ * @param {object} args Arguments.
+ * @param {SignInOptions} args.options Options.
+ * @param {ApiEndpointConfig} args.apiConfig API endpoint configuration.
+ * @returns {Promise<AuthTokens | undefined>} Auth access token and refresh token, or `undefined` if
+ * the sign-in process is automatic or the flow is being done in a popup window.
+ */
+export const getTokens = async ({ options: { token, refreshToken, auto = false }, apiConfig }) => {
+  if (!token) {
+    const result = await handleAuthFlow({ auto, apiConfig });
+
+    if (!result) {
+      return undefined;
+    }
+
+    ({ token, refreshToken } = result);
+  }
+
+  return { token, refreshToken };
+};

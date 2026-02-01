@@ -1,37 +1,38 @@
 <script>
   import { Group } from '@sveltia/ui';
+  import equal from 'fast-deep-equal';
   import { _ } from 'svelte-i18n';
-  import AssetsPanel from '$lib/components/assets/shared/assets-panel.svelte';
+
+  import AssetsPanel from '$lib/components/assets/browser/assets-panel.svelte';
   import DropZone from '$lib/components/assets/shared/drop-zone.svelte';
   import { goto } from '$lib/services/app/navigation';
   import { allAssets, uploadingAssets } from '$lib/services/assets';
+  import { getAssetFolder } from '$lib/services/assets/folders';
   import { selectedCollection } from '$lib/services/contents/collection';
   import { currentView } from '$lib/services/contents/collection/view';
+  import { isLargeScreen } from '$lib/services/user/env';
 
-  const internalPath = $derived($selectedCollection?._assetFolder?.internalPath);
-  const entryRelative = $derived($selectedCollection?._assetFolder?.entryRelative);
+  const folder = $derived(getAssetFolder({ collectionName: $selectedCollection?.name }));
+  const { internalPath, entryRelative, hasTemplateTags } = $derived(
+    folder ?? { internalPath: undefined, entryRelative: false, hasTemplateTags: false },
+  );
   // Can’t upload assets if collection assets are saved at entry-relative paths
-  const uploadDisabled = $derived(!!entryRelative);
+  const uploadDisabled = $derived(entryRelative || hasTemplateTags);
 </script>
 
-{#if internalPath}
-  <Group
-    id="collection-assets"
-    class="secondary-sidebar"
-    hidden={!$currentView.showMedia}
-    aria-label={$_('collection_assets')}
-  >
+{#if internalPath !== undefined && $isLargeScreen && $currentView.showMedia}
+  <Group id="collection-assets" class="secondary-sidebar" aria-label={$_('collection_assets')}>
     <DropZone
       disabled={uploadDisabled}
       multiple={true}
-      onSelect={({ files }) => {
-        $uploadingAssets = { folder: internalPath, files };
+      onDrop={({ files }) => {
+        $uploadingAssets = { folder, files };
       }}
     >
       <AssetsPanel
-        assets={$allAssets.filter(({ folder }) => internalPath === folder)}
+        assets={$allAssets.filter((asset) => equal(asset.folder, folder))}
         onSelect={({ asset }) => {
-          goto(`/assets/${asset.path}`);
+          goto(`/assets/${asset.path}`, { transitionType: 'forwards' });
         }}
       />
     </DropZone>

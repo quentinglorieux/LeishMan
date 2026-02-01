@@ -2,7 +2,12 @@ import { LocalStorage } from '@sveltia/utils/storage';
 import { writable } from 'svelte/store';
 
 /**
- * @type {import('svelte/store').Writable<User | null | undefined>}
+ * @import { Writable } from 'svelte/store';
+ * @import { User } from '$lib/types/private';
+ */
+
+/**
+ * @type {Writable<User | null | undefined>}
  */
 export const user = writable();
 

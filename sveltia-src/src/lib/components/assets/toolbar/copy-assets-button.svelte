@@ -2,18 +2,26 @@
   import { Alert, Menu, MenuButton, MenuItem, Toast } from '@sveltia/ui';
   import { isTextFileType } from '@sveltia/utils/file';
   import { _ } from 'svelte-i18n';
-  import { convertImage } from '$lib/services/utils/media';
-  import { getAssetBlob, getAssetDetails } from '$lib/services/assets';
+
+  import { getAssetBlob, getAssetDetails } from '$lib/services/assets/info';
+  import { SUPPORTED_IMAGE_TYPES } from '$lib/services/utils/media/image';
+  import { transformImage } from '$lib/services/utils/media/image/transform';
+
+  /**
+   * @import { Asset, AssetDetails } from '$lib/types/private';
+   */
 
   /**
    * @typedef {object} Props
-   * @property {Asset[]} [assets] - Selected assets.
+   * @property {Asset[]} [assets] Selected assets.
+   * @property {boolean} [useButton] Whether to use the Button component.
    */
 
   /** @type {Props} */
   let {
     /* eslint-disable prefer-const */
     assets = [],
+    useButton = true,
     /* eslint-enable prefer-const */
   } = $props();
 
@@ -45,14 +53,15 @@
     }
 
     const blob = await getAssetBlob(assets[0]);
+    const { type } = blob;
 
     assetBlob = blob;
 
-    if (isTextFileType(blob.type)) {
+    if (isTextFileType(type)) {
       return true;
     }
 
-    if (blob.type.startsWith('image/')) {
+    if (SUPPORTED_IMAGE_TYPES.includes(type)) {
       return typeof navigator.clipboard.write === 'function';
     }
 
@@ -79,19 +88,20 @@
    */
   const copyFileData = async () => {
     let blob = /** @type {Blob} */ (assetBlob);
+    const { type } = blob;
 
-    if (isTextFileType(blob.type)) {
+    if (isTextFileType(type)) {
       await navigator.clipboard.writeText(await blob.text());
 
       return;
     }
 
-    if (!blob.type.startsWith('image/')) {
+    if (!SUPPORTED_IMAGE_TYPES.includes(type)) {
       throw new Error('Unsupported type');
     }
 
-    if (blob.type !== 'image/png') {
-      blob = await convertImage(blob);
+    if (type !== 'image/png') {
+      blob = await transformImage(blob);
     }
 
     await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
@@ -99,9 +109,9 @@
 
   /**
    * Execute a copy action.
-   * @param {Function} func - Copy function.
-   * @param {string} toastSingular - Singular toast label.
-   * @param {string} toastPlural - Plural toast label.
+   * @param {() => Promise<void>} func Copy function.
+   * @param {string} toastSingular Singular toast label.
+   * @param {string} toastPlural Plural toast label.
    */
   const doCopyAction = async (func, toastSingular, toastPlural) => {
     try {
@@ -124,37 +134,49 @@
   });
 </script>
 
-<MenuButton
-  variant="ghost"
-  disabled={!assets.length}
-  label={$_('copy')}
-  popupPosition="bottom-right"
->
-  {#snippet popup()}
-    <Menu aria-label={$_('copy_options')}>
-      <MenuItem
-        label={singleAsset ? $_('public_url') : $_('public_urls')}
-        disabled={!publicURLs.length}
-        onclick={() => {
-          doCopyAction(copyPublicURLs, $_('asset_url_copied'), $_('asset_urls_copied'));
-        }}
-      />
-      <MenuItem
-        label={singleAsset ? $_('file_path') : $_('file_paths')}
-        onclick={() => {
-          doCopyAction(copyFilePaths, $_('asset_path_copied'), $_('asset_paths_copied'));
-        }}
-      />
-      <MenuItem
-        label={$_('file_data')}
-        disabled={!canCopyFileData}
-        onclick={() => {
-          doCopyAction(copyFileData, $_('asset_data_copied'), $_('asset_data_copied'));
-        }}
-      />
-    </Menu>
-  {/snippet}
-</MenuButton>
+{#snippet menuItems()}
+  <MenuItem
+    label={singleAsset ? $_('public_url') : $_('public_urls')}
+    disabled={!publicURLs.length}
+    onclick={() => {
+      doCopyAction(copyPublicURLs, $_('asset_url_copied'), $_('asset_urls_copied'));
+    }}
+  />
+  <MenuItem
+    label={singleAsset ? $_('file_path') : $_('file_paths')}
+    onclick={() => {
+      doCopyAction(copyFilePaths, $_('asset_path_copied'), $_('asset_paths_copied'));
+    }}
+  />
+  <MenuItem
+    label={$_('file_data')}
+    disabled={!canCopyFileData}
+    onclick={() => {
+      doCopyAction(copyFileData, $_('asset_data_copied'), $_('asset_data_copied'));
+    }}
+  />
+{/snippet}
+
+{#if useButton}
+  <MenuButton
+    variant="ghost"
+    disabled={!assets.length}
+    label={$_('copy')}
+    popupPosition="bottom-right"
+  >
+    {#snippet popup()}
+      <Menu aria-label={$_('copy_options')}>
+        {@render menuItems()}
+      </Menu>
+    {/snippet}
+  </MenuButton>
+{:else}
+  <MenuItem disabled={!assets.length} label={$_('copy')} popupPosition="left-top">
+    {#snippet items()}
+      {@render menuItems()}
+    {/snippet}
+  </MenuItem>
+{/if}
 
 <Toast bind:show={toast.show}>
   <Alert status={toast.status}>{toast.text}</Alert>

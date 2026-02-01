@@ -1,19 +1,64 @@
+import { getHash } from '@sveltia/utils/crypto';
 import { getPathInfo } from '@sveltia/utils/file';
 import { compare, escapeRegExp } from '@sveltia/utils/string';
-import { _, locale as appLocale } from 'svelte-i18n';
+import sanitize from 'sanitize-filename';
 import { get } from 'svelte/store';
+import { _, locale as appLocale } from 'svelte-i18n';
+
+import { slugify } from '$lib/services/common/slug';
 
 /**
- * Check if the user’s browsing environment supports drag & drop operation. Assume drag & drop is
- * supported if the pointer is mouse (on desktop).
- * @returns {boolean} Result.
+ * Create a regular expression that matches the given path.
+ * @param {string} path Path.
+ * @param {(segment: string) => string} replacer Function to replace each path segment.
+ * @returns {RegExp} Regular expression.
  */
-export const canDragDrop = () =>
-  (globalThis.matchMedia('(pointer: fine)')?.matches ?? false) && 'ondrop' in globalThis;
+export const createPathRegEx = (path, replacer) =>
+  new RegExp(`^${path.split('/').map(replacer).join('\\/')}(?:\\/|$)`);
+
+/**
+ * Encode the given (partial) file path or file name. Since {@link encodeURIComponent} encodes
+ * slashes, we need to split and join. Also, encode some more characters, including `!`, `(` and
+ * `)`, which affect the Markdown syntax like images and links. The `@` prefix is an exception; it
+ * shouldn’t be encoded.
+ * @param {string} path Original path.
+ * @returns {string} Encoded path.
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent#encoding_for_rfc3986
+ */
+export const encodeFilePath = (path) => {
+  const hasAtPrefix = path.startsWith('@');
+
+  if (hasAtPrefix) {
+    path = path.slice(1);
+  }
+
+  path = path
+    .split('/')
+    .map((str) =>
+      encodeURIComponent(str).replace(
+        /[!'()*]/g,
+        (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`,
+      ),
+    )
+    .join('/');
+
+  if (hasAtPrefix) {
+    return `@${path}`;
+  }
+
+  return path;
+};
+
+/**
+ * Encode the given (partial) file path or file name. We can use {@link decodeURIComponent} as is.
+ * @param {string} path Original path.
+ * @returns {string} Decoded path.
+ */
+export const decodeFilePath = (path) => decodeURIComponent(path);
 
 /**
  * Format the given file size in bytes, KB, MB, GB or TB.
- * @param {number} size - File size.
+ * @param {number} size File size.
  * @returns {string} Formatted size.
  */
 export const formatSize = (size) => {
@@ -48,8 +93,8 @@ export const formatSize = (size) => {
 /**
  * Check if the given file name or slug has duplicate(s) or its variant in the other names. If
  * found, rename it by prepending a number like `summer-beach-2.jpg`.
- * @param {string} name - Original name.
- * @param {string[]} otherNames - Other names (of files in the same folder).
+ * @param {string} name Original name.
+ * @param {string[]} otherNames Other names (of files in the same folder).
  * @returns {string} Determined name.
  */
 export const renameIfNeeded = (name, otherNames) => {
@@ -77,8 +122,35 @@ export const renameIfNeeded = (name, otherNames) => {
 };
 
 /**
+ * Format the file name for uploading, ensuring it is sanitized and optionally slugified.
+ * @param {string} originalName The original file name.
+ * @param {object} [options] Options.
+ * @param {boolean} [options.slugificationEnabled] Whether to slugify the file name.
+ * @param {string[]} [options.assetNamesInSameFolder] List of asset names in the same folder to
+ * avoid name conflicts.
+ * @returns {string} The formatted file name, sanitized and possibly slugified.
+ */
+export const formatFileName = (
+  originalName,
+  { slugificationEnabled = false, assetNamesInSameFolder = [] } = {},
+) => {
+  // Normalize the name to NFC format (composed characters), then replace all whitespace characters
+  // (including non-breaking spaces, tabs, newlines, etc.) with regular spaces before sanitizing.
+  // Consecutive whitespace characters are collapsed into a single space.
+  let fileName = sanitize(originalName.normalize().replace(/[\s\u00A0\u202F]+/g, ' '));
+
+  if (slugificationEnabled) {
+    const { filename, extension } = getPathInfo(fileName);
+
+    fileName = `${slugify(filename)}${extension ? `.${extension}` : ''}`;
+  }
+
+  return renameIfNeeded(fileName, assetNamesInSameFolder);
+};
+
+/**
  * Join the given path segments while ignoring any falsy value.
- * @param {(string | null | undefined)[]} segments - List of path segments.
+ * @param {(string | null | undefined)[]} segments List of path segments.
  * @returns {string} Path.
  */
 export const createPath = (segments) => segments.filter(Boolean).join('/');
@@ -86,7 +158,7 @@ export const createPath = (segments) => segments.filter(Boolean).join('/');
 /**
  * Resolve the given file path. This processes only dot(s) in the middle of the path; leading dots
  * like `../../foo/image.jpg` will be untouched.
- * @param {string} path - Unresolved path, e.g. `foo/bar/baz/../../image.jpg`.
+ * @param {string} path Unresolved path, e.g. `foo/bar/baz/../../image.jpg`.
  * @returns {string} Resolved path, e.g. `foo/image.jpg`.
  */
 export const resolvePath = (path) => {
@@ -113,4 +185,29 @@ export const resolvePath = (path) => {
   });
 
   return createPath(segments);
+};
+
+/**
+ * Get the Blob object from the given file or blob input. If the input is a string, it is treated as
+ * the file content and converted to a Blob with `text/plain` MIME type.
+ * @param {File | Blob | string} input File or Blob object, or a string representing the file
+ * content.
+ * @returns {Blob} Blob object representing the file.
+ */
+export const getBlob = (input) =>
+  typeof input === 'string' ? new Blob([input], { type: 'text/plain' }) : input;
+
+/**
+ * Get the Git object ID (SHA-1 hash) of the given file or blob.
+ * @param {File | Blob | string} input File or Blob object, or a string representing the file
+ * content.
+ * @returns {Promise<string>} Git object ID (SHA-1 hash) of the file.
+ * @see https://stackoverflow.com/a/68806436
+ * @see https://github.com/Richienb/git-hash-object/blob/master/index.js
+ */
+export const getGitHash = async (input) => {
+  const file = getBlob(input);
+  const buffer = await file.arrayBuffer();
+
+  return getHash(new Blob([`blob ${buffer.byteLength}\0`, buffer]));
 };

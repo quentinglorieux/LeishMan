@@ -3,9 +3,14 @@
   import { _ } from 'svelte-i18n';
 
   /**
+   * @import { Writable } from 'svelte/store';
+   * @import { Asset, Entry } from '$lib/types/private';
+   */
+
+  /**
    * @typedef {object} Props
-   * @property {(Entry | Asset)[]} allItems - All available items.
-   * @property {import('svelte/store').Writable<(Entry | Asset)[]>} selectedItems - Selected items.
+   * @property {(Entry | Asset)[]} allItems All available items.
+   * @property {Writable<(Entry | Asset)[]>} selectedItems Selected items.
    */
 
   /** @type {Props} */
@@ -44,7 +49,7 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    margin-inline: 8px;
+    margin-inline: 20px;
   }
 
   span {

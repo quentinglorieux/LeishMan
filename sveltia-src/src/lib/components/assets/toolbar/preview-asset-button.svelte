@@ -1,12 +1,17 @@
 <script>
   import { Button } from '@sveltia/ui';
   import { _ } from 'svelte-i18n';
+
   import { goto } from '$lib/services/app/navigation';
-  import { canPreviewAsset } from '$lib/services/assets';
+  import { canPreviewAsset } from '$lib/services/assets/kinds';
+
+  /**
+   * @import { Asset } from '$lib/types/private';
+   */
 
   /**
    * @typedef {object} Props
-   * @property {Asset} [asset] - Selected asset.
+   * @property {Asset} [asset] Selected asset.
    */
 
   /** @type {Props} */
@@ -23,6 +28,6 @@
   label={$_('preview')}
   aria-label={$_('show_preview')}
   onclick={() => {
-    goto(`/assets/${asset?.path}`);
+    goto(`/assets/${asset?.path}`, { transitionType: 'forwards' });
   }}
 />

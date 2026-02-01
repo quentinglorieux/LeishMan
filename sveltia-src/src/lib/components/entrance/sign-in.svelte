@@ -1,27 +1,67 @@
 <script>
-  import { Button } from "@sveltia/ui";
-  import DOMPurify from "isomorphic-dompurify";
-  import { onMount } from "svelte";
-  import { _ } from "svelte-i18n";
+  import { Button, Icon, PromptDialog, Spacer } from '@sveltia/ui';
+  import { onMount } from 'svelte';
+  import { _ } from 'svelte-i18n';
+
+  import { allBackendServices } from '$lib/services/backends';
+  import { cmsConfig } from '$lib/services/config';
   import {
     signInAutomatically,
     signInError,
+    signingIn,
     signInManually,
-    unauthenticated,
-  } from "$lib/services/user/auth";
-  import { siteConfig } from "$lib/services/config";
-  import { allBackendServices } from "$lib/services/backends";
+  } from '$lib/services/user/auth';
+  import { makeLink } from '$lib/services/utils/string';
+
+  /**
+   * @import { GitBackend } from '$lib/types/public';
+   */
 
   let isLocalHost = $state(false);
   let isLocalBackendSupported = $state(false);
   let isBrave = $state(false);
-  let isSuperAdmin = $derived($siteConfig?.superadmin ?? false);
+  let showTokenDialog = $state(false);
+  let token = $state('');
 
-  const configuredBackendName = $derived($siteConfig?.backend?.name);
+  const DEFAULT_ORCID_AUTH_URL =
+    'https://orcid-sveltia.quentin-glorieux.workers.dev/auth/orcid';
+  const DEFAULT_ORCID_ORIGIN = 'https://orcid-sveltia.quentin-glorieux.workers.dev';
+
+  const configuredBackendName = $derived(/** @type {string} */ ($cmsConfig?.backend?.name));
   const configuredBackend = $derived(
-    configuredBackendName ? allBackendServices[configuredBackendName] : null
+    configuredBackendName ? allBackendServices[configuredBackendName] : null,
   );
-  const repositoryName = $derived($siteConfig?.backend?.repo?.split("/")?.[1]);
+  const isTestRepo = $derived(configuredBackendName === 'test-repo');
+  const repositoryName = $derived(
+    isTestRepo
+      ? undefined
+      : /** @type {GitBackend} */ ($cmsConfig?.backend)?.repo?.split('/').pop(),
+  );
+  const showLocalBackendOption = $derived(isLocalHost && !isTestRepo);
+
+  const openCenteredPopup = (url, name, w = 600, h = 800) => {
+    const y = window.top.outerHeight / 2 + window.top.screenY - h / 2;
+    const x = window.top.outerWidth / 2 + window.top.screenX - w / 2;
+
+    return window.open(
+      url,
+      name,
+      `width=${w},height=${h},left=${x},top=${y},resizable,scrollbars`,
+    );
+  };
+
+  const getOrcidConfig = () => {
+    const cfg = $cmsConfig?.sveltia?.orcid ?? {};
+    const authURL = cfg.authURL || DEFAULT_ORCID_AUTH_URL;
+    const origin = cfg.origin || DEFAULT_ORCID_ORIGIN;
+
+    return { authURL, origin };
+  };
+
+  const signInWithOrcid = () => {
+    const { authURL } = getOrcidConfig();
+    openCenteredPopup(authURL, 'orcid-auth');
+  };
 
   onMount(() => {
     const { hostname } = window.location;
@@ -29,142 +69,159 @@
     // Local editing needs a secure context, either `http://localhost` or `http://*.localhost`
     // https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts
     isLocalHost =
-      hostname === "127.0.0.1" ||
-      hostname === "localhost" ||
-      hostname.endsWith(".localhost");
-    isLocalBackendSupported = "showDirectoryPicker" in window;
-    isBrave =
-      navigator.userAgentData?.brands.some(({ brand }) => brand === "Brave") ??
-      false;
+      hostname === '127.0.0.1' || hostname === 'localhost' || hostname.endsWith('.localhost');
+    isLocalBackendSupported = 'showDirectoryPicker' in window;
+    isBrave = navigator.userAgentData?.brands.some(({ brand }) => brand === 'Brave') ?? false;
 
     signInAutomatically();
+
+    const onMessage = (event) => {
+      const { origin } = getOrcidConfig();
+
+      if (event.origin !== origin) {
+        return;
+      }
+
+      const d = event?.data || {};
+
+      if (d.backendName === 'github' && d.token) {
+        try {
+          localStorage.setItem(
+            'sveltia-cms.user',
+            JSON.stringify({
+              backendName: 'github',
+              token: d.token,
+            }),
+          );
+
+          if (d.role) localStorage.setItem('sveltia-cms.userRole', d.role);
+          if (d.firstname) localStorage.setItem('sveltia-cms.firstname', d.firstname);
+          if (d.lastname) localStorage.setItem('sveltia-cms.lastname', d.lastname);
+          if (d.orcid) localStorage.setItem('sveltia-cms.orcid', d.orcid);
+          if (d.groups) {
+            localStorage.setItem('sveltia-cms.userGroups', JSON.stringify(d.groups));
+          }
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error('Failed to persist ORCID auth info', err);
+        }
+
+        window.location.reload();
+      }
+    };
+
+    window.addEventListener('message', onMessage);
+
+    return () => {
+      window.removeEventListener('message', onMessage);
+    };
   });
-
-  // Code to update the user's token when the backend sends it 
-  window.addEventListener("message", (event) => {
-  if (event.data.backendName === "github" && event.data.token) {
-    localStorage.setItem("sveltia-cms.user", JSON.stringify({
-      backendName: "github",
-      token: event.data.token,
-    }));
-
-    console.log("Event:", event.data);
-    if (event.data.role) {
-      localStorage.setItem("sveltia-cms.userRole", event.data.role);
-      localStorage.setItem("sveltia-cms.firstname", event.data.firstname);
-      localStorage.setItem("sveltia-cms.lastname", "");
-      localStorage.setItem("sveltia-cms.orcid", event.data.orcid);
-    }
-
-    if (event.data.groups) {
-      localStorage.setItem("sveltia-cms.userGroups", JSON.stringify(event.data.groups));
-    }
-
-    window.location.reload();
-  }
-});
-
-  function signInWithOrcid() {
-    const width = 600;
-    const height = 800;
-    const { availHeight, availWidth } = window.screen;
-    const top = availHeight / 2 - height / 2;
-    const left = availWidth / 2 - width / 2;
-
-    window.open(
-      "https://orcid-sveltia.quentin-glorieux.workers.dev/auth/orcid",
-      "orcid-auth",
-      `width=${width},height=${height},top=${top},left=${left}`
-    );
-  }
 </script>
 
-<div class="superadmin-banner">
-  {#if isSuperAdmin}
-    <p class="superadmin-message">👋 Superadmin Login Page</p>
-  {/if}
-</div>
-
 <div role="none" class="buttons">
-  {#if !$unauthenticated}
-    <div role="alert" class="message">{$_("signing_in")}</div>
-  {:else if !configuredBackend}
-    <div role="alert">
-      {$_("config.error.unsupported_backend", {
-        values: { name: configuredBackendName },
-      })}
-    </div>
-  {:else}
-    {#if isSuperAdmin}
+  {#if $signingIn}
+    <div role="alert" class="message">{$_('signing_in')}</div>
+  {:else if configuredBackend}
+    {#if showLocalBackendOption}
       <Button
         variant="primary"
-        label={$_("sign_in_with_x", {
-          values: { service: configuredBackend.label },
-        })}
-        onclick={async () => {
-          await signInManually(/** @type {string} */ (configuredBackendName));
-        }}
-      />
-    {/if}
-    <!-- ORCID Sign-in  QG-->
-    <Button
-      variant="primary"
-      label="Sign in with ORCID"
-      onclick={signInWithOrcid}
-    />
-
-    {#if isLocalHost}
-      <Button
-        variant="primary"
-        label={$_("work_with_local_repo")}
+        label={$_('work_with_local_repo')}
         disabled={!isLocalBackendSupported}
         onclick={async () => {
-          await signInManually("local");
+          await signInManually('local');
         }}
       />
       {#if !isLocalBackendSupported}
         <div role="alert">
           {#if isBrave}
-            {@html DOMPurify.sanitize(
-              $_("local_backend.disabled").replace(
-                "<a>",
-                '<a href="https://github.com/sveltia/sveltia-cms#enabling-local-development-in-brave" target="_blank">'
-              ),
-              { ALLOWED_TAGS: ["a"], ALLOWED_ATTR: ["href", "target"] }
+            {@html makeLink(
+              $_('local_backend.disabled'),
+              'https://sveltiacms.app/en/docs/workflows/local#enabling-file-system-access-api-in-brave',
             )}
           {:else}
-            {$_("local_backend.unsupported_browser")}
+            {$_('local_backend.unsupported_browser')}
           {/if}
         </div>
       {:else if !$signInError.message}
         <div role="none">
           {#if repositoryName}
-            {$_("work_with_local_repo_description", {
-              values: { repo: repositoryName },
-            })}
+            {$_('work_with_local_repo_description', { values: { repo: repositoryName } })}
           {:else}
-            {$_("work_with_local_repo_description_no_repo")}
+            {$_('work_with_local_repo_description_no_repo')}
           {/if}
         </div>
       {/if}
+      <Spacer />
     {/if}
+    <Button
+      variant={showLocalBackendOption ? 'secondary' : 'primary'}
+      label={isTestRepo
+        ? $_('work_with_test_repo')
+        : $_('sign_in_with_x', { values: { service: configuredBackend.label } })}
+      onclick={async () => {
+        await signInManually(configuredBackendName);
+      }}
+    />
+    {#if !isTestRepo}
+      <Button
+        variant="secondary"
+        label={$_('sign_in_with_x_using_token', { values: { service: configuredBackend.label } })}
+        onclick={() => {
+          showTokenDialog = true;
+        }}
+      />
+    {/if}
+    <Button variant="secondary" label="Sign in with ORCID" onclick={signInWithOrcid} />
   {/if}
-  {#if $signInError.message && $signInError.canRetry}
-    <div role="alert">
+  {#if $signInError.message && $signInError.context === 'authentication'}
+    <div role="alert" class="error">
+      <Icon name="error" />
       {$signInError.message}
     </div>
   {/if}
 </div>
+
+<PromptDialog
+  bind:open={showTokenDialog}
+  bind:value={token}
+  title={$_('sign_in_using_pat_title')}
+  textboxAttrs={{ spellcheck: false, 'aria-label': $_('personal_access_token') }}
+  okLabel={$_('sign_in')}
+  okDisabled={!token.trim()}
+  onOk={async () => {
+    await signInManually(configuredBackendName, token.trim());
+  }}
+>
+  {$_('sign_in_using_pat_description')}
+  {#if configuredBackend?.repository?.tokenPageURL}
+    {@html makeLink(
+      $_('sign_in_using_pat_link', { values: { service: configuredBackend.label } }),
+      configuredBackend.repository.tokenPageURL,
+    )}
+  {/if}
+</PromptDialog>
 
 <style lang="scss">
   .buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 
-    :global(button) {
-      width: 240px;
+    :global {
+      .button {
+        width: 320px;
+      }
+    }
+  }
+
+  [role='alert'] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &.error {
+      color: var(--sui-error-foreground-color);
     }
   }
 </style>

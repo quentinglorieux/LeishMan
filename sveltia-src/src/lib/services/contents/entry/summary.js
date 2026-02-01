@@ -3,18 +3,53 @@ import { stripSlashes } from '@sveltia/utils/string';
 import { sanitize } from 'isomorphic-dompurify';
 import { parseInline } from 'marked';
 import { parseEntities } from 'parse-entities';
-import { applyTransformations } from '$lib/services/contents/entry/transformations';
-import { getFieldConfig, getFieldDisplayValue } from '$lib/services/contents/entry/fields';
+
+import {
+  applyTransformations,
+  DATE_TRANSFORMATION_REGEX,
+  TERNARY_TRANSFORMATION_REGEX,
+} from '$lib/services/common/transformations';
+import { getIndexFile, isCollectionIndexFile } from '$lib/services/contents/collection/index-file';
+import { getField, getFieldDisplayValue } from '$lib/services/contents/entry/fields';
+
+/**
+ * @import {
+ * CommitAuthor,
+ * Entry,
+ * FlattenedEntryContent,
+ * InternalCollection,
+ * InternalLocaleCode,
+ * RawEntryContent,
+ * } from '$lib/types/private';
+ */
+
+/**
+ * @typedef {object} ReplacerSubContext
+ * @property {string} slug Entry slug.
+ * @property {string} entryPath Entry path.
+ * @property {string | undefined} basePath Base path for the entry.
+ * @property {string[]} locales Enabled locales for the entry.
+ * @property {Date | undefined} commitDate Commit date.
+ * @property {CommitAuthor | undefined} commitAuthor Commit author.
+ */
+
+/**
+ * @typedef {object} ReplaceContext
+ * @property {FlattenedEntryContent} content Entry content.
+ * @property {string} collectionName Collection name.
+ * @property {ReplacerSubContext} replaceSubContext Context for the `replaceSub` function.
+ * @property {InternalLocaleCode} defaultLocale Default locale.
+ */
 
 /**
  * Parse the given entry summary as Markdown and sanitize HTML with a few exceptions if the Markdown
  * option is enabled. Also, parse HTML character references (entities).
- * @param {string} str - Original string.
- * @param {object} [options] - Options.
- * @param {boolean} [options.allowMarkdown] - Whether to allow Markdown and return HTML string.
+ * @param {string} str Original string.
+ * @param {object} [options] Options.
+ * @param {boolean} [options.allowMarkdown] Whether to allow Markdown and return HTML string.
  * @returns {string} Parsed string.
  */
-const sanitizeEntrySummary = (str, { allowMarkdown = false } = {}) => {
+export const sanitizeEntrySummary = (str, { allowMarkdown = false } = {}) => {
   str = /** @type {string} */ (parseInline(str));
   str = sanitize(str, { ALLOWED_TAGS: allowMarkdown ? ['strong', 'em', 'code'] : [] });
   str = parseEntities(str);
@@ -26,10 +61,10 @@ const sanitizeEntrySummary = (str, { allowMarkdown = false } = {}) => {
  * Determine an entry summary from the given content. Fields other than `title` should be defined
  * with the `identifier_field` collection option as per the Netlify/Decap CMS document. We also look
  * for the `name` and `label` properties as well as a header in the Markdown `body` as a fallback.
- * @param {FlattenedEntryContent | RawEntryContent} content - Content.
- * @param {object} options - Options.
- * @param {string} [options.identifierField] - Field name to identify the title.
- * @param {boolean} [options.useBody] - Whether to fall back to a header in the Markdown `body`.
+ * @param {FlattenedEntryContent | RawEntryContent} content Content.
+ * @param {object} options Options.
+ * @param {string} [options.identifierField] Field name to identify the title.
+ * @param {boolean} [options.useBody] Whether to fall back to a header in the Markdown `body`.
  * @returns {string} Entry summary. Can be an empty string if it cannot be determined.
  * @see https://decapcms.org/docs/configuration-options/#identifier_field
  */
@@ -55,34 +90,139 @@ export const getEntrySummaryFromContent = (
 };
 
 /**
+ * Replacer subroutine.
+ * @param {string} tag Field name or one of special tags.
+ * @param {ReplacerSubContext} context Context.
+ * @returns {string | Date | undefined} Replaced value or `undefined` if the tag is not recognized.
+ */
+export const replaceSub = (tag, context) => {
+  const { slug, entryPath, basePath, locales, commitDate, commitAuthor } = context;
+
+  if (tag === 'slug') {
+    return slug;
+  }
+
+  if (tag === 'locales') {
+    return locales.sort((a, b) => a.localeCompare(b)).join(', ');
+  }
+
+  if (tag === 'dirname') {
+    let dirPath = entryPath.replace(/[^/]+$/, '');
+
+    if (basePath) {
+      // Remove basePath prefix with boundary awareness
+      const prefix = basePath.endsWith('/') ? basePath : `${basePath}/`;
+
+      if (dirPath.startsWith(prefix)) {
+        dirPath = dirPath.slice(prefix.length);
+      } else if (dirPath.startsWith(basePath)) {
+        dirPath = dirPath.slice(basePath.length);
+      }
+    }
+
+    return stripSlashes(dirPath);
+  }
+
+  if (tag === 'filename') {
+    return /** @type {string} */ (entryPath.split('/').pop()).split('.').shift();
+  }
+
+  if (tag === 'extension') {
+    return /** @type {string} */ (entryPath.split('/').pop()).split('.').pop();
+  }
+
+  if (tag === 'commit_date') {
+    return commitDate ?? '';
+  }
+
+  if (tag === 'commit_author') {
+    return commitAuthor?.name || commitAuthor?.login || commitAuthor?.email;
+  }
+
+  return undefined;
+};
+
+/**
+ * Replacer.
+ * @param {string} placeholder Field name or one of special tags. May contain transformations.
+ * @param {ReplaceContext} context Context.
+ * @returns {string} Replaced string.
+ */
+export const replace = (placeholder, context) => {
+  const { content: valueMap, collectionName, replaceSubContext, defaultLocale } = context;
+  const [tag, ...transformations] = placeholder.split(/\s*\|\s*/);
+  const keyPath = tag.replace(/^fields\./, '');
+  const getFieldArgs = { collectionName, valueMap, keyPath };
+  let value = replaceSub(tag, replaceSubContext);
+
+  if (value === undefined) {
+    // If the `date` transformation is defined, e.g. `{{publish_date | date('YYYY-MM')}}`, use the
+    // raw field value from the entry content. Otherwise, use the field display value. This is to
+    // avoid applying the transformation to the display value, which leads to unexpected results.
+    // Also use raw value for ternary transformations to preserve boolean truthiness.
+    value = transformations.some(
+      (t) => DATE_TRANSFORMATION_REGEX.test(t) || TERNARY_TRANSFORMATION_REGEX.test(t),
+    )
+      ? valueMap[keyPath]
+      : getFieldDisplayValue({ ...getFieldArgs, locale: defaultLocale });
+  }
+
+  if (value === undefined) {
+    return '';
+  }
+
+  if (value instanceof Date && !transformations.length) {
+    const { year, month, day } = getDateTimeParts({ date: value });
+
+    return `${year}-${month}-${day}`;
+  }
+
+  if (transformations.length) {
+    value = applyTransformations({
+      fieldConfig: getField({ ...getFieldArgs }),
+      value,
+      transformations,
+    });
+  }
+
+  return String(value);
+};
+
+/**
  * Get the given entry’s summary that can be displayed in the entry list and other places. Format it
  * with the summary template if necessary, or simply use the `title` or similar field in the entry.
- * @param {Collection} collection - Entry’s collection.
- * @param {Entry} entry - Entry.
- * @param {object} [options] - Options.
- * @param {LocaleCode} [options.locale] - Target locale. The default locale is used if omitted.
- * @param {boolean} [options.useTemplate] - Whether to use the collection’s `summary` template if
+ * @param {InternalCollection} collection Entry’s collection.
+ * @param {Entry} entry Entry.
+ * @param {object} [options] Options.
+ * @param {InternalLocaleCode} [options.locale] Target locale. The default locale is used if
+ * omitted.
+ * @param {boolean} [options.useTemplate] Whether to use the collection’s `summary` template if
  * available.
- * @param {boolean} [options.allowMarkdown] - Whether to allow Markdown and return HTML string.
+ * @param {boolean} [options.allowMarkdown] Whether to allow Markdown and return HTML string.
  * @returns {string} Formatted entry summary.
  * @see https://decapcms.org/docs/configuration-options/#summary
+ * @see https://sveltiacms.app/en/docs/collections/entries#summaries
  */
 export const getEntrySummary = (
   collection,
   entry,
   { locale, useTemplate = false, allowMarkdown = false } = {},
 ) => {
+  if (isCollectionIndexFile(collection, entry)) {
+    return /** @type {string} */ (getIndexFile(collection)?.label);
+  }
+
   const {
+    _type,
     name: collectionName,
-    identifier_field: identifierField = 'title',
-    summary: summaryTemplate,
     _i18n: { defaultLocale },
   } = collection;
 
-  const basePath =
-    collection._type === 'entry'
-      ? /** @type {EntryCollection} */ (collection)._file.basePath
-      : undefined;
+  const {
+    _file: { basePath } = {},
+    identifier_field: identifierField = 'title',
+    summary: summaryTemplate,
+  } = _type === 'entry' ? collection : {};
 
   const { locales, slug, commitDate, commitAuthor } = entry;
 
@@ -96,78 +236,25 @@ export const getEntrySummary = (
     );
   }
 
-  /**
-   * Replacer subroutine.
-   * @param {string} tag - Field name or one of special tags.
-   * @returns {any} Summary.
-   */
-  const replaceSub = (tag) => {
-    if (tag === 'slug') {
-      return slug;
-    }
-
-    if (tag === 'dirname') {
-      return stripSlashes(entryPath.replace(/[^/]+$/, '').replace(basePath ?? '', ''));
-    }
-
-    if (tag === 'filename') {
-      return /** @type {string} */ (entryPath.split('/').pop()).split('.').shift();
-    }
-
-    if (tag === 'extension') {
-      return /** @type {string} */ (entryPath.split('/').pop()).split('.').pop();
-    }
-
-    if (tag === 'commit_date') {
-      return commitDate ?? '';
-    }
-
-    if (tag === 'commit_author') {
-      return commitAuthor?.name || commitAuthor?.login || commitAuthor?.email;
-    }
-
-    return undefined;
-  };
-
-  /**
-   * Replacer.
-   * @param {string} placeholder - Field name or one of special tags. May contain transformations.
-   * @returns {string} Replaced string.
-   */
-  const replace = (placeholder) => {
-    const [tag, ...transformations] = placeholder.split(/\s*\|\s*/);
-    const valueMap = content;
-    const keyPath = tag.replace(/^fields\./, '');
-    /** @type {any} */
-    let value = replaceSub(tag);
-
-    if (value === undefined) {
-      value = getFieldDisplayValue({ collectionName, valueMap, keyPath, locale: defaultLocale });
-    }
-
-    if (value === undefined) {
-      return '';
-    }
-
-    if (value instanceof Date && !transformations.length) {
-      const { year, month, day } = getDateTimeParts({ date: value });
-
-      return `${year}-${month}-${day}`;
-    }
-
-    if (transformations.length) {
-      value = applyTransformations({
-        fieldConfig: getFieldConfig({ collectionName, valueMap, keyPath }),
-        value,
-        transformations,
-      });
-    }
-
-    return String(value);
+  /** @type {ReplaceContext} */
+  const replaceContext = {
+    content,
+    collectionName,
+    replaceSubContext: {
+      slug,
+      entryPath,
+      basePath,
+      locales: Object.keys(locales),
+      commitDate,
+      commitAuthor,
+    },
+    defaultLocale,
   };
 
   return sanitizeEntrySummary(
-    summaryTemplate.replace(/{{(.+?)}}/g, (_match, placeholder) => replace(placeholder)),
+    summaryTemplate.replace(/{{(.+?)}}/g, (_match, placeholder) =>
+      replace(placeholder, replaceContext),
+    ),
     { allowMarkdown },
   );
 };

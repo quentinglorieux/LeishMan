@@ -1,23 +1,32 @@
 <script>
-  import { Alert, Button, Toast } from '@sveltia/ui';
+  import { Alert, Button, MenuItem, Toast } from '@sveltia/ui';
   import { saveFile } from '@sveltia/utils/file';
   import { sleep } from '@sveltia/utils/misc';
   import { _ } from 'svelte-i18n';
-  import { getAssetBlob } from '$lib/services/assets';
+
+  import { getAssetBlob } from '$lib/services/assets/info';
+
+  /**
+   * @import { Asset } from '$lib/types/private';
+   */
 
   /**
    * @typedef {object} Props
-   * @property {Asset[]} [assets] - Selected assets.
+   * @property {Asset[]} [assets] Selected assets.
+   * @property {boolean} [useButton] Whether to use the Button component.
    */
 
   /** @type {Props} */
   let {
     /* eslint-disable prefer-const */
     assets = [],
+    useButton = true,
     /* eslint-enable prefer-const */
   } = $props();
 
   let showToast = $state(false);
+
+  const Component = $derived(useButton ? Button : MenuItem);
 
   /**
    * Download the assets.
@@ -35,7 +44,7 @@
   };
 </script>
 
-<Button
+<Component
   variant="ghost"
   disabled={!assets.length}
   label={$_('download')}

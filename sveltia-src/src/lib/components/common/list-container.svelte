@@ -2,11 +2,13 @@
   @component A container for the entry list or asset list.
 -->
 <script>
-  import { Group } from '@sveltia/ui';
+  /**
+   * @import { Snippet } from 'svelte';
+   */
 
   /**
    * @typedef {object} Props
-   * @property {import('svelte').Snippet} [children] - Slot content.
+   * @property {Snippet} [children] Slot content.
    */
 
   /** @type {Props & Record<string, any>} */
@@ -18,37 +20,19 @@
   } = $props();
 </script>
 
-<div role="none" class="list-container">
-  <Group {...rest}>
-    {@render children?.()}
-  </Group>
+<div role="group" class="list-container" {...rest}>
+  {@render children?.()}
 </div>
 
 <style lang="scss">
   .list-container {
+    --icon-size: 36px;
+
     flex: auto;
     position: relative;
     height: 100%;
-    overflow: hidden;
-
-    & > :global(.group) {
-      height: 100%;
-      overflow-y: auto;
-      overscroll-behavior-y: contain;
-
-      :global(:is(.grid-view, .list-view)) {
-        display: block;
-        height: 100%;
-        overflow-y: auto;
-      }
-
-      :global(.grid-view) {
-        padding: 4px;
-      }
-
-      :global(.list-view) {
-        padding: 12px;
-      }
-    }
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
   }
 </style>

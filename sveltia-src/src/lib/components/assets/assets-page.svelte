@@ -1,8 +1,10 @@
 <script>
-  import { Alert, Group, Toast } from '@sveltia/ui';
+  import { Alert, Toast } from '@sveltia/ui';
   import { sleep } from '@sveltia/utils/misc';
+  import equal from 'fast-deep-equal';
   import { onMount } from 'svelte';
-  import { _ } from 'svelte-i18n';
+  import { _, locale as appLocale } from 'svelte-i18n';
+
   import AssetDetailsOverlay from '$lib/components/assets/details/asset-details-overlay.svelte';
   import EditAssetDialog from '$lib/components/assets/details/edit-asset-dialog.svelte';
   import RenameAssetDialog from '$lib/components/assets/details/rename-asset-dialog.svelte';
@@ -13,22 +15,29 @@
   import SecondaryToolbar from '$lib/components/assets/list/secondary-toolbar.svelte';
   import PageContainerMainArea from '$lib/components/common/page-container-main-area.svelte';
   import PageContainer from '$lib/components/common/page-container.svelte';
-  import { announcedPageStatus, parseLocation } from '$lib/services/app/navigation';
   import {
-    allAssetFolders,
-    allAssets,
-    overlaidAsset,
-    selectedAssetFolder,
-    showAssetOverlay,
-  } from '$lib/services/assets';
+    announcedPageStatus,
+    goto,
+    parseLocation,
+    updateContentFromHashChange,
+  } from '$lib/services/app/navigation';
+  import { allAssets, overlaidAsset } from '$lib/services/assets';
   import { assetUpdatesToast } from '$lib/services/assets/data';
-  import { getFolderLabelByPath, listedAssets } from '$lib/services/assets/view';
+  import { allAssetFolders, selectedAssetFolder } from '$lib/services/assets/folders';
+  import {
+    getFolderLabelByCollection,
+    listedAssets,
+    showAssetOverlay,
+  } from '$lib/services/assets/view';
+  import { isSmallScreen } from '$lib/services/user/env';
 
-  const routeRegex =
-    /^\/assets(?:\/(?<folderPath>[/\-\w]+))?(?:\/(?<fileName>[^/]+\.[A-Za-z0-9]+))?$/;
+  const ROUTE_REGEX = /^\/assets(?:\/(?<folderPath>.+?)(?:\/(?<fileName>[^/]+\.[A-Za-z0-9]+))?)?$/;
+
+  let isIndexPage = $state(false);
 
   const selectedAssetFolderLabel = $derived(
-    getFolderLabelByPath($selectedAssetFolder?.internalPath),
+    // `$appLocale` is a key, because `getFolderLabelByCollection` can return a localized label
+    $appLocale && $selectedAssetFolder ? getFolderLabelByCollection($selectedAssetFolder) : '',
   );
 
   /**
@@ -37,24 +46,43 @@
    */
   const navigate = async () => {
     const { path } = parseLocation();
-    const match = path.match(routeRegex);
+    const match = path.match(ROUTE_REGEX);
+
+    isIndexPage = false;
 
     if (!match?.groups) {
-      return;
+      return; // Different page
     }
 
     const { folderPath, fileName } = match.groups;
 
     if (!folderPath) {
-      $selectedAssetFolder = undefined;
-    } else if ($selectedAssetFolder?.internalPath !== folderPath) {
-      const folder = $allAssetFolders.find(({ internalPath }) => folderPath === internalPath);
-
-      if (folder) {
-        $selectedAssetFolder = folder;
+      if ($isSmallScreen) {
+        // Show the asset folder list only
+        $selectedAssetFolder = undefined;
+        $announcedPageStatus = $_('viewing_asset_folder_list');
+        isIndexPage = true;
       } else {
-        // Not Found
+        // Redirect to All Assets
+        goto('/assets/-/all');
       }
+
+      return;
+    }
+
+    const folder =
+      window.history.state?.folder ??
+      $allAssetFolders.find(({ internalPath, collectionName }) =>
+        folderPath === '-/all'
+          ? internalPath === undefined && collectionName === undefined
+          : internalPath === folderPath,
+      );
+
+    if (!folder) {
+      // Not found
+      $selectedAssetFolder = undefined;
+    } else if (!equal($selectedAssetFolder, folder)) {
+      $selectedAssetFolder = folder;
     }
 
     if (!fileName) {
@@ -90,29 +118,30 @@
 </script>
 
 <svelte:window
-  onhashchange={() => {
-    navigate();
+  onhashchange={(event) => {
+    updateContentFromHashChange(event, navigate, ROUTE_REGEX);
   }}
 />
 
-<PageContainer class="media" aria-label={$_('asset_library')}>
+<PageContainer aria-label={$_('asset_library')}>
   {#snippet primarySidebar()}
-    <PrimarySidebar />
+    {#if !$isSmallScreen || isIndexPage}
+      <PrimarySidebar />
+    {/if}
   {/snippet}
   {#snippet main()}
-    <Group
-      id="assets-container"
-      class="main"
-      aria-label={$_('x_asset_folder', {
-        values: { folder: selectedAssetFolderLabel },
-      })}
-    >
-      <PageContainerMainArea>
+    {#if !$isSmallScreen || !isIndexPage}
+      <PageContainerMainArea
+        id="assets-container"
+        aria-label={$_('x_asset_folder', { values: { folder: selectedAssetFolderLabel } })}
+      >
         {#snippet primaryToolbar()}
           <PrimaryToolbar />
         {/snippet}
         {#snippet secondaryToolbar()}
-          <SecondaryToolbar />
+          {#if $listedAssets.length}
+            <SecondaryToolbar />
+          {/if}
         {/snippet}
         {#snippet mainContent()}
           <AssetList />
@@ -121,7 +150,7 @@
           <SecondarySidebar />
         {/snippet}
       </PageContainerMainArea>
-    </Group>
+    {/if}
   {/snippet}
 </PageContainer>
 

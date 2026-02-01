@@ -1,14 +1,20 @@
 <script>
-  import { Button, ConfirmationDialog } from '@sveltia/ui';
+  import { Button, ConfirmationDialog, MenuItem } from '@sveltia/ui';
   import { _ } from 'svelte-i18n';
-  import { deleteAssets } from '$lib/services/assets/data';
+
+  import { deleteAssets } from '$lib/services/assets/data/delete';
+
+  /**
+   * @import { Asset } from '$lib/types/private';
+   */
 
   /**
    * @typedef {object} Props
-   * @property {Asset[]} [assets] - Selected assets.
-   * @property {string} [buttonDescription] - The `aria-label` attribute on the button.
-   * @property {string} [dialogDescription] - Description to be displayed on the dialog.
-   * @property {(() => void) | undefined} [onDelete] - Custom `delete` event handler.
+   * @property {Asset[]} [assets] Selected assets.
+   * @property {string} [buttonDescription] The `aria-label` attribute on the button.
+   * @property {string} [dialogDescription] Description to be displayed on the dialog.
+   * @property {(() => void) | undefined} [onDelete] Custom `delete` event handler.
+   * @property {boolean} [useButton] Whether to use the Button component.
    */
 
   /** @type {Props} */
@@ -18,13 +24,16 @@
     buttonDescription = '',
     dialogDescription = '',
     onDelete = undefined,
+    useButton = true,
     /* eslint-enable prefer-const */
   } = $props();
 
   let showDialog = $state(false);
+
+  const Component = $derived(useButton ? Button : MenuItem);
 </script>
 
-<Button
+<Component
   variant="ghost"
   disabled={!assets.length}
   label={$_('delete')}

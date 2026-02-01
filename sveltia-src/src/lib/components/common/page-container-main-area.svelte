@@ -1,33 +1,62 @@
 <script>
   /**
-   * @typedef {object} Props
-   * @property {import('svelte').Snippet} [primaryToolbar] - Primary toolbar content.
-   * @property {import('svelte').Snippet} [secondaryToolbar] - Secondary toolbar content.
-   * @property {import('svelte').Snippet} [mainContent] - Main content.
-   * @property {import('svelte').Snippet} [secondarySidebar] - Secondary sidebar content.
+   * @import { Snippet } from 'svelte';
    */
 
-  /** @type {Props} */
+  /**
+   * @typedef {object} Props
+   * @property {Snippet} [primaryToolbar] Primary toolbar content.
+   * @property {Snippet} [secondaryToolbar] Secondary toolbar content.
+   * @property {Snippet} [mainContent] Main content.
+   * @property {Snippet} [secondarySidebar] Secondary sidebar content.
+   */
+
+  /** @type {Props & Record<string, any>} */
   let {
     /* eslint-disable prefer-const */
     primaryToolbar = undefined,
     secondaryToolbar = undefined,
     mainContent = undefined,
     secondarySidebar = undefined,
+    ...rest
     /* eslint-enable prefer-const */
   } = $props();
 </script>
 
-{@render primaryToolbar?.()}
-<div role="none" class="main-inner">
-  <div role="none" class="main-inner-main">
-    {@render secondaryToolbar?.()}
-    {@render mainContent?.()}
+<div role="group" class="wrapper" {...rest}>
+  {@render primaryToolbar?.()}
+  <div role="none" class="main-inner">
+    <div role="none" class="main-inner-main">
+      {@render secondaryToolbar?.()}
+      {@render mainContent?.()}
+    </div>
+    {@render secondarySidebar?.()}
   </div>
-  {@render secondarySidebar?.()}
 </div>
 
 <style lang="scss">
+  .wrapper {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--sui-primary-background-color);
+
+    &:not(:first-child) {
+      border-start-start-radius: 16px;
+    }
+
+    :global {
+      .sui.toolbar.primary {
+        justify-content: center;
+
+        @media (width < 768px) {
+          background-color: var(--sui-secondary-background-color);
+        }
+      }
+    }
+  }
+
   .main-inner {
     flex: auto;
     display: flex;
@@ -40,12 +69,22 @@
       overflow: hidden;
     }
 
-    :global(.secondary-sidebar) {
-      flex: none;
-      overflow: auto;
-      box-sizing: content-box;
-      width: 320px;
-      border-left: 1px solid var(--sui-primary-border-color);
+    :global {
+      .secondary-sidebar {
+        flex: none;
+        overflow: auto;
+        box-sizing: content-box;
+        width: 320px;
+        background-color: var(--sui-secondary-background-color);
+
+        @media (768px <= width) {
+          border-start-start-radius: 16px;
+        }
+
+        [role='listbox'] {
+          padding: 12px;
+        }
+      }
     }
   }
 </style>

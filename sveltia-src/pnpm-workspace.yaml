@@ -1,0 +1,23 @@
+minimumReleaseAge: 1440
+
+minimumReleaseAgeExclude:
+  - devalue
+  - svelte
+  - "@sveltejs/*"
+  - "@sveltia/*"
+
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - es5-ext
+  - esbuild
+  - svelte-preprocess
+
+overrides:
+  esbuild@<=0.24.2: ">=0.25.0"
+  glob@>=11.0.0 <11.1.0: ">=11.1.0"
+
+auditConfig:
+  ignoreCves:
+    # ESLint
+    # https://github.com/advisories/GHSA-p5wg-g6qr-c7cg
+    - CVE-2025-50537

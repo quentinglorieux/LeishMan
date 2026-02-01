@@ -1,7 +1,8 @@
 <script>
-  import { Alert, Group, Toast } from '@sveltia/ui';
+  import { Alert, Toast } from '@sveltia/ui';
   import { onMount } from 'svelte';
-  import { _ } from 'svelte-i18n';
+  import { _, locale as appLocale } from 'svelte-i18n';
+
   import PageContainerMainArea from '$lib/components/common/page-container-main-area.svelte';
   import PageContainer from '$lib/components/common/page-container.svelte';
   import ContentDetailsOverlay from '$lib/components/contents/details/content-details-overlay.svelte';
@@ -11,19 +12,42 @@
   import PrimaryToolbar from '$lib/components/contents/list/primary-toolbar.svelte';
   import SecondarySidebar from '$lib/components/contents/list/secondary-sidebar.svelte';
   import SecondaryToolbar from '$lib/components/contents/list/secondary-toolbar.svelte';
-  import { announcedPageStatus, parseLocation } from '$lib/services/app/navigation';
-  import { getCollection, selectedCollection } from '$lib/services/contents/collection';
+  import {
+    announcedPageStatus,
+    goto,
+    parseLocation,
+    updateContentFromHashChange,
+  } from '$lib/services/app/navigation';
+  import {
+    getCollection,
+    getCollectionLabel,
+    getFirstCollection,
+    getSingletonCollection,
+    getValidCollections,
+    selectedCollection,
+  } from '$lib/services/contents/collection';
   import { contentUpdatesToast } from '$lib/services/contents/collection/data';
-  import { getFile } from '$lib/services/contents/collection/files';
+  import {
+    getCollectionFileEntry,
+    getCollectionFileLabel,
+  } from '$lib/services/contents/collection/files';
   import { listedEntries } from '$lib/services/contents/collection/view';
   import { createDraft } from '$lib/services/contents/draft/create';
-  import { showContentOverlay } from '$lib/services/contents/draft/editor';
+  import { showContentOverlay } from '$lib/services/contents/editor';
   import { getEntrySummary } from '$lib/services/contents/entry/summary';
+  import { isSmallScreen } from '$lib/services/user/env';
+
+  /**
+   * @import { InternalCollection } from '$lib/types/private';
+   */
 
   const routeRegex =
-    /^\/collections\/(?<_collectionName>[^/]+)(?:\/(?<routeType>new|entries))?(?:\/(?<subPath>.+?))?$/;
+    /^\/collections(?:\/(?<_collectionName>[^/]+)(?:\/(?<routeType>new|entries))?(?:\/(?<subPath>.+?))?)?$/;
 
-  const MainContent = $derived($selectedCollection?.files ? FileList : EntryList);
+  let isIndexPage = $state(false);
+  let editorLocale = $state();
+
+  const MainContent = $derived('files' in ($selectedCollection ?? {}) ? FileList : EntryList);
 
   /**
    * Navigate to the content list or content details page given the URL hash.
@@ -33,15 +57,41 @@
     const { path, params } = parseLocation();
     const match = path.match(routeRegex);
 
+    isIndexPage = false;
+
+    // Set the editor locale if specified in the URL params, e.g., `?_locale=fr`
+    editorLocale = params._locale;
+    delete params._locale;
+
+    // `/collections/_singletons` should not be used unless there is only the singleton collection
+    if ($selectedCollection?.name === '_singletons' && getValidCollections().length) {
+      $selectedCollection = undefined;
+    }
+
     if (!match?.groups) {
-      return; // Not Found
+      return; // Different page
     }
 
     const { _collectionName, routeType, subPath } = match.groups;
-    /**
-     * @type {Collection | undefined}
-     */
-    const collection = _collectionName ? getCollection(_collectionName) : undefined;
+
+    if (!_collectionName) {
+      if ($isSmallScreen) {
+        // Show the collection list only
+        $selectedCollection = undefined;
+        $announcedPageStatus = $_('viewing_collection_list');
+        isIndexPage = true;
+      } else {
+        // Redirect to the selected, first or singleton collection
+        const collection = $selectedCollection || getFirstCollection() || getSingletonCollection();
+
+        goto(`/collections/${collection?.name}`, { replaceState: true });
+      }
+
+      return;
+    }
+
+    /** @type {InternalCollection | undefined} */
+    const collection = getCollection(_collectionName);
 
     if (!collection || collection.hide) {
       $selectedCollection = undefined;
@@ -55,12 +105,9 @@
       return; // Not Found
     }
 
-    const { name: collectionName, label, create, files } = $selectedCollection;
-    const collectionLabel = label || collectionName;
-
-    const _fileMap = files
-      ? /** @type {FileCollection} */ ($selectedCollection)._fileMap
-      : undefined;
+    const { name: collectionName } = $selectedCollection;
+    const collectionLabel = getCollectionLabel($selectedCollection);
+    const _fileMap = '_fileMap' in $selectedCollection ? $selectedCollection._fileMap : undefined;
 
     if (!routeType) {
       const count = $listedEntries.length;
@@ -80,40 +127,44 @@
     $showContentOverlay = true;
 
     if (_fileMap) {
-      // File collection
+      // File/singleton collection
       if (routeType === 'entries' && subPath) {
-        const originalEntry = getFile(collectionName, subPath);
+        const originalEntry = getCollectionFileEntry(collectionName, subPath);
         const collectionFile = _fileMap[subPath];
 
         if (originalEntry) {
           createDraft({ collection, collectionFile, originalEntry });
         } else {
-          const { locales } = collectionFile._i18n;
-
           // File is not yet created
           createDraft({
             collection,
             collectionFile,
             originalEntry: {
               slug: collectionFile.name,
-              locales: Object.fromEntries(locales.map((_locale) => [_locale, {}])),
+              locales: Object.fromEntries(
+                collectionFile._i18n.initialLocales.map((_locale) => [_locale, {}]),
+              ),
             },
           });
         }
 
-        $announcedPageStatus = $_('editing_x_collection_file', {
+        $announcedPageStatus = $_(`edit_${collection._type}_announcement`, {
           values: {
             collection: collectionLabel,
-            file: collectionFile.label || collectionFile.name,
+            file: getCollectionFileLabel(collectionFile),
           },
         });
       }
     } else {
-      // Folder collection
-      if (routeType === 'new' && !subPath && create) {
-        createDraft({ collection, dynamicValues: params });
+      // Entry collection
+      if (routeType === 'new' && !subPath) {
+        createDraft({
+          collection,
+          dynamicValues: params,
+          isIndexFile: !!window.history.state?.index,
+        });
 
-        $announcedPageStatus = $_('creating_x_collection_entry', {
+        $announcedPageStatus = $_('create_entry_announcement', {
           values: {
             collection: collectionLabel,
           },
@@ -123,10 +174,10 @@
       if (routeType === 'entries' && subPath) {
         const originalEntry = $listedEntries.find((entry) => entry.subPath === subPath);
 
-        if (originalEntry) {
+        if (originalEntry && $appLocale) {
           createDraft({ collection, originalEntry });
 
-          $announcedPageStatus = $_('editing_x_collection_entry', {
+          $announcedPageStatus = $_('edit_entry_announcement', {
             values: {
               collection: collectionLabel,
               entry: getEntrySummary($selectedCollection, originalEntry),
@@ -143,30 +194,36 @@
 </script>
 
 <svelte:window
-  onhashchange={() => {
-    navigate();
+  onhashchange={(event) => {
+    updateContentFromHashChange(event, navigate, routeRegex);
   }}
 />
 
-<PageContainer class="content" aria-label={$_('content_library')}>
+<PageContainer aria-label={$_('content_library')}>
   {#snippet primarySidebar()}
-    <PrimarySidebar />
+    {#if !$isSmallScreen || isIndexPage}
+      <PrimarySidebar />
+    {/if}
   {/snippet}
   {#snippet main()}
-    <Group
-      id="collection-container"
-      class="main"
-      aria-label={$_('x_collection', {
-        values: { collection: $selectedCollection?.label || $selectedCollection?.name },
-      })}
-      aria-description={$selectedCollection?.description}
-    >
-      <PageContainerMainArea>
+    {#if !$isSmallScreen || !isIndexPage}
+      <PageContainerMainArea
+        aria-label={$_('x_collection', {
+          values: {
+            collection:
+              // `$appLocale` is a key, because `getCollectionLabel` can return a localized label
+              $appLocale && $selectedCollection ? getCollectionLabel($selectedCollection) : '',
+          },
+        })}
+        aria-description={$selectedCollection?.description}
+      >
         {#snippet primaryToolbar()}
           <PrimaryToolbar />
         {/snippet}
         {#snippet secondaryToolbar()}
-          <SecondaryToolbar />
+          {#if $selectedCollection?._type === 'entry' && $listedEntries.length}
+            <SecondaryToolbar />
+          {/if}
         {/snippet}
         {#snippet mainContent()}
           <MainContent />
@@ -175,11 +232,11 @@
           <SecondarySidebar />
         {/snippet}
       </PageContainerMainArea>
-    </Group>
+    {/if}
   {/snippet}
 </PageContainer>
 
-<ContentDetailsOverlay />
+<ContentDetailsOverlay {editorLocale} />
 
 <Toast bind:show={$contentUpdatesToast.saved}>
   <Alert status="success">

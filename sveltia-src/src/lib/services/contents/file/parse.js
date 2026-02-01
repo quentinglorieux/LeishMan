@@ -1,36 +1,54 @@
 import { toRaw } from '@sveltia/utils/object';
 import { escapeRegExp } from '@sveltia/utils/string';
-import * as TOML from 'smol-toml';
-import YAML from 'yaml';
-import { customFileFormats, getFrontMatterDelimiters } from '$lib/services/contents/file';
+import { parse as libParseTOML } from 'smol-toml';
+import { parse as libParseYAML } from 'yaml';
+
 import { getCollection } from '$lib/services/contents/collection';
+import { getCollectionFile } from '$lib/services/contents/collection/files';
+import {
+  customFileFormatRegistry,
+  getFrontMatterDelimiters,
+} from '$lib/services/contents/file/config';
+
+/**
+ * @import {
+ * BaseEntryListItem,
+ * InternalCollection,
+ * InternalCollectionFile,
+ * InternalEntryCollection,
+ * } from '$lib/types/private';
+ * @import { FrontMatterFormat } from '$lib/types/public';
+ */
 
 /**
  * Parse a JSON document using the built-in method.
- * @param {string} str - JSON document.
+ * @param {string} str JSON document.
  * @returns {any} Parsed object.
  */
-const parseJSON = (str) => JSON.parse(str);
+export const parseJSON = (str) => JSON.parse(str);
+
 /**
  * Parse a TOML document using a library. The TOML parser returns date fields as `Date` objects, but
  * we need strings to match the JSON and YAML parsers, so we have to parse twice.
- * @param {string} str - TOML document.
+ * @param {string} str TOML document.
  * @returns {any} Parsed object.
  */
-const parseTOML = (str) => toRaw(TOML.parse(str));
+export const parseTOML = (str) => toRaw(libParseTOML(str));
+
 /**
  * Parse a YAML document using a library.
- * @param {string} str - YAML document.
+ * @param {string} str YAML document.
+ * @param {object} [options] Parsing options.
  * @returns {any} Parsed object.
  */
-const parseYAML = (str) => YAML.parse(str);
+export const parseYAML = (str, options) => libParseYAML(str, options);
 
 /**
  * Detect the Markdown front matter serialization format by checking a delimiter in the content.
- * @param {string} text - File content.
+ * @param {string} text File content.
  * @returns {FrontMatterFormat} Determined format.
  */
-const detectFrontMatterFormat = (text) => {
+export const detectFrontMatterFormat = (text) => {
   if (text.startsWith('+++')) {
     return 'toml-frontmatter';
   }
@@ -43,17 +61,66 @@ const detectFrontMatterFormat = (text) => {
 };
 
 /**
+ * Parse front matter from a Markdown file.
+ * @param {object} args Arguments.
+ * @param {InternalCollection} args.collection Collection.
+ * @param {InternalCollectionFile} [args.collectionFile] Collection file. File/singleton collection
+ * only.
+ * @param {FrontMatterFormat} args.format Front matter format.
+ * @param {string} args.text File content.
+ * @returns {Record<string, any>} Parsed front matter and body.
+ * @throws {Error} When the front matter block could not be parsed.
+ */
+export const parseFrontMatter = ({ collection, collectionFile, format, text }) => {
+  const {
+    _file: { format: _format, fmDelimiters },
+  } = collectionFile ?? /** @type {InternalEntryCollection} */ (collection);
+
+  const [startDelimiter, endDelimiter] = (_format === 'frontmatter'
+    ? getFrontMatterDelimiters({ format, delimiter: fmDelimiters })
+    : fmDelimiters) ?? ['---', '---'];
+
+  const sd = escapeRegExp(startDelimiter);
+  const ed = escapeRegExp(endDelimiter);
+  // Front matter matching: allow an empty head
+  const regex = new RegExp(`^${sd}\\n(?:(?<head>.*?)\\n)?${ed}$(?:\\n(?<body>.+))?`, 'ms');
+  const { head, body } = text.match(regex)?.groups ?? {};
+
+  if (!head && !body) {
+    // Support Markdown without a front matter block, particularly for VitePress
+    // The text can be an empty string, but it’s okay to return an empty body
+    return { body: text };
+  }
+
+  let parsedHead = {};
+
+  if (format === 'yaml-frontmatter') {
+    parsedHead = parseYAML(head);
+  }
+
+  if (format === 'toml-frontmatter') {
+    parsedHead = parseTOML(head);
+  }
+
+  if (format === 'json-frontmatter') {
+    // For JSON front matter, we need to add the braces back since the regex strips them
+    parsedHead = parseJSON(`{${head}}`);
+  }
+
+  return { ...parsedHead, body };
+};
+
+/**
  * Parse raw content with given file details.
- * @param {BaseEntryListItem} entry - Entry file list item.
+ * @param {BaseEntryListItem} entry Entry file list item.
  * @returns {Promise<any>} Parsed content.
  * @throws {Error} When the content could not be parsed.
  */
 export const parseEntryFile = async ({ text = '', path, folder: { collectionName, fileName } }) => {
   const collection = getCollection(collectionName);
 
-  const collectionFile = fileName
-    ? /** @type {FileCollection} */ (collection)?._fileMap[fileName]
-    : undefined;
+  const collectionFile =
+    collection && fileName ? getCollectionFile(collection, fileName) : undefined;
 
   if (!collection) {
     throw new Error('Collection not found');
@@ -66,19 +133,23 @@ export const parseEntryFile = async ({ text = '', path, folder: { collectionName
   // Normalize line breaks
   text = text.trim().replace(/\r\n?/g, '\n');
 
-  const {
-    _file: { format: _format, fmDelimiters },
-  } = collectionFile ?? /** @type {EntryCollection} */ (collection);
+  let {
+    _file: { format },
+  } = collectionFile ?? /** @type {InternalEntryCollection} */ (collection);
 
-  const format = _format === 'frontmatter' ? detectFrontMatterFormat(text) : _format;
-  const customParser = customFileFormats[format]?.parser;
+  const customParser = customFileFormatRegistry.get(format)?.parser;
 
   if (customParser) {
     return customParser(text);
   }
 
+  // Raw format: return the content as-is
+  if (format === 'raw') {
+    return { body: text };
+  }
+
   try {
-    if (/^ya?ml$/.test(format)) {
+    if (format === 'yaml' || format === 'yml') {
       return parseYAML(text);
     }
 
@@ -90,37 +161,18 @@ export const parseEntryFile = async ({ text = '', path, folder: { collectionName
       return parseJSON(text);
     }
 
+    if (format === 'frontmatter') {
+      format = detectFrontMatterFormat(text);
+    }
+
     if (/^(?:yaml|toml|json)-frontmatter$/.test(format)) {
-      const [startDelimiter, endDelimiter] = (_format === 'frontmatter'
-        ? getFrontMatterDelimiters({ format, delimiter: fmDelimiters })
-        : fmDelimiters) ?? ['---', '---'];
-
-      const sd = escapeRegExp(startDelimiter);
-      const ed = escapeRegExp(endDelimiter);
-      // Front matter matching: allow an empty head
-      const regex = new RegExp(`^${sd}\\n(?:(?<head>.*?)\\n)?${ed}$(?:\\n(?<body>.+))?`, 'ms');
-      const { head, body } = text.match(regex)?.groups ?? {};
-
-      if (!head && !body) {
-        // Support Markdown without a front matter block, particularly for VitePress
-        if (text) {
-          return { body: text };
-        }
-
-        throw new Error('No front matter block found');
-      }
-
-      if (format === 'yaml-frontmatter') {
-        return { ...parseYAML(head), body };
-      }
-
-      if (format === 'toml-frontmatter') {
-        return { ...parseTOML(head), body };
-      }
-
-      if (format === 'json-frontmatter') {
-        return { ...parseJSON(head), body };
-      }
+      return parseFrontMatter({
+        collection,
+        collectionFile,
+        // eslint-disable-next-line object-shorthand
+        format: /** @type {FrontMatterFormat} */ (format),
+        text,
+      });
     }
   } catch (/** @type {any} */ ex) {
     throw new Error(`${path} could not be parsed due to ${ex.name}: ${ex.message}`);

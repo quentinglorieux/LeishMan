@@ -1,19 +1,14 @@
 <script setup>
 const columns = [
-  { key: "institution", label: "Institution Name", sortable: true },
-  { key: "country", label: "Country", sortable: true },
-  { key: "city", label: "City", sortable: true },
+  { accessorKey: "institution", header: "Institution Name" },
+  { accessorKey: "country", header: "Country" },
+  { accessorKey: "city", header: "City" },
 ];
 
-const laboratories = await queryContent("laboratories").find();
+const laboratories = await queryCollection("laboratories").all();
 const filterLab = ref([]);
 
 const q = ref("");
-const sort = ref({
-  column: "institution",
-  direction: "asc",
-});
-
 onMounted(async () => {
   try {
     laboratories.forEach((x) =>
@@ -41,21 +36,19 @@ const filteredRows = computed(() => {
 </script>
 
 <template>
-  <div class="bg-white dark:bg-slate-700 dark:text-white mb-10">
-    <div class="flex px-5 py-3.5 border-b border-gray-200 dark:border-gray-700">
-      <UInput v-model="q" placeholder="Filter centers..." />
+  <div class="rounded-[22px] border border-white/70 bg-white/80 shadow-lg">
+    <div class="flex px-5 py-3.5 border-b border-slate-200">
+      <UInput v-model="q" placeholder="Filter centers..." class="w-full" />
     </div>
 
-    <UTable
-      :rows="filteredRows"
+  <UTable
+      :data="filteredRows"
       :columns="columns"
-      :sort="sort"
-      style="color: white"
       :loading-state="{
         icon: 'i-heroicons-arrow-path-20-solid',
         label: 'Loading...',
       }"
-      class="dark:text-white"
+      class="text-slate-700"
     />
   </div>
 </template>

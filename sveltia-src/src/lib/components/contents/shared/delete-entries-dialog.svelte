@@ -1,15 +1,17 @@
 <script>
   import { ConfirmationDialog } from '@sveltia/ui';
   import { _ } from 'svelte-i18n';
+
+  import { getAssetFolder } from '$lib/services/assets/folders';
   import { selectedCollection } from '$lib/services/contents/collection';
-  import { deleteEntries } from '$lib/services/contents/collection/data';
+  import { deleteEntries } from '$lib/services/contents/collection/data/delete';
   import { selectedEntries } from '$lib/services/contents/collection/entries';
   import { listedEntries } from '$lib/services/contents/collection/view';
   import { getAssociatedAssets } from '$lib/services/contents/entry/assets';
 
   /**
    * @typedef {object} Props
-   * @property {boolean} [open] - Whether the dialog is open.
+   * @property {boolean} [open] Whether the dialog is open.
    */
 
   /** @type {Props} */
@@ -20,9 +22,13 @@
   } = $props();
 
   const associatedAssets = $derived.by(() => {
-    if (!!$selectedEntries.length && !!$selectedCollection?._assetFolder?.entryRelative) {
-      const collectionName = $selectedCollection.name;
+    const collectionName = $selectedCollection?.name;
 
+    if (
+      $selectedEntries.length &&
+      collectionName &&
+      getAssetFolder({ collectionName })?.entryRelative
+    ) {
       return $selectedEntries
         .map((entry) => getAssociatedAssets({ entry, collectionName, relative: true }))
         .flat(1);
@@ -37,10 +43,7 @@
   title={$selectedEntries.length === 1 ? $_('delete_entry') : $_('delete_entries')}
   okLabel={$_('delete')}
   onOk={() => {
-    deleteEntries(
-      $selectedEntries.map(({ id }) => id),
-      associatedAssets.map(({ path }) => path),
-    );
+    deleteEntries($selectedEntries, associatedAssets);
   }}
 >
   {#if $selectedEntries.length === 1}
