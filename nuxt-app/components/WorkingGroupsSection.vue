@@ -2,7 +2,7 @@
     <section class="py-12">
         <div>
             <h2 class="font-display text-3xl mb-6">Working Groups</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <NuxtLink v-for="group in groups" :key="group.id" :to="'/projects/' + group.title"
                     class="group relative overflow-hidden rounded-[22px] border border-white/70 bg-white/80 shadow-lg transition hover:-translate-y-1 hover:shadow-xl">
                     <div class="aspect-[4/3] overflow-hidden">
