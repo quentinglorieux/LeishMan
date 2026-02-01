@@ -9,3 +9,4 @@ node_modules
 nuxt-app/dist
 # sveltia-src/
 .info
+*.sqlite
