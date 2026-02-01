@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div>
     <Hero />
     <section class="mt-10 rounded-[22px] border border-white/70 bg-white/80 p-8 shadow-lg text-left">
       <h2 class="font-display text-3xl text-slate-900">LeishMan Network</h2>
@@ -17,7 +17,6 @@
 
 <script setup>
 import { parse } from "yaml";
-import Hero from "~/components/Hero.vue";
 
 const { data: about } = await useAsyncData("about-home", async () => {
   const raw = await $fetch("/data/pages/about.yml");
