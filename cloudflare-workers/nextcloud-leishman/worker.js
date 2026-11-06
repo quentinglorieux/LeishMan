@@ -231,21 +231,32 @@ function parseListing(xmlText, env) {
   const files = [];
   const folders = [];
   const prefix = `/remote.php/dav/files/${env.NEXTCLOUD_USER}/`;
-  for (const m of xmlText.matchAll(/<d:href>([^<]+)<\/d:href>/g)) {
-    const href = m[1];
+  for (const block of xmlText.matchAll(/<d:response>([\s\S]*?)<\/d:response>/g)) {
+    const href = davProp(block[1], "href");
+    if (!href) continue;
     const isDir = href.endsWith("/");
     const rel = href.startsWith(prefix) ? href.slice(prefix.length) : href;
     const parts = rel.split("/").filter(Boolean);
     if (!parts.length) continue; // the root itself
     const name = safeDecode(parts[parts.length - 1]);
     const depth = href.split("/").length - 6; // kept for compatibility with v1 consumers
+    // Extra fields (v2), ignored by older consumers
+    const modified = davProp(block[1], "getlastmodified");
+    const extra = modified ? { modified: new Date(modified).toISOString() } : {};
     if (isDir) {
-      if (depth > 0) folders.push({ name, path: href, depth });
+      if (depth > 0) folders.push({ name, path: href, depth, ...extra });
     } else {
-      files.push({ name, path: href });
+      const rawSize = davProp(block[1], "getcontentlength");
+      const size = rawSize ? Number(rawSize) : NaN;
+      files.push({ name, path: href, ...extra, ...(Number.isFinite(size) ? { size } : {}) });
     }
   }
   return { files, folders };
+}
+
+function davProp(xml, tag) {
+  const m = xml.match(new RegExp(`<d:${tag}>([^<]*)</d:${tag}>`));
+  return m ? m[1] : "";
 }
 
 function safeDecode(s) {
