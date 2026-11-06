@@ -1,4 +1,12 @@
+---
+search:
+  exclude: true
+---
+
 # Security notes
+
+!!! info "Restricted section"
+    These pages are password protected and excluded from the site search.
 
 Findings of the November 2026 review and what the v2 workers change.
 

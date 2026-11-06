@@ -1,4 +1,12 @@
+---
+search:
+  exclude: true
+---
+
 # Deployment
+
+!!! info "Restricted section"
+    These pages are password protected and excluded from the site search.
 
 ## Website (Netlify)
 

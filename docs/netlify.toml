@@ -1,5 +1,7 @@
 # Second Netlify site for the documentation.
 # In Netlify: "Add new site" > same GitHub repo > Base directory: docs
+# Maintainers pages (/admin/*) are behind a password: set the environment
+# variable DOCS_ADMIN_PASSWORD on that site (see netlify/edge-functions/admin-auth.ts).
 [build]
   command = "pip install -r requirements.txt && mkdocs build --strict"
   publish = "site"

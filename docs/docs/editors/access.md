@@ -25,7 +25,7 @@ A person can read a group folder when **one** of these is true:
 - **Extra access (non-members)**: read access to some folders for people who are not group members (for example an external reviewer). Each person needs an ORCID iD.
 
 !!! note "Do I still need the extra access list?"
-    Usually not: put people in the working group instead. The extra access list was the only mechanism before November 2026; some of its entries are now redundant (see the access report from the website manager).
+    Usually not: put people in the working group instead. Use the extra access list only for someone who must read a folder without being a member of that group.
 
 ## Checking the result
 

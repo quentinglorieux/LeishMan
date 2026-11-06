@@ -1,4 +1,12 @@
+---
+search:
+  exclude: true
+---
+
 # How the website works
+
+!!! info "Restricted section"
+    These pages are password protected and excluded from the site search.
 
 ```mermaid
 flowchart TB

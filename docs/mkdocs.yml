@@ -38,7 +38,7 @@ nav:
       - Who can read which documents: editors/access.md
       - Files on Nextcloud: editors/files.md
       - Other content: editors/other-content.md
-  - For administrators:
+  - Maintainers (password):
       - How the website works: admin/architecture.md
       - Deployment: admin/deployment.md
       - Security notes: admin/security.md
