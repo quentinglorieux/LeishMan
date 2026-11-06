@@ -12,7 +12,6 @@
 {#if src && showInHeader}
   <Button
     variant="ghost"
-    iconic
     aria-label={$_('visit_live_site')}
     onclick={() => {
       openProductionSite();
@@ -25,7 +24,7 @@
 <style lang="scss">
   img {
     width: auto;
-    max-width: 140px;
+    max-width: 160px;
     height: 24px;
     object-fit: contain;
   }
