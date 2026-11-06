@@ -7,4 +7,6 @@ shortbio: Andreas  heads the Centre for Tropical and Travel Medicine at the Swis
 role: MD
 mail: Neumayr@leisman.fr
 coordinator: false
+orcid: "0000-0001-7358-2791"
+steering: true
 ---

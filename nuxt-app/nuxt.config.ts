@@ -3,6 +3,8 @@ export default defineNuxtConfig({
   ssr: true, // Enable or Disable SSR
   nitro: {
     preset: "netlify",
+    // Access map for the Cloudflare workers, generated from content at build time
+    prerender: { routes: ["/data/access.json"] },
   },
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
@@ -23,7 +25,9 @@ export default defineNuxtConfig({
     public: {
       publicApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY || "",
       cms: process.env.CMS || "sveltia",
+      // Overridable with NUXT_PUBLIC_WORKER_BASE / NUXT_PUBLIC_ORCID_AUTH_URL (e.g. local `wrangler dev`)
       workerBase: "https://nextcloud-leishman.quentin-glorieux.workers.dev",
+      orcidAuthUrl: "https://orcid-sveltia.quentin-glorieux.workers.dev/auth/orcid",
     },
   },
   // nitro: {

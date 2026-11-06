@@ -2,14 +2,19 @@
 title: Biobanking group
 slug: Biobanking
 shortdescription: The biobanking group takes care of collecting, storing, and managing biological samples for research purposes within the network.
-description: |-
-  ### Group members:
-
-  - Sara Karlsson Söbirk (Group leader)
-  - Mark Bailey (Group leader)
-  - Rens Zonneveld
-  - Laura Nabarro
-  - Adriana Calderaro
 image: /assets/projects/LeishMan_Biobanking.png
+description: ""
+folder: Biobanking
+members:
+  - member: Sobirk
+    leader: true
+  - member: mark-bailey
+    leader: true
+  - member: Zonneveld
+    leader: false
+  - member: laura-nabarro
+    leader: false
+  - member: adriana-calderaro
+    leader: false
 ---
 

@@ -42,7 +42,8 @@
 </template>
 
 <script setup>
-const contact = await queryCollection("members").all();
+// Only steering committee members (the members collection also holds all working-group members)
+const contact = await queryCollection("members").where("steering", "=", true).all();
 </script>
 
 <style scoped></style>

@@ -1,5 +1,5 @@
 ---
-lastname: Sobirk
+lastname: Karlsson Söbirk
 firstname: Sara
 laboratory: Lund University
 thumbnail: /assets/members/sara.webp
@@ -7,4 +7,5 @@ shortbio: Sara Karlsson Söbirk is specialized in infectious diseases and clinic
 role: MD, PhD
 mail: sobirk@leisman.fr
 coordinator: false
+steering: true
 ---

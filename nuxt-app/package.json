@@ -19,7 +19,8 @@
     "ordered-uuid-v4": "^0.2.1",
     "parse-md": "^3.0.3",
     "vue-showdown": "^4.2.0",
-    "vue3-google-map": "^0.21.0"
+    "vue3-google-map": "^0.21.0",
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@iconify-json/fa": "^1.2.2",
