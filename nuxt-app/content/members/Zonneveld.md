@@ -7,5 +7,6 @@ shortbio: Rens Zonneveld works as a clinical parasitologist and postdoctoral res
 role: MD, PhD
 mail: zonneveld@leisman.fr
 coordinator: false
+steering: true
 ---
 

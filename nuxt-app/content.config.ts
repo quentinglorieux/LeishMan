@@ -42,6 +42,7 @@ export default defineContentConfig({
       source: "laboratories/**/*.md",
       schema: z.object({
         title: z.string().optional(),
+        name: z.string().optional(),
         country: z.string().optional(),
         city: z.string().optional(),
         lat: z.string().optional(),
@@ -60,7 +61,9 @@ export default defineContentConfig({
         thumbnail: z.string().optional(),
         shortbio: z.string().optional(),
         coordinator: z.boolean().optional(),
+        steering: z.boolean().optional(),
         laboratory: z.string().optional(),
+        orcid: z.string().optional(),
       }),
     }),
     news: defineCollection({
@@ -88,6 +91,12 @@ export default defineContentConfig({
         image: z.string().optional(),
         date: z.string().optional(),
         slug: z.string().optional(),
+        // Nextcloud folder of the group (relative to the LeishMan root)
+        folder: z.string().optional(),
+        // Structured member list: `member` is the file name (stem) of a members/*.md entry
+        members: z
+          .array(z.object({ member: z.string(), leader: z.boolean().optional() }))
+          .optional(),
       }),
     }),
     protocols: defineCollection({

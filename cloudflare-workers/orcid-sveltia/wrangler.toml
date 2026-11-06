@@ -1,0 +1,17 @@
+name = "orcid-sveltia"
+main = "worker.js"
+compatibility_date = "2025-05-01"
+
+[observability]
+enabled = true
+
+[vars]
+BASE_URL = "https://orcid-sveltia.quentin-glorieux.workers.dev"
+FRONT_URL = "https://leishman.netlify.app"
+ACCESS_URL = "https://leishman.netlify.app/data/access.json"
+# Pages allowed to receive the login result (comma separated, * = one DNS label part)
+ALLOWED_ORIGINS = "https://leishman.netlify.app,https://*--leishman.netlify.app,https://leishman-network.org,https://www.leishman-network.org,http://localhost:3400"
+CONTACT_EMAIL = "clea.melenotte@aphp.fr"
+
+# Secrets (never in this file): wrangler secret put <NAME>
+#   ORCID_CLIENT_ID, ORCID_CLIENT_SECRET, GITHUB_BOT_TOKEN, SESSION_SECRET

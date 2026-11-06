@@ -8,7 +8,7 @@ admin_list:
       - Diagnostic-procedure
       - Epidemiology
       - LC-treatment
-      - LV-treatment
+      - VL-treatment
       - Recommendations
       - Admin
   - lastname: Melenotte
@@ -20,7 +20,7 @@ admin_list:
       - Diagnostic-procedure
       - Epidemiology
       - LC-treatment
-      - LV-treatment
+      - VL-treatment
       - Recommendations
       - Admin
   - lastname: Neumayr
@@ -32,7 +32,7 @@ admin_list:
       - Diagnostic-procedure
       - Epidemiology
       - LC-treatment
-      - LV-treatment
+      - VL-treatment
       - Recommendations
       - Admin
   - lastname: Glorieux

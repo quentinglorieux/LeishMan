@@ -1,0 +1,14 @@
+name = "nextcloud-leishman"
+main = "worker.js"
+compatibility_date = "2025-05-01"
+
+[observability]
+enabled = true
+
+[vars]
+NEXTCLOUD_URL = "https://nextcloud.rubidiumweb.fr"
+NEXTCLOUD_USER = "quentin"
+ALLOWED_ORIGINS = "https://leishman.netlify.app,https://*--leishman.netlify.app,https://leishman-network.org,https://www.leishman-network.org,http://localhost:3400"
+
+# Secrets (never in this file): wrangler secret put <NAME>
+#   NEXTCLOUD_PASSWORD, SESSION_SECRET (same value as in orcid-sveltia)

@@ -56,3 +56,7 @@ See details [new-features.md](new-features.md#login)
 ### NextCloud
 The site is now using NextCloud for file storage. This is done via the NextCloud API.
 See details [new-features.md](new-features.md#nextcloud)
+## Documentation (November 2026)
+User guide for members and editors in [`docs/`](docs/docs/index.md) (MkDocs Material, deployable as a second Netlify site with base directory `docs`):
+- working groups now reference member pages; the member list also grants read access to the group's Nextcloud folder (ORCID login)
+- the two Cloudflare workers are versioned in `cloudflare-workers/` (see `docs/docs/admin/deployment.md` before deploying them)

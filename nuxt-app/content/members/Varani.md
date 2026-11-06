@@ -7,4 +7,6 @@ shortbio: Department of Medical and Surgical Sciences, University of Bologna, Bo
 role: MD, PhD
 mail: varani@leisman.fr
 coordinator: false
+orcid: "0000-0003-0862-4937"
+steering: true
 ---

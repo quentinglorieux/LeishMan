@@ -143,16 +143,14 @@
 import { ref, computed, onMounted } from 'vue'
 import { useOrcidLogin } from '~/composables/useOrcidLogin'
 
-const { signInWithOrcid } = useOrcidLogin()
+const { member, refresh, signIn, signOut } = useOrcidLogin()
 
-const isLoggedIn = ref(false)
-const userRole = ref('')
-const userFirstname = ref('')
+const isLoggedIn = computed(() => !!member.value)
+const userRole = computed(() => member.value?.role || '')
+const userFirstname = computed(() => member.value?.firstname || '')
 
 onMounted(() => {
-  isLoggedIn.value = !!localStorage.getItem('sveltia-cms.user')
-  userRole.value = localStorage.getItem('sveltia-cms.userRole') || ''
-  userFirstname.value = localStorage.getItem('sveltia-cms.firstname') || ''
+  refresh()
 })
 
 const menuItems = computed(() => [
@@ -222,18 +220,11 @@ const toggleMenu = () => { isOpen.value = !isOpen.value }
 
 function handleMenuAction(action) {
   if (action === 'orcid-login-home') {
-    // ORCID popup; on success store Sveltia creds then go HOME
-    signInWithOrcid('/')
+    // ORCID popup; the menu and group pages update reactively
+    signIn()
   }
   if (action === 'logout') {
-    // Clear Sveltia session locally
-    localStorage.removeItem('sveltia-cms.user')
-    localStorage.removeItem('sveltia-cms.userRole')
-    localStorage.removeItem('sveltia-cms.firstname')
-    localStorage.removeItem('sveltia-cms.lastname')
-    localStorage.removeItem('sveltia-cms.orcid')
-    localStorage.removeItem('sveltia-cms.userGroups')
-    window.location.reload()
+    signOut()
   }
   if (action === 'admin') {
     window.location.href = '/admin/'
