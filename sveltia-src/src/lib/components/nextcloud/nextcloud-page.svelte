@@ -102,16 +102,23 @@
 
       const data = await response.json();
 
+      // v2 worker: access is enforced server-side from the signed session, nothing to filter.
+      // Legacy worker (no session): keep the old client-side filtering by group name.
+      const hasSession = !!localStorage.getItem("leishman.session");
       const storedGroups =
         JSON.parse(localStorage.getItem("sveltia-cms.userGroups")) || [];
 
-      const filteredFolders = data.folders.filter((folder) =>
-        storedGroups.some((group) => folder.path.includes(group))
-      );
+      const filteredFolders = hasSession
+        ? data.folders
+        : data.folders.filter((folder) =>
+            storedGroups.some((group) => folder.path.includes(group))
+          );
 
-      const filteredFiles = data.files.filter((file) =>
-        filteredFolders.some((folder) => file.path.startsWith(folder.path))
-      );
+      const filteredFiles = hasSession
+        ? data.files
+        : data.files.filter((file) =>
+            filteredFolders.some((folder) => file.path.startsWith(folder.path))
+          );
 
       files.set(filteredFiles);
       folders.set(filteredFolders);

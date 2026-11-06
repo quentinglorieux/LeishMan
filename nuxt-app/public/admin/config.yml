@@ -9,7 +9,7 @@ backend:
     uploadMedia: Upload - “{{path}}”
     deleteMedia: Delete - “{{path}}”
     openAuthoring: "{{message}}"
-  automatic_deployments: true
+  skip_ci: false
 
 media_folder: nuxt-app/public/images
 public_folder: /assets/images
@@ -73,6 +73,7 @@ collections:
         widget: "list"
         required: false
         add_to_top: false
+        collapsed: true
         summary: "{{fields.member}}{{fields.leader | ternary(' (group leader)', '')}}"
         hint: "Pick people from the Members collection. Group leaders are shown first. Create the member page first if the person is missing."
         fields:
