@@ -1,5 +1,5 @@
 <script setup>
-// Reference centres map: Leaflet + OpenStreetMap data (CARTO "Positron" tiles), no API key needed.
+// Reference centres map: Leaflet + standard OpenStreetMap tiles, no API key needed.
 import { onMounted, onBeforeUnmount, ref } from "vue";
 import "leaflet/dist/leaflet.css";
 
