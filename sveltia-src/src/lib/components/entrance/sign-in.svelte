@@ -60,7 +60,12 @@
 
   const signInWithOrcid = () => {
     const { authURL } = getOrcidConfig();
-    openCenteredPopup(authURL, 'orcid-auth');
+    const url = new URL(authURL);
+
+    // v2 login worker: tell it where to send the result (checked against an allowlist)
+    url.searchParams.set('origin', window.location.origin);
+    url.searchParams.set('mode', 'cms');
+    openCenteredPopup(url.toString(), 'orcid-auth');
   };
 
   onMount(() => {
@@ -94,6 +99,8 @@
             }),
           );
 
+          // Signed session used by the Nextcloud worker (shared with the public website)
+          if (d.session) localStorage.setItem('leishman.session', d.session);
           if (d.role) localStorage.setItem('sveltia-cms.userRole', d.role);
           if (d.firstname) localStorage.setItem('sveltia-cms.firstname', d.firstname);
           if (d.lastname) localStorage.setItem('sveltia-cms.lastname', d.lastname);

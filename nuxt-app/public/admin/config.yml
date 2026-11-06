@@ -15,11 +15,83 @@ media_folder: nuxt-app/public/images
 public_folder: /assets/images
 show_preview_links: false
 superadmin: false
+
+# LeishMan customisations of Sveltia CMS (see sveltia-src/)
+sveltia:
+  orcid:
+    authURL: "https://orcid-sveltia.quentin-glorieux.workers.dev/auth/orcid"
+    origin: "https://orcid-sveltia.quentin-glorieux.workers.dev"
+  nextcloudWorkerBase: "https://nextcloud-leishman.quentin-glorieux.workers.dev"
 # editor:
 #   preview: true
 
 collections:
+  # ------------------------------------------------------------------ Working groups
+  - label: Working groups
+    label_singular: Working group
+    description: >-
+      One entry per working group. The member list below is shown on the group page AND
+      decides who can open the group's private documents (members need an ORCID iD on
+      their member page). Changes are live a few minutes after saving.
+    is_admin: true
+    name: projects
+    icon: workspaces
+    folder: nuxt-app/content/projects
+    media_folder: /nuxt-app/public/assets/projects
+    public_folder: /assets/projects
+    create: true
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields: [title]
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true, hint: "Also used in the page address: avoid changing it once published." }
+      - {
+          label: "Short description",
+          name: "shortdescription",
+          widget: "markdown",
+          required: false,
+          hint: "Shown on the working groups list and at the top of the group page.",
+        }
+      - {
+          label: "Additional description",
+          name: "description",
+          widget: "markdown",
+          required: false,
+          hint: "Optional longer text. Do NOT list members here: use the Members field below.",
+        }
+      - { label: "Image", name: "image", widget: "image", required: false }
+      - {
+          label: "Documents folder (Nextcloud)",
+          name: "folder",
+          widget: "select",
+          required: false,
+          options: ["Biobanking", "Diagnostic-procedure", "Epidemiology", "LC-treatment", "VL-treatment", "Recommendations", "LC recommendations", "Consortium"],
+          hint: "Top-level Nextcloud folder whose content is shown to the group members. Ask the website manager to create a new folder if needed.",
+        }
+      - label: "Members"
+        name: "members"
+        widget: "list"
+        required: false
+        add_to_top: false
+        summary: "{{fields.member}}{{fields.leader | ternary(' (group leader)', '')}}"
+        hint: "Pick people from the Members collection. Group leaders are shown first. Create the member page first if the person is missing."
+        fields:
+          - label: "Member"
+            name: "member"
+            widget: "relation"
+            collection: "members"
+            value_field: "{{slug}}"
+            search_fields: ["lastname", "firstname", "laboratory"]
+            display_fields: ["{{firstname}} {{lastname}}"]
+          - { label: "Group leader", name: "leader", widget: "boolean", default: false, required: false }
+      - { label: "URL slug (technical)", name: "slug", widget: "string", required: false, hint: "Short technical name. Leave as is." }
+
+  # ------------------------------------------------------------------ Members
   - label: Members
+    label_singular: Member
+    description: >-
+      Everyone in the network: steering committee and working-group members.
+      Add the ORCID iD so the person can sign in and read their groups' documents.
     name: members
     icon: group
     is_admin: true
@@ -28,37 +100,61 @@ collections:
     public_folder: /assets/members
     create: true
     identifier_field: lastname
+    slug: "{{firstname}}-{{lastname}}"
     fields:
-      - { label: "Nom", name: "lastname", widget: "string", required: true }
-      - { label: "Prénom", name: "firstname", widget: "string", required: true }
+      - { label: "Last name", name: "lastname", widget: "string", required: true }
+      - { label: "First name", name: "firstname", widget: "string", required: true }
       - {
-          label: "Laboratoire",
+          label: "ORCID iD",
+          name: "orcid",
+          widget: "string",
+          required: false,
+          pattern: ['^$|^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$', "Format: 0000-0002-1825-0097 (without https://orcid.org/)"],
+          hint: "Needed to sign in. Find it on https://orcid.org (format 0000-0000-0000-0000).",
+        }
+      - {
+          label: "Institution",
           name: "laboratory",
           widget: "string",
           required: false,
+          hint: "e.g. Instituto de Salud Carlos III, Madrid, Spain",
         }
       - {
-          label: "Featured Image",
+          label: "Photo",
           name: "thumbnail",
           widget: "image",
           required: false,
+          hint: "Square picture, at least 300×300 px. Initials are shown when empty.",
         }
+      - { label: "Title / role", name: "role", widget: "string", required: false, hint: "e.g. MD, PhD" }
+      - { label: "E-mail", name: "mail", widget: "string", required: false, hint: "Shown publicly on the Steering committee and Contact pages only." }
       - {
-          label: "Short Bio",
+          label: "Short bio",
           name: "shortbio",
           widget: "markdown",
           required: false,
         }
-      - { label: "Role", name: "role", widget: "string", required: false }
-      - { label: "E-mail", name: "mail", widget: "string", required: false }
       - {
-          label: "Coordinator ?",
+          label: "Steering committee",
+          name: "steering",
+          widget: "boolean",
+          default: false,
+          required: false,
+          hint: "Show on the Steering committee page.",
+        }
+      - {
+          label: "Coordinator",
           name: "coordinator",
           widget: "boolean",
+          default: false,
           required: false,
+          hint: "Show on the Contact page.",
         }
-    summary: "{{lastname}} {{firstname}}"
-    sortable_fields: [lastname]
+    summary: "{{lastname}}, {{firstname}}{{laboratory | ternary(' · ', '')}}{{laboratory}}"
+    sortable_fields: [lastname, firstname, laboratory]
+    view_filters:
+      - { label: "Steering committee", field: steering, pattern: true }
+      - { label: "Without ORCID iD", field: orcid, pattern: '^$' }
   - label: Collaborations
     is_admin: true
     name: collaborations
@@ -89,35 +185,6 @@ collections:
           widget: "image",
           required: false,
         }
-  - label: Working group
-    is_admin: true
-    name: projects
-    icon: build
-    folder: nuxt-app/content/projects
-    media_folder: /nuxt-app/public/assets/projects
-    public_folder: /assets/projects
-    create: true
-    identifier_field: title
-    fields:
-      - { label: "Titre", name: "title", widget: "string", required: true }
-      - {
-          label: "Short Description",
-          name: "shortdescription",
-          widget: "markdown",
-          required: false,
-        }
-      - {
-          label: "Description",
-          name: "description",
-          widget: "markdown",
-          required: false,
-        }
-      - {
-          label: "Featured Image",
-          name: "image",
-          widget: "image",
-          required: false,
-        }
   # - label: Protocols
   #   name: protocols
   #   icon: build
@@ -127,7 +194,7 @@ collections:
   #   create: true
   #   identifier_field: title
   #   fields:
-  #     - { label: "Titre", name: "title", widget: "string", required: true }
+  #     - { label: "Title", name: "title", widget: "string", required: true }
   #     - {
   #         label: "Short Description",
   #         name: "shortdescription",
@@ -156,7 +223,7 @@ collections:
     identifier_field: title
     is_admin: true
     fields:
-      - { label: "Titre", name: "title", widget: "string", required: true }
+      - { label: "Title", name: "title", widget: "string", required: true }
       - {
           label: "Short Description",
           name: "shortdescription",
@@ -176,7 +243,7 @@ collections:
           required: false,
         }
       - {
-          label: "date",
+          label: "Date",
           name: "date",
           widget: "datetime",
           time_format: false,
@@ -229,7 +296,7 @@ collections:
           required: false,
         }
       - {
-          label: "date",
+          label: "Date",
           name: "date",
           widget: "datetime",
           time_format: false,
@@ -448,36 +515,43 @@ collections:
   #         widget: "file",
   #         required: true,
   #       }
-  - label: Users
+  - label: Access & roles
     name: users
-    icon: group
-    create: true
+    icon: admin_panel_settings
+    description: >-
+      Working-group members get access to their group's documents automatically (Working groups >
+      Members). Use these lists only for administrators (full access + editing the website) and for
+      extra access given to people who are not members of the group.
     is_admin: true
     identifier_field: lastname
     files:
-      - label: "Admin"
+      - label: "Administrators"
         name: "admin"
         file: "nuxt-app/public/data/users/admin.yml"
         fields:
-          - label: "Admin"
+          - label: "Administrators"
             name: "admin_list"
             widget: "list"
+            summary: "{{fields.lastname}}, {{fields.firstname}} ({{fields.orcid}})"
+            hint: "Administrators can edit the whole website and read every folder."
             fields:
-              - { label: "Nom", name: "lastname", widget: "string", required: true }
-              - { label: "Prénom", name: "firstname", widget: "string", required: false }
-              - { label: "Email", name: "email", widget: "string", required: false }
-              - { label: "ORCID", name: "orcid", widget: "string", required: true }
-              - { label: "Group membership", name: "group",   widget: "select", options: ["Biobanking", "Diagnostic", "Epidemiology", "LC ", "LV", "Visceral", "Recommendations", "Admin"],multiple: true }
-      - label: "Viewer"
+              - { label: "Last name", name: "lastname", widget: "string", required: true }
+              - { label: "First name", name: "firstname", widget: "string", required: false }
+              - { label: "E-mail", name: "email", widget: "string", required: false }
+              - { label: "ORCID iD", name: "orcid", widget: "string", required: true, pattern: ['^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$', "Format: 0000-0002-1825-0097"] }
+              - { label: "Groups (informative, admins see every folder)", name: "group", widget: "select", options: ["Biobanking", "Diagnostic-procedure", "Epidemiology", "LC-treatment", "VL-treatment", "Recommendations", "Admin"], multiple: true, required: false }
+      - label: "Extra access (non-members)"
         name: "viewer"
         file: "nuxt-app/public/data/users/viewer.yml"
         fields:
-          - label: "Viewer"
+          - label: "People with extra read access"
             name: "viewer_list"
             widget: "list"
+            summary: "{{fields.lastname}}, {{fields.firstname}}"
+            hint: "Read access to the selected group folders, in addition to the group members."
             fields:
-              - { label: "Nom", name: "lastname", widget: "string", required: true }
-              - { label: "Prénom", name: "firstname", widget: "string", required: false }
-              - { label: "Email", name: "email", widget: "string", required: false }
-              - { label: "ORCID", name: "orcid", widget: "string", required: true }
-              - { label: "Group membership", name: "group",   widget: "select", options: ["Biobanking", "Diagnostic", "Epidemiology", "Treatment Optimization LC", "Treatment Optimization LV", "Visceral leishmaniasis", "Recommendations", "Admin"],multiple: true }
+              - { label: "Last name", name: "lastname", widget: "string", required: true }
+              - { label: "First name", name: "firstname", widget: "string", required: false }
+              - { label: "E-mail", name: "email", widget: "string", required: false }
+              - { label: "ORCID iD", name: "orcid", widget: "string", required: true, pattern: ['^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$', "Format: 0000-0002-1825-0097"] }
+              - { label: "Folders", name: "group", widget: "select", options: ["Biobanking", "Diagnostic-procedure", "Epidemiology", "LC-treatment", "VL-treatment", "Recommendations"], multiple: true }

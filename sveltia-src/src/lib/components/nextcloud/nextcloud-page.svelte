@@ -44,7 +44,17 @@
     } else if (cfg.token) {
       headers["X-Worker-Token"] = cfg.token;
     }
+    const session = localStorage.getItem("leishman.session");
+    if (session) {
+      headers.Authorization = `Bearer ${session}`;
+    }
     return headers;
+  }
+
+  // For URLs opened directly (img src, new tab) where headers cannot be sent
+  function withToken(url) {
+    const session = localStorage.getItem("leishman.session");
+    return session ? `${url}&access_token=${encodeURIComponent(session)}` : url;
   }
 
   function getNextcloudHeaders() {
@@ -277,7 +287,7 @@
 
     const downloadURL = `${getWorkerBase()}/api/nextcloud/download?file=${encodePathOnce(filePath)}`;
 
-    window.open(downloadURL, "_blank");
+    window.open(withToken(downloadURL), "_blank");
   }
 
   async function openPreview(filePath) {
@@ -326,7 +336,7 @@
 
     if (["jpg", "jpeg", "png", "gif"].includes(fileType)) {
       //  Show images inside the modal
-      previewFile.set({ url: previewUrl, type: `image/${fileType}` });
+      previewFile.set({ url: withToken(previewUrl), type: `image/${fileType}` });
       loadingPreview.set(false);
     } else if (officeTypes.includes(fileType)) {
       try {
@@ -336,16 +346,16 @@
         if (data?.url) {
           previewFile.set({ url: data.url, type: "office" });
         } else {
-          window.open(previewUrl, "_blank");
+          window.open(withToken(previewUrl), "_blank");
         }
       } catch (err) {
         console.error("Error fetching share link:", err);
-        window.open(previewUrl, "_blank");
+        window.open(withToken(previewUrl), "_blank");
       } finally {
         loadingPreview.set(false);
       }
     } else {
-      window.open(previewUrl, "_blank");
+      window.open(withToken(previewUrl), "_blank");
       loadingPreview.set(false);
       // console.log("🔹 Sending user groups for preview:", storedGroups);
       //  Fetch the Nextcloud Share Link for PDFs, Markdown, and DOCX
