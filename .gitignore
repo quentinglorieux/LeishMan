@@ -10,3 +10,10 @@ nuxt-app/dist
 # sveltia-src/
 .info
 *.sqlite
+.data/
+
+# Cloudflare worker local secrets/config dumps
+cloudflare-workers/**/settings.json
+cloudflare-workers/**/content.raw
+cloudflare-workers/**/.dev.vars
+.wrangler/
