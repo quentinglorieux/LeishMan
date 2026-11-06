@@ -1,0 +1,8 @@
+# Second Netlify site for the documentation.
+# In Netlify: "Add new site" > same GitHub repo > Base directory: docs
+[build]
+  command = "pip install -r requirements.txt && mkdocs build --strict"
+  publish = "site"
+
+[build.environment]
+  PYTHON_VERSION = "3.12"

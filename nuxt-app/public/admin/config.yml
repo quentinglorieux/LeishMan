@@ -534,6 +534,7 @@ collections:
             name: "admin_list"
             widget: "list"
             summary: "{{fields.lastname}}, {{fields.firstname}} ({{fields.orcid}})"
+            collapsed: true
             hint: "Administrators can edit the whole website and read every folder."
             fields:
               - { label: "Last name", name: "lastname", widget: "string", required: true }
@@ -549,6 +550,7 @@ collections:
             name: "viewer_list"
             widget: "list"
             summary: "{{fields.lastname}}, {{fields.firstname}}"
+            collapsed: true
             hint: "Read access to the selected group folders, in addition to the group members."
             fields:
               - { label: "Last name", name: "lastname", widget: "string", required: true }
