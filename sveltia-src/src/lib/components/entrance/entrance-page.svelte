@@ -32,7 +32,7 @@
       {@const logoURL = $cmsConfig?.logo?.src ?? $cmsConfig?.logo_url}
       <img src={logoURL || `data:image/svg+xml;base64,${btoa(SveltiaLogo)}`} alt="" class="logo" />
     {/if}
-    <h1>Sveltia CMS</h1>
+    <h1>LeishMan Content Manager</h1>
     {#if $cmsConfigErrors.length}
       <div role="alert" class="message">
         <div role="none">
@@ -100,11 +100,11 @@
     }
 
     .logo {
-      max-width: 160px;
+      max-width: 360px;
       height: auto;
 
       @media (width < 768px) {
-        max-width: 120px;
+        max-width: 260px;
       }
     }
 

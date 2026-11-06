@@ -24,7 +24,8 @@
 
 <style lang="scss">
   img {
-    width: 24px;
+    width: auto;
+    max-width: 140px;
     height: 24px;
     object-fit: contain;
   }

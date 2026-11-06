@@ -15,6 +15,8 @@ media_folder: nuxt-app/public/images
 public_folder: /assets/images
 show_preview_links: false
 superadmin: false
+# Logo shown on the CMS sign-in page and in the toolbar (replaces the Sveltia logo)
+logo_url: /assets/general/logo.webp
 
 # LeishMan customisations of Sveltia CMS (see sveltia-src/)
 sveltia:
