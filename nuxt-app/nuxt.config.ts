@@ -21,9 +21,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    gmapsApiKey: process.env.GOOGLE_MAPS_API_KEY || "",
     public: {
-      publicApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY || "",
       cms: process.env.CMS || "sveltia",
       // Overridable with NUXT_PUBLIC_WORKER_BASE / NUXT_PUBLIC_ORCID_AUTH_URL (e.g. local `wrangler dev`)
       workerBase: "https://nextcloud-leishman.quentin-glorieux.workers.dev",

@@ -42,6 +42,7 @@ export default defineContentConfig({
       source: "laboratories/**/*.md",
       schema: z.object({
         title: z.string().optional(),
+        name: z.string().optional(),
         country: z.string().optional(),
         city: z.string().optional(),
         lat: z.string().optional(),
